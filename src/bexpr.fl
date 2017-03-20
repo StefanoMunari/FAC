@@ -1,6 +1,6 @@
 _NOT	!
 _AND 	&&
-_OR		||
+_OR		\|\|
 _XOR 	X
 _IMPLY 	->
 _EQ 	==
