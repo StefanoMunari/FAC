@@ -8,6 +8,7 @@ bool
 id 		{letter}({letter}|{digits}|_)*
 Aexpr	
 Bexpr
+delimiter	
 if
 while
 stmt (while|if)
