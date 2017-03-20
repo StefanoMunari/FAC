@@ -1,0 +1,4 @@
+_SIGN [+|-]
+_DIGIT [0-9]
+_DIGIT0 [1-9]
+FRACT {_SIGN}?\[\{_DIGIT}+\|{_DIGIT0}+\]

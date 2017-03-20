@@ -1,0 +1,15 @@
+_NOT	!
+_AND 	&&
+_OR		\|\|
+_XOR 	X
+_IMPLY 	->
+_EQ 	==
+_NEQ	{_NOT}{_EQ}
+_LT 	<
+_GT 	>
+_LEQ 	<=
+_GEQ 	>=
+BOP1	[{_NOT}]
+BOP2 	[{_AND}|{_OR}|{_XOR}|{_IMPLY}]
+RELOP 	[{_EQ}|{_NEQ}|{_LT}|{_GT}|{_LEQ}|{_GEQ}]
+BEXPR	[true|false|({BOP1}?{BEXPR})({BOP2}({BOP1}?{BEXPR}))*|{AEXP}({RELOP}{AEXP})+] 
