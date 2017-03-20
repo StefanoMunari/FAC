@@ -12,4 +12,4 @@ _GEQ 	>=
 BOP1	[{_NOT}]
 BOP2 	[{_AND}|{_OR}|{_XOR}|{_IMPLY}]
 RELOP 	[{_EQ}|{_NEQ}|{_LT}|{_GT}|{_LEQ}|{_GEQ}]
-BEXP	[true|false|({BOP1}?{BEXP})({BOP2}({BOP1}?{BEXP}))*|{AEXP}({RELOP}{AEXP})+] 
+BEXPR	[true|false|({BOP1}?{BEXPR})({BOP2}({BOP1}?{BEXPR}))*|{AEXP}({RELOP}{AEXP})+] 
