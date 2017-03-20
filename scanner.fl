@@ -1,0 +1,17 @@
+%{
+#include <stdio.h>
+}%
+
+letter
+fract 
+bool 
+id 		{letter}({letter}|{digits}|_)*
+Aexpr	
+Bexpr
+if
+while
+stmt (while|if)
+print
+comment
+%%
+%%
