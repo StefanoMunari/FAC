@@ -1,0 +1,7 @@
+_SUM	\+
+_DIFF	\-
+_MULT	\*
+_DIV	\/
+_REM	\%
+AOP		[{_MULT}|{_DIV}|{_REM}|{_SUM}|{_DIFF}]
+AEXPR	[{_SIGN}{AEXPR}({AOP}{_SIGN}{AEXP})*]
