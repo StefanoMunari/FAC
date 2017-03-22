@@ -1,15 +1,18 @@
-_NOT	!
-_AND 	&&
-_OR		\|\|
-_XOR 	X
-_IMPLY 	->
-_EQ 	==
-_NEQ	{_NOT}{_EQ}
-_LT 	<
-_GT 	>
-_LEQ 	<=
-_GEQ 	>=
-BOP1	[{_NOT}]
-BOP2 	[{_AND}|{_OR}|{_XOR}|{_IMPLY}]
-RELOP 	[{_EQ}|{_NEQ}|{_LT}|{_GT}|{_LEQ}|{_GEQ}]
-BEXPR	[true|false|({BOP1}?{BEXPR})({BOP2}({BOP1}?{BEXPR}))*|{AEXP}({RELOP}{AEXP})+] 
+NOT		!
+AND 	&&
+OR		\|\|
+XOR 	X
+IMPLY 	->
+EQ 		==
+NEQ		{NOT}{EQ}
+LT 		<
+GT 		>
+LEQ 	<=
+GEQ 	>=
+BOP1	[{NOT}]
+BOP2 	[{AND}|{OR}|{XOR}|{IMPLY}]
+RELOP 	[{EQ}|{NEQ}|{LT}|{GT}|{LEQ}|{GEQ}]
+BOOL 	[true|false]
+BOPRN	[{BOOL}|{VAR}]	/*Boolean OPeRaNd*/
+BEXPR	[{BOP1}?{BOPRN}({BOP2}({BOP1}?{BOPRN}))*|{AEXP}({RELOP}{AEXP})+] 
+/*@todo: implement brackets using / in regex*/
