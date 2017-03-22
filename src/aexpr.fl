@@ -1,7 +1,9 @@
-_SUM	\+
-_DIFF	\-
-_MULT	\*
-_DIV	\/
-_REM	\%
-AOP		[{_MULT}|{_DIV}|{_REM}|{_SUM}|{_DIFF}]
-AEXPR	[{_SIGN}?{AEXPR}({AOP}{_SIGN}?{AEXP})*]
+SUM			\+
+DIFF		\-
+MULT		\*
+DIV			\/
+REM			\%
+AOP			[{MULT}|{DIV}|{REM}|{SUM}|{DIFF}]
+AOPRN 		[{FRACT}|{VAR}]						/*Arithmetic OPeRaNd*/
+AEXPR		[{XAOPRN}({AOP}{XAOPRN})*]
+/*@todo: implement brackets using / in regex*/
