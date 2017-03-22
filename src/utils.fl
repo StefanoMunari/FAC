@@ -1,2 +1,5 @@
-SPACE	[ \n\t\r\b\v\0]
-DELIMITER ;
+SIGN 		[+|-]
+SPACE		[ \n\t\r\b\v\0]
+DELIMITER 	;
+LBRAC		(
+RBRAC		)
