@@ -1,0 +1,1 @@
+WHILE while{SPACE}*\({BEXP}\){SPACE}*\{({SPACE}*{STMT}?)*\}
