@@ -10,7 +10,7 @@ void tokenize_fract(char * yytext, int yyleng){
 	
 	long long numerator = strtoll(buf0, NULL, 0);
 	long long denominator = strtoll(buf1, NULL, 0);
-	printf("<FRACT, %lld, %lld>\n", numerator, denominator); 
+	printf("<FRACT,%lld|%lld>\n", numerator, denominator); 
 	
 	free(c);
 	free(buf0);
