@@ -1,4 +1,6 @@
 #include <stdbool.h>
+#include <stdlib.h>
+
 int extract_exp(int pos){
 	char exp[2];
 	int j = 0;
