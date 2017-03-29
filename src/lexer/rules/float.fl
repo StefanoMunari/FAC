@@ -1,0 +1,1 @@
+^{float}$ { printf("-> FLOAT: %.*f", precision(), atof(yytext)); }

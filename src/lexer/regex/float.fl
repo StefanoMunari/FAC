@@ -1,0 +1,1 @@
+float 	{sign}?{int}({fract}?{exp}|{fract}{exp}?)
