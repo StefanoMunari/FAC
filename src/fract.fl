@@ -1,3 +1,0 @@
-DIGIT 	[0-9]
-DIGIT0 	[1-9]
-FRACT 	{SIGN}?\[{DIGIT}+\|{DIGIT0}{DIGIT}*\]

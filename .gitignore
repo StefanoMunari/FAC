@@ -32,5 +32,8 @@
 *.dSYM/
 *.su
 
+# Flex-generated files
+*.yy.c
+
 # Auto-generated files
 lexer.fl
