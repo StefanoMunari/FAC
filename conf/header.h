@@ -1,7 +1,8 @@
 #include <stdbool.h>
 int extract_exp(int pos){
 	char exp[2];
-	for(int j=pos; j<yyleng; ++j)
+	int j = 0;
+	for(j=pos; j<yyleng; ++j)
 		exp[j-pos]=yytext[j];
 	return atoi(exp);
 }
@@ -9,7 +10,8 @@ int precision(){
 	int int_len=0, 
 		precision=yyleng;
 	bool complete=false;
-	for(int i=0; !complete && i<yyleng; ++i){
+	int i = 0;
+	for(i=0; !complete && i<yyleng; ++i){
 		switch(yytext[i]){
 			case 'E'://exponent
 				++i;//next char
