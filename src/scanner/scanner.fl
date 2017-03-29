@@ -1,0 +1,88 @@
+%{
+#include "scanner_utils.h"
+char BUFF0[128];
+char BUFF1[128];
+int line_number = 1;
+%}
+
+
+
+
+SIGN 		[+|-]
+SPACE		[ \n\t\r\b\v\0]
+DELIMITER 	;
+LBRAC		\(
+RBRAC		\)
+
+LETTER		[a-zA-Z]
+DIGIT 		[0-9]
+DIGIT0 		[1-9]
+
+FRACT 		{SIGN}?\[{SPACE}*{DIGIT}+{SPACE}*\|{SPACE}*{DIGIT0}{DIGIT}*{SPACE}*\]
+ERROR_FRACT {SIGN}?\[{SPACE}*{DIGIT}+{SPACE}*\|{SPACE}*0*{SPACE}*\]
+
+ID 			({LETTER}|_)({LETTER}|{DIGIT}|_)*
+
+TYPE		(bool|fract)
+DECLARATION {TYPE}{SPACE}*{ID}
+
+SUM			\+
+DIFF		\-
+MULT		\*
+DIV			\/
+REM			\%
+AOP			{MULT}|{DIV}|{REM}|{SUM}|{DIFF}
+AOPRN 		{FRACT}|{ID}	
+AEXPR 		{AOPRN}{SPACE}*{AOP}{SPACE}*{AOPRN}
+
+
+NOT		!
+AND 	&&
+OR		\|\|
+XOR 	X
+IMPLY 	\-\>
+EQ 		==
+NEQ		{NOT}{EQ}
+LT 		<
+GT 		>
+LEQ 	<=
+GEQ 	>=
+BOP1	{NOT}
+BOP2 	{AND}|{OR}|{XOR}|{IMPLY}
+RELOP 	{EQ}|{NEQ}|{LT}|{GT}|{LEQ}|{GEQ}
+BOOL 	(true|false)
+BOPRN	{BOOL}|{ID}	
+BEXPR	{BOP1}?{BOPRN}({BOP2}({BOP1}?{BOPRN}))*|{AEXPR}({RELOP}{AEXPR})+
+
+WHILE 		while{SPACE}*\({BEXP}\){SPACE}*\{({SPACE}*{STMT}?)*\}
+IF  		if{SPACE}*\({BEXP}\){SPACE}*\{({STMT}{DELIMITER})+\}
+COMMENT 	\/\*([^*"]*|".*"|\*+[^/])*\*\/
+STMT 		{ASSIGNMENT}|{IF}|{WHILE}
+
+
+%%
+{COMMENT} 		{ }
+{DELIMITER}		{ }
+{DECLARATION} 	{ printf("<DECLARATION, %s>\n", yytext); }
+{AEXPR}			{ printf("<AEXPR, %s>\n", yytext);} 
+{ID}			{ printf("<ID, %s>\n", yytext); }
+{FRACT} 		{ tokenize_fract(yytext, yyleng); }
+{ERROR_FRACT} 	{fprintf(stderr, 
+		"Line number %d: %s is not a valid fractional number: 0 is not a valid denominator\n", line_number, yytext);}
+
+\n		{ line_number++; }
+.		{ fprintf(stderr,"Line %d pattern '%s' not recognized\n", line_number, yytext); }
+%%
+
+int main(int argc, char ** argv) {
+	if(argc > 1) {
+		FILE * fp = fopen(argv[1], "r");
+		if(fp == NULL) {
+			fprintf(stderr, "File %s: no such file or directory. The stdin will be used\n", argv[1]);
+		} else {
+			yyin = fp;
+		}
+	}
+	yylex();
+	return EXIT_SUCCESS;
+}
