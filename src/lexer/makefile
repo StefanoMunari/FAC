@@ -1,6 +1,6 @@
 C_SOURCES = $(wildcard c_src/*.c)
 
-all: run
+all: compile
 
 generate: lexer.py
 	python lexer.py
