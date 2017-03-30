@@ -1,1 +1,1 @@
-{DEFAULT}	{ fprintf(stderr,"Line %d lexeme '%s' not recognized\n", line_counter, yytext); }
+{DEFAULT}	{ err_handler("Line %u : lexeme '%s' not recognized\n", 'M'); }

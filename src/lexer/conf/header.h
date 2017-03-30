@@ -1,2 +1,2 @@
 #include "c_src/lexer.h" 
-int line_counter= 1;
+uint line_counter= 1;

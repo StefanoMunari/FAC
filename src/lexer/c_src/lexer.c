@@ -5,7 +5,7 @@ long long gcd(long long x, long long y) {
 }
 
 void tokenize_fract(){
-	char fract[(yyleng+1)];
+	char fract[(++yyleng)];
 	char num_buf[yyleng];
 	char den_buf[yyleng];
 	strncpy(fract, yytext, yyleng*sizeof(char));
@@ -20,3 +20,18 @@ void tokenize_fract(){
 	printf("<FRACT,%lld|%lld>\n", numerator, denominator); 
 }
 
+void err_handler(char* err, char mode){
+	switch(mode){
+		case 'S': /*string*/
+			fprintf(stderr, err, yytext);
+			break;
+		case 'L': /*line*/ 
+			fprintf(stderr, err, line_counter);
+			break;
+		case 'M': /*multiple: line + string*/ 
+			fprintf(stderr, err, line_counter, yytext);
+			break;
+		default: 
+			fprintf(stderr, err);
+	}
+}

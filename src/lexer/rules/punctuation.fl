@@ -1,4 +1,4 @@
-\n					{ line_counter++; }
+\n					{ ++line_counter; }
 {SPACE}*			{ /* get rid of spaces */ }
 {DELIMITER}			{ printf("<DELIMITER>\n"); }
 {LBRAC}				{ printf("<LBRAC>\n"); }
