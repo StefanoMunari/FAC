@@ -1,10 +1,15 @@
 {
 	"regex" : [
-		"sign",
-		"dig",
-		"int",
+		"comment",
+		"digit",
+		"punctuation",
+		"aop",
+		"declaration",
 		"fract",
-		"exp",
-		"float"
+		"bop",
+		"keyword",
+		"assignment",
+		"id",
+		"default"
 	]
 }

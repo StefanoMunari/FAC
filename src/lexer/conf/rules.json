@@ -1,6 +1,14 @@
 {
 	"rules" : [
-		"float",
-		"any"
+		"comment",
+		"punctuation",
+		"aop",
+		"declaration",
+		"fract",
+		"bop",
+		"keyword",
+		"assignment",
+		"id",
+		"default"
 	]
 }

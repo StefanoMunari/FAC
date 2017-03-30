@@ -1,0 +1,4 @@
+{WHILE}				{ printf("<WHILE>\n"); 	}
+{IF}				{ printf("<IF>\n");    	}
+{ELSE}				{ printf("<ELSE>\n");	}
+{SKIP}				{ printf("<SKIP>\n");	}

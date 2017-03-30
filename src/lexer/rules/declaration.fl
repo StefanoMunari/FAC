@@ -1,0 +1,2 @@
+{TYPE}	{ printf("<TYPE_DECL, %s>\n", yytext); }
+

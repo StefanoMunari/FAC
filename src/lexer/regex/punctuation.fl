@@ -1,0 +1,6 @@
+DELIMITER 	;
+LBRAC		\(
+RBRAC		\)
+SPACE		[ \n\t\r\b\v\0]
+LCURLYBRAC	\{
+RCURLYBRAC	\}

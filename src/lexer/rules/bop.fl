@@ -1,0 +1,5 @@
+{BOP1}	{ printf("<BOP1, %s>\n", yytext); }
+{BOP2}	{ printf("<BOP2, %s>\n", yytext); }
+{RELOP}	{ printf("<RELOP, %s>\n", yytext); }
+{BOOL}	{ printf("<BOOL, %s>\n", yytext); }
+
