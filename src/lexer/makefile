@@ -1,16 +1,18 @@
+C_SOURCES = $(wildcard c/*.c)
+
 all: run
 
-lex.yy.c: lexer.fl
+generate: lexer.py
+	python lexer.py
+
+lex.yy.c: generate lexer.fl
 	flex lexer.fl
 
-compile: lex.yy.c lexer.c
-	gcc -o lexer lexer.c lex.yy.c -lfl  
+compile: lex.yy.c
+	gcc -o lexer $(C_SOURCES) lex.yy.c -lfl  
 
 run: compile
 	./lexer
 
-#generate: lexer.py
-#	python lexer.py
-
 clean:
-	rm -f *.yy.c *.o *.out lexer
+	rm -f *.yy.c *.o *.out lexer lexer.fl
