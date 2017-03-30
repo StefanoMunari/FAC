@@ -1,5 +1,5 @@
-{FRACT}	 		{ tokenize_fract(yytext, yyleng); }
-{ERROR_FRACT}	{ fprintf(stderr,"Line %d: 0 is not a valid denominator!\n", line_number, yytext); }
+{FRACT}	 		{ tokenize_fract(); }
+{ERROR_FRACT}	{ fprintf(stderr,"Line %d: 0 is not a valid denominator!\n", line_counter, yytext); }
 
 
 

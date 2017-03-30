@@ -4,7 +4,7 @@ long long gcd(long long x, long long y) {
 	return (y != 0)?gcd(y, x%y):x;
 }
 
-void tokenize_fract(char * yytext, int yyleng){
+void tokenize_fract(){
 	char fract[(yyleng+1)];
 	char num_buf[yyleng];
 	char den_buf[yyleng];
