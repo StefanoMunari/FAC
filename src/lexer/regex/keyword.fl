@@ -2,3 +2,4 @@ WHILE	while
 IF		if
 ELSE	else
 SKIP	skip
+PRINT 	print
