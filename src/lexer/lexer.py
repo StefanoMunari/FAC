@@ -13,8 +13,14 @@ ROOT_DIR=os.getcwd()+"/"
 os.chdir(ROOT_DIR+TARGET_CONF)
 
 with open(ROOT_DIR+OUTPUT_FILE, 'w+') as output_file:
-    with open('regex.json', 'rb') as regexs, open('rules.json', 'rb') as rules: 
-    #open('../lexer.c', 'rb') as body:
+    with open('regex.json', 'rb') as regexs, open('rules.json', 'rb') as rules:
+        ## HEADER 
+        header=open('header.h', 'rb')
+        output_file.write("%{\n")
+        shutil.copyfileobj(header, output_file)
+        output_file.write("\n%}")
+        header.close()
+        ## REGEX
         os.chdir(ROOT_DIR+"regex")
         regexs=json.load(regexs)
         # extract list of regexs
@@ -25,6 +31,7 @@ with open(ROOT_DIR+OUTPUT_FILE, 'w+') as output_file:
         	shutil.copyfileobj(data, output_file)
         	data.close()
         output_file.write("\n%%")
+        ## TRANSLATION RULES
         os.chdir(ROOT_DIR+"rules")
         rules=json.load(rules)
         # extract list of rules
@@ -35,6 +42,4 @@ with open(ROOT_DIR+OUTPUT_FILE, 'w+') as output_file:
         	shutil.copyfileobj(data, output_file)
         	data.close()
         output_file.write("\n%%\n")
-#        shutil.copyfileobj(body, output_file)
-#        body.close()
         output_file.close()
