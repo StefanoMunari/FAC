@@ -19,3 +19,5 @@ while(condition){
 	print(a);
 	condition = false;
 }
+
+print(a, a)
