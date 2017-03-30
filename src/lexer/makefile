@@ -1,4 +1,4 @@
-C_SOURCES = $(wildcard c/*.c)
+C_SOURCES = $(wildcard c_src/*.c)
 
 all: run
 
