@@ -9,7 +9,7 @@ lex.yy.c: generate lexer.fl
 	flex lexer.fl
 
 compile: lex.yy.c
-	gcc -O3 -o lexer $(C_SOURCES) lex.yy.c -lfl  
+	gcc -g -o lexer $(C_SOURCES) lex.yy.c -lfl  
 
 run: compile
 	./lexer

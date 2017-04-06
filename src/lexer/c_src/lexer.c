@@ -39,6 +39,7 @@ void err_handler(char* err, err_input mode){
 		case FAC_STANDARD_ERROR: 
 			/* standard error means that errno was set, therefore perror can be used */
 			perror(err);
+			break;
 		default: 
 			fprintf(stderr, err);
 	}
