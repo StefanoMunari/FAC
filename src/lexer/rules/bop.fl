@@ -1,5 +1,13 @@
-{BOP1}	{ printf("<BOP1, %s>\n", yytext); }
-{BOP2}	{ printf("<BOP2, %s>\n", yytext); }
-{RELOP}	{ printf("<RELOP, %s>\n", yytext); }
-{BOOL}	{ printf("<BOOL, %s>\n", yytext); }
-
+{NOT}	{ yylval.bop1 = AND; return (BOP1); }
+{AND}	{ yylval.bop2 = AND; return (BOP2); }
+{OR}	{ yylval.bop2 = OR; return (BOP2); }
+{XOR}	{ yylval.bop2 = XOR; return (BOP2); }
+{IMPLY}	{ yylval.bop2 = IMPLY; return (BOP2); }
+{IFF}	{ yylval.bop2 = IFF; return (BOP2); }
+{EQ}	{ yylval.bop2 = EQ; return (RELOP); }
+{LT}	{ yylval.bop2 = LT; return (RELOP); }
+{GT}	{ yylval.bop2 = GT; return (RELOP); }
+{NEQ}	{ yylval.bop2 = NEQ; return (RELOP); }
+{LEQ}	{ yylval.bop2 = LEQ; return (RELOP); }
+{GEQ}	{ yylval.bop2 = GEQ; return (RELOP); }
+{BOOL}	{ yylval.bval = ((yytext[0] == 't') ? true : false); return (BOOL); }

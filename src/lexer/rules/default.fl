@@ -1,1 +1,1 @@
-{DEFAULT}	{ err_handler("Line %u : lexeme '%s' not recognized\n", 'M'); }
+{DEFAULT}	{ err_handler("Line %u : lexeme '%s' not recognized\n", FAC_LINE_STRING); }

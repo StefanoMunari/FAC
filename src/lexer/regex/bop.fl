@@ -3,13 +3,11 @@ AND 	&&
 OR		\|\|
 XOR 	X
 IMPLY 	\-\>
+IFF		\<\-\>
 EQ 		==
-NEQ		{NOT}{EQ}
 LT 		<
 GT 		>
+NEQ		{LT}{GT}
 LEQ 	<=
 GEQ 	>=
-BOP1	{NOT}
-BOP2 	{AND}|{OR}|{XOR}|{IMPLY}
-RELOP 	{EQ}|{NEQ}|{LT}|{GT}|{LEQ}|{GEQ}
 BOOL 	(true|false)

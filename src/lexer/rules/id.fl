@@ -1,1 +1,1 @@
-{ID}   { printf("<ID, %s>\n", yytext); }
+{ID}   { yyval.id = yytext; return (ID); }

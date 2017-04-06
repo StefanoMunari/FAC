@@ -1,2 +1,2 @@
-{TYPE}	{ printf("<TYPE_DECL, %s>\n", yytext); }
-
+bool	{ yylval.type = BOOL; return (TYPE); }
+fract	{ yylval.type = FRACT; return (TYPE); }

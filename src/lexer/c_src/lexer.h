@@ -5,14 +5,8 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
-
-/** enumeration type used in error handling */
-typedef enum _err_input {
-	FAC_STANDARD_ERROR, 
-	FAC_STRING, 
-	FAC_LINE, 
-	FAC_MULTIPLE,
-} err_input;
+#include "facerr.h"
+#include "factype.h"
 
 typedef unsigned int uint;
 
@@ -23,7 +17,7 @@ extern uint line_counter;
  * function called when a fract is recognized in order to extract numerator
  * and denumerator
  */
-void tokenize_fract();
+fract tokenize_fract();
 /**
  * error handler function, catch errors
  * @param the string to print

@@ -1,5 +1,5 @@
-{WHILE}															{ printf("<WHILE>\n"); 	}
-{IF}															{ printf("<IF>\n");    	}
-{ELSE}															{ printf("<ELSE>\n");	}
-{SKIP}															{ printf("<SKIP>\n");	}
-{PRINT}/{SPACE}*{L_DEL_EXPR}{SPACE}*{ID}{SPACE}*{R_DEL_EXPR}	{ printf("<PRINT>\n"); }
+{WHILE}															{ return (WHILE); }
+{IF}															{ return (IF); }
+{ELSE}															{ return (ELSE); }
+{SKIP}															{ return (SKIP); }
+{PRINT}/{SPACE}*{L_DEL_EXPR}{SPACE}*{ID}{SPACE}*{R_DEL_EXPR}	{ return (PRINT); }

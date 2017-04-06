@@ -2,5 +2,3 @@ SUM			\+
 DIFF		\-
 MULT		\*
 DIV			\/
-REM			\%
-AOP			{MULT}|{DIV}|{REM}|{SUM}|{DIFF}

@@ -1,3 +1,2 @@
 LETTER		[a-zA-Z]
-
 ID 			({LETTER}|_)({LETTER}|{DIGIT}|_)*

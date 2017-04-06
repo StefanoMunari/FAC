@@ -5,10 +5,10 @@
  * @return gcd of x and y
  */
 long long gcd(long long x, long long y) {
-	return (y != 0)?gcd(y, x%y):x;
+	return (y != 0)? gcd(y, x%y) : x;
 }
 
-void tokenize_fract(){
+fract tokenize_fract(){
 	char fract[(++yyleng)];
 	char num_buf[yyleng];
 	char den_buf[yyleng];
@@ -18,11 +18,14 @@ void tokenize_fract(){
 	sscanf(fract,"[%[^|]|%[^]]]", num_buf, den_buf);
 	
 	long long numerator = strtol(num_buf, NULL, 0);
-	long long denominator = strtol(den_buf, NULL, 0);
-	long long g = gcd(numerator, denominator);
+	long long denumerator = strtol(den_buf, NULL, 0);
+	long long g = gcd(numerator, denumerator);
 	numerator /= g;
-	denominator /= g;
-	printf("<FRACT,%lld|%lld>\n", numerator, denominator); 
+	denumerator /= g;
+	fract f;
+	f.num = (int) numerator;
+	f.den = (int) denumerator;
+	return f;
 }
 
 void err_handler(char* err, err_input mode){
@@ -33,7 +36,7 @@ void err_handler(char* err, err_input mode){
 		case FAC_LINE: /*line*/ 
 			fprintf(stderr, err, line_counter);
 			break;
-		case FAC_MULTIPLE: /*multiple: line + string*/ 
+		case FAC_LINE_STRING: /*line + string*/ 
 			fprintf(stderr, err, line_counter, yytext);
 			break;
 		case FAC_STANDARD_ERROR: 

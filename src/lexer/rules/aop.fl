@@ -1,1 +1,4 @@
-{AOP}	{ printf("<AOP, %s>\n", yytext); }
+{SUM}	{ yylval.aop0 = SUM; return (AOP0); }
+{DIFF}	{ yylval.aop0 = DIFF; return (AOP0); }
+{MULT}	{ yylval.aop1 = MULT; return (AOP1); }
+{DIV}	{ yylval.aop1 = DIV; return (AOP1); }

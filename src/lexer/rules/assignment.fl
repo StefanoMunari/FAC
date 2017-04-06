@@ -1,1 +1,1 @@
-{ASSIGNMENT}	{ printf("<ASSIGNMENT>\n"); }
+{ASSIGNMENT}	{ return (ASSIGNMENT); }

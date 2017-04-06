@@ -1,6 +1,6 @@
 SEPARATOR 	;
-L_DEL_EXPR		\(
-R_DEL_EXPR		\)
+L_DEL_EXPR	\(
+R_DEL_EXPR	\)
 SPACE		[ \n\t\r\b\v\0]
 L_DEL_SCOPE	\{
 R_DEL_SCOPE	\}
