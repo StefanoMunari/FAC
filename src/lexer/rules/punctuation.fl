@@ -1,7 +1,7 @@
 \n					{ ++line_counter; }
 {SPACE}*			{ /* get rid of spaces */ }
-{DELIMITER}			{ printf("<DELIMITER>\n"); }
-{LBRAC}				{ printf("<LBRAC>\n"); }
-{RBRAC}				{ printf("<RBRAC>\n"); }
-{LCURLYBRAC}		{ printf("<LCURLYBRAC>\n"); }
-{RCURLYBRAC}		{ printf("<RCURLYBRAC>\n"); }
+{SEPARATOR}			{ printf("<SEPARATOR>\n"); }
+{L_DEL_EXPR}		{ printf("<L_DEL_EXPR>\n"); }
+{R_DEL_EXPR}		{ printf("<R_DEL_EXPR>\n"); }
+{L_DEL_SCOPE}		{ printf("<L_DEL_SCOPE>\n"); }
+{R_DEL_SCOPE}		{ printf("<R_DEL_SCOPE>\n"); }
