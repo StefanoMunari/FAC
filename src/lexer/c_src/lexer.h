@@ -17,7 +17,7 @@ extern uint line_counter;
  * function called when a fract is recognized in order to extract numerator
  * and denumerator
  */
-fract tokenize_fract();
+fract_t tokenize_fract();
 /**
  * error handler function, catch errors
  * @param the string to print

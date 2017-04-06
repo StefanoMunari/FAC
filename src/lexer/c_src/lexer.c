@@ -8,7 +8,7 @@ long long gcd(long long x, long long y) {
 	return (y != 0)? gcd(y, x%y) : x;
 }
 
-fract tokenize_fract(){
+fract_t tokenize_fract(){
 	char fract[(++yyleng)];
 	char num_buf[yyleng];
 	char den_buf[yyleng];
@@ -22,7 +22,7 @@ fract tokenize_fract(){
 	long long g = gcd(numerator, denumerator);
 	numerator /= g;
 	denumerator /= g;
-	fract f;
+	fract_t f;
 	f.num = (int) numerator;
 	f.den = (int) denumerator;
 	return f;
