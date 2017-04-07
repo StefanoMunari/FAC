@@ -35,6 +35,9 @@
 # Flex-generated files
 *.yy.c
 
+# Bison-generated files
+*.tab.*
+
 # Auto-generated files
 lexer.fl
 lexer
