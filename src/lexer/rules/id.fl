@@ -1,1 +1,1 @@
-{ID}   { yyval.id = yytext; return (ID); }
+{ID}   { yylval.id = yytext; return (ID); }
