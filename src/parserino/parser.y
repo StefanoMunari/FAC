@@ -3,7 +3,39 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "factype.h"
+#include "facmath.h"
 
+fract_t minus(fract_t fract1) {
+	fract_t res;
+	res.num = fract1.num;
+	res.den = fract1.den;
+	return res;
+}
+
+fract_t inverse(fract_t fract1) {
+	fract_t res;
+	res.num = fract1.den;
+	res.den = fract1.num;
+	return res;
+}
+
+fract_t mult(fract_t fract1, fract_t fract2) {
+	fract_t res;
+	res.num = fract1.num * fract1.num;
+	res.den = fract1.den * fract1.den;
+	return normalizeFract(res);
+}
+
+fract_t sum(fract_t fract1, fract_t fract2) {
+	fract_t res;
+	res.num = fract1.num * fract2.den + fract1.den * fract1.num;
+	res.den = fract1.den * fract2.den;
+	return normalizeFract(res);
+}
+
+void yyerror(char * s) {
+	fprintf(stderr, "%s\n", s);
+}
 
 
 
@@ -21,7 +53,7 @@
 	bop2_t bop2;
 }
 %type <fract> aexpr
-%type <bval> bexpr
+
 %token <bval> BOOL		/* Token for true and false literals */
 %token <fract> FRACT	   /* Token for the fract */
 %token SEPARATOR   /* Separator of statement */
@@ -52,57 +84,33 @@
 
 %%
 lines : lines aexpr '\n' { printf("%d\n", $2); }
-| lines bexpr '\n' 		 { printf("%s\n", $2?"true":"false"); }
 | lines '\n'	
 | /* empty */
 ;
 aexpr : aexpr AOP0 aexpr { 
 	switch(yylval.aop0){
-		case SUM: $$ = $1 + $3; break;
-		case DIFF: $$ = $1 - $3; break;
+		case SUM: $$ = sum($1, $3); break;
+		case DIFF: $$ = sum($1, minus($3)); break;
 	}
 }
 | aexpr AOP1 aexpr {
 	switch(yylval.aop1){
-		case MULT: $$ = $1 * $3; break;
-		case DIV: $$ = $1 / $3; break;
+		case MULT: $$ = mult($1, $3); break;
+		case DIV: $$ = mult($1, inverse($3)); break;
 	}
 }
 | AOP0 aexpr %prec USIGN { 
 	switch(yyval.aop0) {
-		case SUM: $$ = +$2; break;
-		case DIFF: $$ = -$2; break;
+		case SUM: $$ = $2; break;
+		case DIFF: $$ = minus($2); break;
 	}
 }
 | FRACT
 ;
-bexpr : bexpr BOP2 bexpr { 
-			switch(yylval.bop2){
-				case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
-				case AND: $$ = $1 && $3; break;
-				case OR: $$ = $1 || $3; break;
-				case IMPLY: $$ = !$1 || $3; break;
-				case XOR: $$ = ($1 || $3) && !($1 && $3); break;
-			}
-		}	
-	| aexpr RELOP aexpr {
-		switch(yylval.relop){
-			case EQ: $$ = $1 == $3; break;
-			case LT: $$ = $1 < $3; break;
-			case LEQ: $$ = $1 <= $3; break;
-			case GT: $$ = $1 > $3; break;
-			case GEQ: $$ = $1 >= $3; break;
-			case NEQ: $$ = $1 != $3; break;
-		}
-	}
-	| BOP1 bexpr %prec UBOP1{
-		$$ = !$2;
-	 }
-	| BOOL
-	;
+
 %%
-int main() { 
-	if(yyparse() != 0)
-		fprintf(stderr, "Abnormal exit\n");
+int main(void){
+	yyparse();
+	printf("FICK DICH HART!\n");
 	return 0;
 }

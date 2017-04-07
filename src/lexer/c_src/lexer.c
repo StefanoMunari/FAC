@@ -1,13 +1,5 @@
 #include "lexer.h"
-/** "private" function that computes the gcd of two numbers 
- * @param y
- * @param x
- * @return gcd of x and y
- */
-long long gcd(long long x, long long y) {
-	return (y != 0)? gcd(y, x%y) : x;
-}
-
+#include "facmath.h"
 fract_t tokenize_fract(){
 	char fract[(++yyleng)];
 	char num_buf[yyleng];
@@ -17,15 +9,13 @@ fract_t tokenize_fract(){
 	fract[yyleng] = '\0';
 	sscanf(fract,"[%[^|]|%[^]]]", num_buf, den_buf);
 	
-	long long numerator = strtol(num_buf, NULL, 0);
-	long long denumerator = strtol(den_buf, NULL, 0);
-	long long g = gcd(numerator, denumerator);
-	numerator /= g;
-	denumerator /= g;
+	int numerator = (int) strtol(num_buf, NULL, 0);
+	int denumerator = (int) strtol(den_buf, NULL, 0);
+	
 	fract_t f;
-	f.num = (int) numerator;
-	f.den = (int) denumerator;
-	return f;
+	f.num = numerator;
+	f.den = denumerator;
+	return normalizeFract(f);
 }
 
 void err_handler(char* err, err_input mode){
