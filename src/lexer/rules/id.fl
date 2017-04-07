@@ -1,1 +1,1 @@
-{ID}   { yylval.id = yytext; return (ID); }
+{ID}   { yylval.id = strdup (yytext); return (ID); }
