@@ -3,7 +3,7 @@ LEXER_PATH = $(PWD)/lexer
 PARSER_FILE = parser
 C_SOURCES = $(wildcard $(LEXER_PATH)/c_src/*.c)
 
-all: lex.yy.c
+all: compile
 
 generate_parser:
 	bison -d $(PARSER_PATH)/$(PARSER_FILE).y
@@ -17,10 +17,10 @@ lex.yy.c: generate_lexer
 	flex -o $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/lexer.fl
 
 compile: lex.yy.c
-	gcc -O3 -o parser $(C_SOURCES) $(LEXER_PATH)/lex.yy.c -lfl
+	gcc -O3 -o fac $(C_SOURCES) $(LEXER_PATH)/lex.yy.c -lfl
 
 run: compile
 	./parser
 
 clean:
-	rm -f *.yy.c *.o *.out parser
+	rm -f *.yy.c *.o *.out parser $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/c_src/$(PARSER_FILE).tab.*

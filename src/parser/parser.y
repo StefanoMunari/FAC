@@ -33,6 +33,8 @@ fract_t sum(fract_t fract1, fract_t fract2) {
 	return normalizeFract(res);
 }
 
+int yylex ();
+
 void yyerror(char * s) {
 	fprintf(stderr, "%s\n", s);
 }
