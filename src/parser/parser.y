@@ -85,9 +85,7 @@ void yyerror(char * s) {
 %right UBOP1
 
 %%
-lines : lines aexpr '\n' { printf("%d\n", $2); }
-| lines '\n'	
-| /* empty */
+lines : aexpr SEPARATOR { printf("AEXPR%d\n", $1.num); }
 ;
 aexpr : aexpr AOP0 aexpr { 
 	switch(yylval.aop0){
@@ -113,6 +111,5 @@ aexpr : aexpr AOP0 aexpr {
 %%
 int main(void){
 	yyparse();
-	printf("FICK DICH HART!\n");
 	return 0;
 }
