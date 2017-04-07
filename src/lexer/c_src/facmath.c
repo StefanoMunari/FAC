@@ -17,5 +17,14 @@ fract_t normalizeFract(fract_t f) {
 	fract_t ret;
 	ret.num = f.num/g;
 	ret.den = f.den/g;
+	/* Normalize sign in order to have minus only on the numerator */
+	if(ret.num < 0 && ret.den < 0){
+		ret.num = -ret.num;
+		ret.den = -ret.den;
+	}
+	else if(ret.num >= 0 && ret.den < 0) {
+		ret.num = -ret.num;
+		ret.den = -ret.den;
+	} 
 	return ret;
 }
