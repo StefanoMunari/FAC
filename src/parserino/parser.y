@@ -2,17 +2,23 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "factype.h"
+
+
 
 
 %}
 
 %union {
-	char c; 
-	bool bval; 
-	struct fract_t{int num; int den; } fract; 
-	enum type_t{BOOL, FRACT} type;
-	enum relop_t{LT, LEQ, EQ, GEQ, GT, NEQ} relop;
-	enum bop2_t{IFF, AND, OR, IMPLY, XOR} bop2;
+	char * id;
+	bool bval;
+	fract_t fract; 
+	type_t type;
+	relop_t relop;
+	aop0_t aop0;
+	aop1_t aop1;
+	bop1_t bop1;
+	bop2_t bop2;
 }
 %type <fract> aexpr
 %type <bval> bexpr
@@ -51,27 +57,27 @@ lines : lines aexpr '\n' { printf("%d\n", $2); }
 | /* empty */
 ;
 aexpr : aexpr AOP0 aexpr { 
-	switch(yylval.c){
-		case '+': $$ = $1 + $3; break;
-		case '-': $$ = $1 - $3; break;
+	switch(yylval.aop0){
+		case SUM: $$ = $1 + $3; break;
+		case DIFF: $$ = $1 - $3; break;
 	}
 }
 | aexpr AOP1 aexpr {
-	switch(yylval.c){
-		case '*': $$ = $1 * $3; break;
-		case '/': $$ = $1 / $3; break;
+	switch(yylval.aop1){
+		case MULT: $$ = $1 * $3; break;
+		case DIV: $$ = $1 / $3; break;
 	}
 }
 | AOP0 aexpr %prec USIGN { 
-	switch(yyval.c) {
-		case '+': $$ = +$2; break;
-		case '-': $$ = -$2; break;
+	switch(yyval.aop0) {
+		case SUM: $$ = +$2; break;
+		case DIFF: $$ = -$2; break;
 	}
 }
 | FRACT
 ;
 bexpr : bexpr BOP2 bexpr { 
-			switch(yylval.c){
+			switch(yylval.bop2){
 				case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
 				case AND: $$ = $1 && $3; break;
 				case OR: $$ = $1 || $3; break;
@@ -85,7 +91,7 @@ bexpr : bexpr BOP2 bexpr {
 			case LT: $$ = $1 < $3; break;
 			case LEQ: $$ = $1 <= $3; break;
 			case GT: $$ = $1 > $3; break;
-			case GE: $$ = $1 >= $3; break;
+			case GEQ: $$ = $1 >= $3; break;
 			case NEQ: $$ = $1 != $3; break;
 		}
 	}

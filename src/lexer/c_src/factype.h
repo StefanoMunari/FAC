@@ -1,12 +1,12 @@
 #ifndef _FACTYPE_H_
 #define _FACTYPE_H_
 
-struct fract_t
+typedef struct fract_t
 {
 	int num;
 	int den;
-};
-typedef struct fract_t fract_t;
+} fract_t;
+
 
 typedef enum 
 {
@@ -46,8 +46,8 @@ typedef enum
 
 typedef enum 
 {
-	BOOL,
-	FRACT	
+	BOOL_T,
+	FRACT_T	
 } type_t;
 
 #endif/*_FACTYPE_H_*/

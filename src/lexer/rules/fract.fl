@@ -1,4 +1,4 @@
-{FRACT}	 		{ yylval.fval = tokenize_fract(); return (FRACT); }
+{FRACT}	 		{ yylval.fract = tokenize_fract(); return (FRACT); }
 {ERROR_FRACT}	{ err_handler("Line %u: 0 is not a valid denominator!\n", FAC_LINE); }
 
 
