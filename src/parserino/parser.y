@@ -33,6 +33,8 @@ fract_t sum(fract_t fract1, fract_t fract2) {
 	return normalizeFract(res);
 }
 
+
+
 void yyerror(char * s) {
 	fprintf(stderr, "%s\n", s);
 }
@@ -53,6 +55,7 @@ void yyerror(char * s) {
 	bop2_t bop2;
 }
 %type <fract> aexpr
+%type <bval> bexpr
 
 %token <bval> BOOL		/* Token for true and false literals */
 %token <fract> FRACT	   /* Token for the fract */
@@ -84,6 +87,7 @@ void yyerror(char * s) {
 
 %%
 lines : lines aexpr '\n' { printf("%d\n", $2); }
+| lines bexpr '\n' 		 { printf("%s\n", $2?"true":"false"); }
 | lines '\n'	
 | /* empty */
 ;
@@ -107,6 +111,31 @@ aexpr : aexpr AOP0 aexpr {
 }
 | FRACT
 ;
+bexpr : bexpr BOP2 bexpr { 
+			switch(yylval.bop2){
+				case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
+				case AND: $$ = $1 && $3; break;
+				case OR: $$ = $1 || $3; break;
+				case IMPLY: $$ = !$1 || $3; break;
+				case XOR: $$ = ($1 || $3) && !($1 && $3); break;
+			}
+		}	
+	| aexpr RELOP aexpr {
+		switch(yylval.relop){
+			case EQ: $$ = $1.num == $3.num; break;
+			case LT: $$ = $1.num < $3.num; break;
+			case LEQ: $$ = $1.num <= $3.num; break;
+			case GT: $$ = $1.num > $3.num; break;
+			case GEQ: $$ = $1.num >= $3.num; break;
+			case NEQ: $$ = $1.num != $3.num; break;
+		}
+	}
+	| BOP1 bexpr %prec UBOP1{
+		$$ = !$2;
+	 }
+	| BOOL
+	;
+	
 
 %%
 int main(void){
