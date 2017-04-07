@@ -7,7 +7,7 @@
 
 fract_t minus(fract_t fract1) {
 	fract_t res;
-	res.num = fract1.num;
+	res.num = -fract1.num;
 	res.den = fract1.den;
 	return res;
 }
@@ -63,19 +63,19 @@ void yyerror(char * s) {
 %token R_DEL_SCOPE /* Scope right delimiter */
 %token L_DEL_EXPR  /* Scope left delimiter */
 %token R_DEL_EXPR  /* Scope right delimiter */
-%token <fract> AOP0	   /* Arithmetic operation: + and - */
-%token <fract> AOP1	   /* Arithmetic operation */	
+%token <aop0> AOP0	   /* Arithmetic operation: + and - */
+%token <aop1> AOP1	   /* Arithmetic operation */	
 %token TYPE
-%token <bval> BOP1		   /* Boolean operation with arity 1 */
-%token <bval> BOP2		   /* Boolean operation with arity 2 */
-%token RELOP	   /* Relation operation LT, LQ, ... */
+%token <bop1> BOP1		   /* Boolean operation with arity 1 */
+%token <bop2> BOP2		   /* Boolean operation with arity 2 */
+%token <relop> RELOP	   /* Relation operation LT, LQ, ... */
 %token WHILE	   /* token for the while symbol */
 %token IF		   /* token for the if symbol */
 %token ELSE 	   /* token for the else symbol */
 %token SKIP		   /* token for the skip symbol */
 %token PRINT		
 %token ASSIGNMENT	
-%token ID			
+%token <id> ID			
 
 %left AOP0
 %left AOP1
@@ -90,19 +90,19 @@ lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | /* empty */
 ;
 aexpr : aexpr AOP0 aexpr { 
-	switch(yylval.aop0){
+	switch($2){
 		case SUM: $$ = sum($1, $3); break;
 		case DIFF: $$ = sum($1, minus($3)); break;
 	}
 }
 | aexpr AOP1 aexpr {
-	switch(yylval.aop1){
+	switch($2){
 		case MULT: $$ = mult($1, $3); break;
 		case DIV: $$ = mult($1, inverse($3)); break;
 	}
 }
 | AOP0 aexpr %prec USIGN { 
-	switch(yyval.aop0) {
+	switch($1) {
 		case SUM: $$ = $2; break;
 		case DIFF: $$ = minus($2); break;
 	}

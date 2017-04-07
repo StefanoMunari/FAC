@@ -23,4 +23,4 @@ run: compile
 	./parser
 
 clean:
-	rm -f *.yy.c *.o *.out parser $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/c_src/$(PARSER_FILE).tab.*
+	rm -f *.yy.c *.o *.out fac $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/c_src/$(PARSER_FILE).tab.*
