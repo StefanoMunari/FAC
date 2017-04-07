@@ -12,16 +12,17 @@
 	enum relop_t{LT, LEQ, EQ, GEQ, GT, NEQ} relop;
 	enum bop2_t{IFF, AND, OR, IMPLY, XOR} bop2;
 }
-%token <fract> aexpr
-%token <bval> bexpr
-%token <fval> FRACT	   /* Token for the fract */
+%type <fract> aexpr
+%type <bval> bexpr
+%token <bval> BOOL		/* Token for true and false literals */
+%token <fract> FRACT	   /* Token for the fract */
 %token SEPARATOR   /* Separator of statement */
 %token L_DEL_SCOPE /* Scope left delimiter */
 %token R_DEL_SCOPE /* Scope right delimiter */
 %token L_DEL_EXPR  /* Scope left delimiter */
 %token R_DEL_EXPR  /* Scope right delimiter */
-%token <fval> AOP0	   /* Arithmetic operation: + and - */
-%token <fval> AOP1	   /* Arithmetic operation */	
+%token <fract> AOP0	   /* Arithmetic operation: + and - */
+%token <fract> AOP1	   /* Arithmetic operation */	
 %token TYPE
 %token <bval> BOP1		   /* Boolean operation with arity 1 */
 %token <bval> BOP2		   /* Boolean operation with arity 2 */
@@ -36,14 +37,15 @@
 
 %left AOP0
 %left AOP1
-%
+
 %right USIGN
 %left BOP2 
 %right UBOP1
 
 %%
 lines : lines aexpr '\n' { printf("%d\n", $2); }
-| lines '\n'
+| lines bexpr '\n' 		 { printf("%s\n", $2?"true":"false"); }
+| lines '\n'	
 | /* empty */
 ;
 aexpr : aexpr AOP0 aexpr { 
@@ -66,33 +68,30 @@ aexpr : aexpr AOP0 aexpr {
 }
 | FRACT
 ;
-
-bexpr : bexpr  BOP2 bexpr { 
-	switch(yylval.c){
-		case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
-		case AND: $$ = $1 && $3; break;
-		case OR: $$ = $1 || $3; break;
-		case IMPLY: $$ = !$1 || $3; break;
-		case XOR: $$ = ($1 || $3) && !($1 && $3); break;
+bexpr : bexpr BOP2 bexpr { 
+			switch(yylval.c){
+				case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
+				case AND: $$ = $1 && $3; break;
+				case OR: $$ = $1 || $3; break;
+				case IMPLY: $$ = !$1 || $3; break;
+				case XOR: $$ = ($1 || $3) && !($1 && $3); break;
+			}
+		}	
+	| aexpr RELOP aexpr {
+		switch(yylval.relop){
+			case EQ: $$ = $1 == $3; break;
+			case LT: $$ = $1 < $3; break;
+			case LEQ: $$ = $1 <= $3; break;
+			case GT: $$ = $1 > $3; break;
+			case GE: $$ = $1 >= $3; break;
+			case NEQ: $$ = $1 != $3; break;
+		}
 	}
-}
-| aexpr RELOP aexpr {
-	switch(yylval.relop){
-		case EQ: $$ = $1 == $2; break;
-		case LT: $$ = $1 < $2; break;
-		case LEQ: $$ = $1 <= $2; break;
-		case GT: $$ = $1 > $2; break;
-		case GE: $$ = $1 >= $2; break;
-		case NEQ: $$ = $1 != $2; break;
-	}
-}
-| BOP1 bexpr %prec UBOP1{
-	$$ = !$2;
-}
-| BOOL
-;
-
-
+	| BOP1 bexpr %prec UBOP1{
+		$$ = !$2;
+	 }
+	| BOOL
+	;
 %%
 int main() { 
 	if(yyparse() != 0)
