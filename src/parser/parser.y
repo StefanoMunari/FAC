@@ -33,6 +33,10 @@ fract_t sum(fract_t fract1, fract_t fract2) {
 	return normalizeFract(res);
 }
 
+int lcm(int a, int b) {
+	return a*b/gcd(a,b);
+}
+
 int yylex ();
 
 void yyerror(char * s) {
@@ -55,7 +59,7 @@ void yyerror(char * s) {
 	bop2_t bop2;
 }
 %type <fract> aexpr
-
+%type <bval> bexpr
 %token <bval> BOOL		/* Token for true and false literals */
 %token <fract> FRACT	   /* Token for the fract */
 %token SEPARATOR   /* Separator of statement */
@@ -86,6 +90,7 @@ void yyerror(char * s) {
 
 %%
 lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
+| lines bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
 | lines '\n'
 | /* empty */
 ;
@@ -110,6 +115,30 @@ aexpr : aexpr AOP0 aexpr {
 | FRACT
 ;
 
+bexpr : bexpr BOP2 bexpr { 
+		switch($2){
+			case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
+			case AND: $$ = $1 && $3; break;
+			case OR: $$ = $1 || $3; break;
+			case IMPLY: $$ = !$1 || $3; break;
+			case XOR: $$ = ($1 || $3) && !($1 && $3); break;
+		}
+	}	
+| aexpr RELOP aexpr {
+	switch($2){
+		case EQ:  $$ = $1.num*$3.den == $3.num*$1.den; break;
+		case LT:  $$ = $1.num*$3.den <  $3.num*$1.den; break;
+		case LEQ: $$ = $1.num*$3.den <= $3.num*$1.den; break;
+		case GT:  $$ = $1.num*$3.den >  $3.num*$1.den; break;
+		case GEQ: $$ = $1.num*$3.den >= $3.num*$1.den; break;
+		case NEQ: $$ = $1.num*$3.den != $3.num*$1.den; break;
+	}
+}
+| BOP1 bexpr %prec UBOP1{
+	$$ = !$2;
+ }
+| BOOL
+;
 %%
 int main(void){
 	yyparse();
