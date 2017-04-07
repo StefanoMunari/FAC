@@ -28,7 +28,7 @@ fract_t mult(fract_t fract1, fract_t fract2) {
 
 fract_t sum(fract_t fract1, fract_t fract2) {
 	fract_t res;
-	res.num = fract1.num * fract2.den + fract1.den * fract1.num;
+	res.num = fract1.num * fract2.den + fract1.den * fract2.num;
 	res.den = fract1.den * fract2.den;
 	return normalizeFract(res);
 }
