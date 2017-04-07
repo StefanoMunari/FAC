@@ -2,6 +2,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+
 %}
 
 %union {
@@ -50,7 +52,7 @@ lines : lines aexpr '\n' { printf("%d\n", $2); }
 ;
 aexpr : aexpr AOP0 aexpr { 
 	switch(yylval.c){
-		case '+': $$.fval = $1.fval + $3.fval; break;
+		case '+': $$ = $1 + $3; break;
 		case '-': $$ = $1 - $3; break;
 	}
 }
