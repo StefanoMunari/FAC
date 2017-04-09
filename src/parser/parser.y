@@ -5,38 +5,6 @@
 #include "factype.h"
 #include "facmath.h"
 
-fract_t minus(fract_t fract1) {
-	fract_t res;
-	res.num = -fract1.num;
-	res.den = fract1.den;
-	return res;
-}
-
-fract_t inverse(fract_t fract1) {
-	fract_t res;
-	res.num = fract1.den;
-	res.den = fract1.num;
-	return res;
-}
-
-fract_t mult(fract_t fract1, fract_t fract2) {
-	fract_t res;
-	res.num = fract1.num * fract2.num;
-	res.den = fract1.den * fract2.den;
-	return normalizeFract(res);
-}
-
-fract_t sum(fract_t fract1, fract_t fract2) {
-	fract_t res;
-	res.num = fract1.num * fract2.den + fract1.den * fract2.num;
-	res.den = fract1.den * fract2.den;
-	return normalizeFract(res);
-}
-
-int lcm(int a, int b) {
-	return a*b/gcd(a,b);
-}
-
 int yylex ();
 
 void yyerror(char * s) {
