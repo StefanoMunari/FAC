@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "factype.h"
 #include "facmath.h"
 
@@ -106,7 +107,7 @@ bexpr : bexpr BOP2 bexpr {
 %%
 int main(void){
 	yyparse();
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 void yyerror(char * s) {
