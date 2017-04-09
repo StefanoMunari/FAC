@@ -7,11 +7,7 @@
 
 int yylex ();
 
-void yyerror(char * s) {
-	fprintf(stderr, "%s\n", s);
-}
-
-
+void yyerror(char * s);
 
 %}
 
@@ -111,4 +107,8 @@ bexpr : bexpr BOP2 bexpr {
 int main(void){
 	yyparse();
 	return 0;
+}
+
+void yyerror(char * s) {
+	fprintf(stderr, "%s\n", s);
 }
