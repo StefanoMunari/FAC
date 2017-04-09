@@ -71,7 +71,7 @@ aexpr : aexpr AOP0 aexpr {
 | aexpr AOP1 aexpr {
 	switch($2){
 		case MULT: $$ = mult($1, $3); break;
-		case DIV: $$ = mult($1, inverse($3)); break;
+		case DIV: $$ = mult($1, reciprocal($3)); break;
 	}
 }
 | AOP0 aexpr %prec USIGN { 

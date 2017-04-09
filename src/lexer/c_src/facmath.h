@@ -18,7 +18,7 @@ fract_t minus(fract_t f);
  * @param fract1 in the form [a|b]
  * @return [b|a]
  */
-fract_t inverse(fract_t fract1);
+fract_t reciprocal(fract_t fract1);
 
 /**
  * Returns the multiplication of fract1 and fract2

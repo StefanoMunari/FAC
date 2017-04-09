@@ -46,7 +46,7 @@ fract_t minus(fract_t f) {
  * @param fract1 in the form [a|b]
  * @return [b|a]
  */
-fract_t inverse(fract_t fract1) {
+fract_t reciprocal(fract_t fract1) {
 	fract_t res;
 	res.num = fract1.den;
 	res.den = fract1.num;
