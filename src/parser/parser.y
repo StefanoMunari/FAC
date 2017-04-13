@@ -34,7 +34,7 @@ void yyerror(char * s);
 %token R_DEL_EXPR  /* Scope right delimiter */
 %token <aop0> AOP0	   /* Arithmetic operation: + and - */
 %token <aop1> AOP1	   /* Arithmetic operation */	
-%token TYPE
+%token <type> TYPE
 %token <bop1> BOP1		   /* Boolean operation with arity 1 */
 %token <bop2> BOP2		   /* Boolean operation with arity 2 */
 %token <relop> RELOP	   /* Relation operation LT, LQ, ... */
@@ -56,6 +56,7 @@ void yyerror(char * s);
 %%
 lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | lines bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
+| lines declation SEPARATOR { printf("DECLARATION"); }
 | lines '\n'
 | /* empty */
 ;
@@ -78,6 +79,7 @@ aexpr : aexpr AOP0 aexpr {
 	}
 }
 | FRACT
+| ID	{ $$ = lookupID($1, FRACT_T); }
 ;
 
 bexpr : bexpr BOP2 bexpr { 
@@ -103,6 +105,10 @@ bexpr : bexpr BOP2 bexpr {
 	$$ = !$2;
  }
 | BOOL
+| ID	{ $$ = lookupID($1, BOOL_T); }
+;
+
+declaration : TYPE ID { installID($2,$1); }	
 ;
 %%
 int main(void){
