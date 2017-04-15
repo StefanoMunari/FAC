@@ -7,6 +7,8 @@
 #include "facmath.h"
 #include "facerr.h"
 
+extern FILE * yyin;
+
 int yylex ();
 
 void yyerror(char * s);
@@ -31,8 +33,8 @@ void yyerror(char * s);
 %token SEPARATOR   /* Separator of statement */
 %token L_DEL_SCOPE /* Scope left delimiter */
 %token R_DEL_SCOPE /* Scope right delimiter */
-%token L_DEL_EXPR  /* Scope left delimiter */
-%token R_DEL_EXPR  /* Scope right delimiter */
+%token L_DEL_EXPR  /* Expression left delimiter */
+%token R_DEL_EXPR  /* Expression right delimiter */
 %token <aop0> AOP0	   /* Arithmetic operation: + and - */
 %token <aop1> AOP1	   /* Arithmetic operation */	
 %token <type> TYPE
@@ -79,6 +81,7 @@ aexpr : aexpr AOP0 aexpr {
 		case DIFF: $$ = minus($2); break;
 	}
 }
+| L_DEL_EXPR aexpr R_DEL_EXPR
 | FRACT
 | ID	{ $$ = lookupID($1, FRACT_T); }
 ;
@@ -104,7 +107,8 @@ bexpr : bexpr BOP2 bexpr {
 }
 | BOP1 bexpr %prec UBOP1{
 	$$ = !$2;
- }
+}
+| L_DEL_EXPR bexpr R_DEL_EXPR
 | BOOL
 | ID	{ $$ = lookupID($1, BOOL_T); }
 ;
