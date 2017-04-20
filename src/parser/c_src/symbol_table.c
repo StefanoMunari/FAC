@@ -1,6 +1,7 @@
 #include "symbol_table.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 extern entry * symbol_table;
 
@@ -49,7 +50,17 @@ void setValue(char * _id, type_t type, void * value) {
 		fprintf(stderr, "The requested type for variable %s differs from the symbol_table's one. Exiting\n", _id);
 		exit(EXIT_FAILURE);
 	}
-	e->value = value;
+	
+	switch(type){
+		case FRACT_T : 
+			e->value = malloc(sizeof(fract_t));
+			memcpy(e->value, value, sizeof(fract_t));
+			break;
+		case BOOL_T : 
+			e->value = malloc(sizeof(bool));
+			memcpy(e->value, value, sizeof(bool));
+			break;
+	}
 }
 
 
