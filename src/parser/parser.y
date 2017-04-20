@@ -6,11 +6,11 @@
 #include "factype.h"
 #include "facmath.h"
 #include "facerr.h"
-#include "symbol_table.h"
+#include "../../parser/c_src/symbol_table.h"
 
 extern FILE * yyin;
-extern entry * table;
-table = NULL;
+entry * symbol_table = NULL; // declaration of the variable
+
 
 
 int yylex ();
@@ -66,7 +66,7 @@ void yyerror(char * s);
 %%
 lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | lines bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
-| lines declation SEPARATOR { printf("DECLARATION"); }
+| lines declaration SEPARATOR { printf("DECLARATION"); }
 | lines '\n'
 | /* empty */
 ;
@@ -90,7 +90,7 @@ aexpr : aexpr AOP0 aexpr {
 }
 | L_DEL_EXPR aexpr R_DEL_EXPR
 | FRACT
-| ID	{ $$ = lookupID($1, FRACT_T); }
+| ID	{ $$ = *(fract_t*) lookupID($1, FRACT_T); }
 ;
 
 bexpr : bexpr BOP2 bexpr { 
