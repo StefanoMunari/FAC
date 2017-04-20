@@ -68,6 +68,7 @@ stmt : stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | stmt bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
 | stmt declaration SEPARATOR { printf("DECLARATION\n"); }
 | stmt var_assignment SEPARATOR {printf("Assignment\n"); }
+| stmt print_var SEPARATOR 
 | stmt '\n'
 | /* empty */
 ;
@@ -118,7 +119,7 @@ bexpr : bexpr BOP2 bexpr {
 }
 | L_DEL_EXPR bexpr R_DEL_EXPR
 | BOOL
-| ID	{ $$ = lookupID($1, BOOL_T); }
+| ID	{ $$ = *(bool*)lookupID($1, BOOL_T); }
 ;
 
 declaration : TYPE ID { installID($2,$1); }	
@@ -132,8 +133,26 @@ var_assignment : ID ASSIGNMENT aexpr {
 	setValue($1, BOOL_T, &t);
 
 }
-
 ;
+
+print_var : PRINT L_DEL_EXPR ID R_DEL_EXPR {
+	type_t type = getType($3);
+	switch(type){
+		case FRACT_T: 
+		{
+			fract_t f = *(fract_t*) lookupID($3, FRACT_T); 
+			printf("VAR %s = [%d|%d]\n", $3, f.num, f.den);
+			break;
+		}
+		case BOOL_T:
+		{
+			bool b = (bool) lookupID($3, BOOL_T);
+			printf("VAR %s = %s\n", $3, b?"true":"false");
+			break;
+		}
+	}
+}
+
 %%
 int main(int argc, char * argv[]) {
 	if(argc < 2){

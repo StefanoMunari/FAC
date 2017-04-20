@@ -38,6 +38,16 @@ void* lookupID(char* _id, type_t type) {
 	return e->value;
 }
 
+type_t getType(char * _id) {
+	entry * e;
+	HASH_FIND_STR(symbol_table, _id, e);
+	if(e == NULL){
+		fprintf(stderr, "Failed lookup: The variable %s is not yet installed\n", _id);
+		exit(EXIT_FAILURE);
+	}
+	return e->type;
+}
+
 
 void setValue(char * _id, type_t type, void * value) {
 	entry * e;
