@@ -63,7 +63,8 @@ void yyerror(char * s);
 %%
 lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | lines bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
-| lines declaration SEPARATOR { printf("DECLARATION"); }
+| lines declaration SEPARATOR { printf("DECLARATION\n"); }
+| lines var_assignment SEPARATOR {printf("Assignment\n"); }
 | lines '\n'
 | /* empty */
 ;
@@ -118,6 +119,17 @@ bexpr : bexpr BOP2 bexpr {
 ;
 
 declaration : TYPE ID { installID($2,$1); }	
+
+var_assignment : ID ASSIGNMENT aexpr {
+	fract_t f = $3; 
+	setValue($1, FRACT_T, &f);
+}
+| ID ASSIGNMENT bexpr {
+	bool t = $3;
+	setValue($1, BOOL_T, &t);
+
+}
+
 ;
 %%
 int main(int argc, char * argv[]) {
@@ -134,6 +146,7 @@ int main(int argc, char * argv[]) {
   int err_code = fclose(yyin);
   if(err_code == EOF)
     err_handler(argv[1], FAC_STANDARD_ERROR);
+  freeTable();
   return EXIT_SUCCESS;
 }
 

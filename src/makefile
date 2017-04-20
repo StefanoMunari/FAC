@@ -1,7 +1,7 @@
 PARSER_PATH = $(PWD)/parser
 LEXER_PATH = $(PWD)/lexer
 PARSER_FILE = parser
-C_SOURCES = $(wildcard $(LEXER_PATH)/c_src/*.c)
+C_SOURCES = $(wildcard $(PWD)/*/c_src/*.c)
 
 all: compile
 
