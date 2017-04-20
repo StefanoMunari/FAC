@@ -7,7 +7,7 @@ typedef struct _entry {
 	UT_hash_handle hh; /* makes this structure hashable */
 } entry;
 
-entry * table = NULL; // declaration of the variable
+entry * symbol_table = NULL; // declaration of the variable
 
 void installID(char* id, type_t type);
 void* lookupID(char* id, type_t type);

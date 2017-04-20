@@ -6,8 +6,12 @@
 #include "factype.h"
 #include "facmath.h"
 #include "facerr.h"
+#include "symbol_table.h"
 
 extern FILE * yyin;
+extern entry * table;
+table = NULL;
+
 
 int yylex ();
 
