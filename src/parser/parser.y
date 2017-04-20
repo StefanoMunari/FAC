@@ -61,11 +61,11 @@ void yyerror(char * s);
 %right UBOP1
 
 %%
-lines : lines aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
-| lines bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
-| lines declaration SEPARATOR { printf("DECLARATION\n"); }
-| lines var_assignment SEPARATOR {printf("Assignment\n"); }
-| lines '\n'
+stmt : stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
+| stmt bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
+| stmt declaration SEPARATOR { printf("DECLARATION\n"); }
+| stmt var_assignment SEPARATOR {printf("Assignment\n"); }
+| stmt '\n'
 | /* empty */
 ;
 aexpr : aexpr AOP0 aexpr { 
