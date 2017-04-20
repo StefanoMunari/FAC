@@ -136,21 +136,25 @@ var_assignment : ID ASSIGNMENT aexpr {
 ;
 %%
 int main(int argc, char * argv[]) {
-  if (argc > 1) {
+	if(argc < 2){
+		fprintf(stderr, "Usage: %s <file-to-interpret>", argv[0]);
+		return EXIT_FAILURE;
+	}
+ 
     FILE * fp = fopen(argv[1], "r");
     if (fp == NULL) {
       err_handler(argv[1], FAC_STANDARD_ERROR);
       return EXIT_FAILURE;
     } 
-    else 
-      yyin = fp;
-  }
-  yyparse();
-  int err_code = fclose(yyin);
-  if(err_code == EOF)
-    err_handler(argv[1], FAC_STANDARD_ERROR);
-  freeTable();
-  return EXIT_SUCCESS;
+    
+    yyin = fp;
+  
+	yyparse();
+	int err_code = fclose(yyin);
+	if(err_code == EOF)
+		err_handler(argv[1], FAC_STANDARD_ERROR);
+	freeTable();
+	return EXIT_SUCCESS;
 }
 
 void yyerror(char * s) {
