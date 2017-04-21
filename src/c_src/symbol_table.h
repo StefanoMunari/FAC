@@ -1,6 +1,6 @@
 #ifndef __SYMBOL_TABLE_H__
 #define __SYMBOL_TABLE_H__
-#include "../../lexer/c_src/factype.h"
+#include "factype.h"
 #include "../lib/uthash.h"
 
 typedef struct _entry {
