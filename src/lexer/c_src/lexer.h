@@ -12,16 +12,10 @@ typedef unsigned int uint;
 
 extern char* yytext;
 extern int yyleng;
-extern uint line_counter;
+
 /**
  * function called when a fract is recognized in order to extract numerator
  * and denumerator
  */
 fract_t tokenize_fract();
-/**
- * error handler function, catch errors
- * @param the string to print
- * @param is the mode format for printing
- */
-void err_handler(char*, err_input);
 #endif/*_LEXER_H_*/

@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "facmath.h"
+
 fract_t tokenize_fract(){
 	char fract[(++yyleng)];
 	char num_buf[yyleng];
@@ -16,24 +17,4 @@ fract_t tokenize_fract(){
 	f.num = numerator;
 	f.den = denumerator;
 	return normalizeFract(f);
-}
-
-void err_handler(char* err, err_input mode){
-	switch(mode){
-		case FAC_STRING: /*string*/
-			fprintf(stderr, err, yytext);
-			break;
-		case FAC_LINE: /*line*/ 
-			fprintf(stderr, err, line_counter);
-			break;
-		case FAC_LINE_STRING: /*line + string*/ 
-			fprintf(stderr, err, line_counter, yytext);
-			break;
-		case FAC_STANDARD_ERROR: 
-			/* standard error means that errno was set, therefore perror can be used */
-			perror(err);
-			break;
-		default: 
-			fprintf(stderr, err);
-	}
 }
