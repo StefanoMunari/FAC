@@ -16,6 +16,6 @@ void err_handler(char* err, err_input mode){
 			perror(err);
 			break;
 		default: 
-			fprintf(stderr, err);
+			fprintf(stderr, "%s\n", err);
 	}
 }
