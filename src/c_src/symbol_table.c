@@ -35,6 +35,10 @@ void* lookupID(char* _id, type_t type) {
 		fprintf(stderr, "The requested type for %s differs from the symbol_table's one. Exiting\n", _id);
 		exit(EXIT_FAILURE);
 	}
+	if(e -> value == NULL) {
+		fprintf(stderr, "The variable %s is declared but not initialized. Exiting\n", _id);
+		exit(EXIT_FAILURE);
+	}
 	return e->value;
 }
 
