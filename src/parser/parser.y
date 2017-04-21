@@ -9,6 +9,7 @@
 #include "../../parser/c_src/symbol_table.h"
 
 extern FILE * yyin;
+
 entry * symbol_table = NULL; // declaration of the variable
 
 
