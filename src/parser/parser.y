@@ -91,7 +91,7 @@ aexpr : aexpr AOP0 aexpr {
 		case DIFF: $$ = minus($2); break;
 	}
 }
-| L_DEL_EXPR aexpr R_DEL_EXPR
+| L_DEL_EXPR aexpr R_DEL_EXPR { $$ = $2; }
 | FRACT
 | ID	{ $$ = *(fract_t*) lookupID($1, FRACT_T); }
 ;
@@ -118,7 +118,7 @@ bexpr : bexpr BOP2 bexpr {
 | BOP1 bexpr %prec UBOP1{
 	$$ = !$2;
 }
-| L_DEL_EXPR bexpr R_DEL_EXPR
+| L_DEL_EXPR bexpr R_DEL_EXPR { $$ = $2; }
 | BOOL
 | ID	{ $$ = *(bool*)lookupID($1, BOOL_T); }
 ;
