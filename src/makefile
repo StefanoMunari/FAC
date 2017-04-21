@@ -1,26 +1,32 @@
 PARSER_PATH = $(PWD)/parser
 LEXER_PATH = $(PWD)/lexer
 PARSER_FILE = parser
-C_SOURCES = $(wildcard $(PWD)/*/c_src/*.c)
+C_SRC_PATH = $(PWD)/c_src
+C_SOURCES = $(wildcard $(PWD)/c_src/*.c)
+BIN = bin
 
 all: compile
 
 generate_parser:
 	bison -d $(PARSER_PATH)/$(PARSER_FILE).y
-	mv $(PARSER_FILE).tab.* $(LEXER_PATH)/c_src
+	mv $(PARSER_FILE).tab.* $(C_SRC_PATH)
 
 generate_lexer: generate_parser
-	@cd $(LEXER_PATH) && \
-	python $(LEXER_PATH)/lexer.py
+	@cp $(LEXER_PATH)/lexer.py $(PWD) && \
+	python $(PWD)/lexer.py && \
+	rm $(PWD)/lexer.py && \
+	cp $(LEXER_PATH)/lexer.fl $(C_SRC_PATH)
 
 lex.yy.c: generate_lexer
-	flex -o $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/lexer.fl
+	flex -o $(C_SRC_PATH)/lex.yy.c $(C_SRC_PATH)/lexer.fl && \
+	rm $(C_SRC_PATH)/lexer.fl 
 
 compile: lex.yy.c
-	gcc -O3 -o fac $(C_SOURCES) $(LEXER_PATH)/lex.yy.c -lfl
+	gcc -O3 -o $(BIN)/fac $(C_SOURCES) -lfl && \
+	rm $(C_SRC_PATH)/lex.yy.c
 
 run: compile
 	./parser
 
 clean:
-	rm -f *.yy.c *.o *.out fac $(LEXER_PATH)/lex.yy.c $(LEXER_PATH)/c_src/$(PARSER_FILE).tab.*
+	rm -rf *.yy.c *.o *.out fac $(LEXER_PATH)/lex.yy.c *.tab.*

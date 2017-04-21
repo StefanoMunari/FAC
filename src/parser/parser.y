@@ -6,7 +6,7 @@
 #include "factype.h"
 #include "facmath.h"
 #include "facerr.h"
-#include "../../parser/c_src/symbol_table.h"
+#include "symbol_table.h"
 
 extern FILE * yyin;
 
