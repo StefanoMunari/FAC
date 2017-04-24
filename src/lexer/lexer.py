@@ -13,7 +13,11 @@ OUTPUT_FILE="lexer.fl"
 os.chdir(ROOT_DIR+TARGET_CONF)
 
 with open(ROOT_DIR+OUTPUT_FILE, 'w+') as output_file:
-    with open('header.h', 'rb') as header, open('regex.json', 'rb') as regexs, open('rules.json', 'rb') as rules:
+    with open ('options.h', 'rb') as options, open('header.h', 'rb') as header, open('regex.json', 'rb') as regexs, open('rules.json', 'rb') as rules:
+        ## OPTIONS
+        shutil.copyfileobj(options, output_file)
+        output_file.write("\n")
+        options.close()        
         ## HEADER 
         output_file.write("%{\n")
         shutil.copyfileobj(header, output_file)
