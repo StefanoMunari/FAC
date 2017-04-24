@@ -41,3 +41,4 @@
 # Auto-generated files
 lexer.fl
 fac
+*.output
