@@ -8,7 +8,7 @@ BIN = bin
 all: compile
 
 generate_parser:
-	bison -d $(PARSER_PATH)/$(PARSER_FILE).y
+	bison -dv $(PARSER_PATH)/$(PARSER_FILE).y
 	mv $(PARSER_FILE).tab.* $(C_SRC_PATH)
 
 generate_lexer: generate_parser
@@ -29,4 +29,4 @@ run: compile
 	./parser
 
 clean:
-	rm -rf *.yy.c *.o *.out fac $(LEXER_PATH)/lex.yy.c *.tab.*
+	rm -rf *.yy.c *.o *.out *.output bin/fac $(LEXER_PATH)/lex.yy.c *.tab.*
