@@ -179,4 +179,5 @@ int main(int argc, char * argv[]) {
 
 void yyerror(char * s) {
 	fprintf(stderr, "%s\n", s);
+	exit(EXIT_FAILURE);
 }

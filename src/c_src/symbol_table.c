@@ -4,14 +4,24 @@
 #include <stdbool.h>
 
 extern entry * symbol_table;
+extern void yyerror(char *);
+
+static void check_type (type_t type0, type_t type1) {
+	if(type0 != type1)
+		yyerror("The requested type differs from the symbol_table's one. Exiting");
+};
 
 void installID(char* _id, type_t _type) {
 	entry * e;
 	
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e != NULL) { /* ID ALREADY INSTALLED -> ERROR */
-		fprintf(stderr, "The id %s is already installed\n", _id);
-		exit(EXIT_FAILURE);
+		char* err_message="The id %s is already installed";
+		int size_id= (int)strlen(_id);
+		int size_message= (int)strlen(err_message);
+		char err_buffer[size_message+size_id];
+		sprintf(err_buffer, err_message, _id);
+		yyerror(err_buffer);
 	}
 	e = (entry*)malloc(sizeof(entry));
 	
@@ -28,16 +38,21 @@ void* lookupID(char* _id, type_t type) {
 	entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
-		fprintf(stderr, "Failed lookup: The variable %s is not yet installed\n", _id);
-		exit(EXIT_FAILURE);
+		char* err_message="Failed lookup: The variable %s is not yet installed";
+		int size_id= (int)strlen(_id);
+		int size_message= (int)strlen(err_message);
+		char err_buffer[size_message+size_id];
+		sprintf(err_buffer, err_message, _id);
+		yyerror(err_buffer);
 	}
-	if(e->type != type){
-		fprintf(stderr, "The requested type for %s differs from the symbol_table's one. Exiting\n", _id);
-		exit(EXIT_FAILURE);
-	}
+	check_type(e->type, type);
 	if(e -> value == NULL) {
-		fprintf(stderr, "The variable %s is declared but not initialized. Exiting\n", _id);
-		exit(EXIT_FAILURE);
+		char* err_message="The variable %s is declared but not initialized. Exiting";
+		int size_id= (int)strlen(_id);
+		int size_message= (int)strlen(err_message);
+		char err_buffer[size_message+size_id];
+		sprintf(err_buffer, err_message, _id);
+		yyerror(err_buffer);
 	}
 	return e->value;
 }
@@ -46,8 +61,12 @@ type_t getType(char * _id) {
 	entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
-		fprintf(stderr, "Failed lookup: The variable %s is not yet installed\n", _id);
-		exit(EXIT_FAILURE);
+		char* err_message="Failed lookup: The variable %s is not yet installed";
+		int size_id= (int)strlen(_id);
+		int size_message= (int)strlen(err_message);
+		char err_buffer[size_message+size_id];
+		sprintf(err_buffer, err_message, _id);
+		yyerror(err_buffer);
 	}
 	return e->type;
 }
@@ -57,14 +76,14 @@ void setValue(char * _id, type_t type, void * value) {
 	entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
-		fprintf(stderr, "The variable cannot be assigned because %s is not yet installed\n", _id);
-		exit(EXIT_FAILURE);
+		char* err_message="The variable cannot be assigned because %s is not yet installed";
+		int size_id= (int)strlen(_id);
+		int size_message= (int)strlen(err_message);
+		char err_buffer[size_message+size_id];
+		sprintf(err_buffer, err_message, _id);
+		yyerror(err_buffer);
 	}
-	if(e->type != type){
-		fprintf(stderr, "The requested type for variable %s differs from the symbol_table's one. Exiting\n", _id);
-		exit(EXIT_FAILURE);
-	}
-	
+	check_type(e->type, type);
 	switch(type){
 		case FRACT_T : 
 			e->value = malloc(sizeof(fract_t));
@@ -76,9 +95,6 @@ void setValue(char * _id, type_t type, void * value) {
 			break;
 	}
 }
-
-
-
 
 void freeTable(){
 	entry * e, *tmp;
