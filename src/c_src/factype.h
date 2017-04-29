@@ -7,6 +7,12 @@ typedef struct fract_t
 	int den;
 } fract_t;
 
+typedef struct value_t
+{
+	fract_t fract_val;
+	bool bool_val;
+	
+} value_t;
 
 typedef enum 
 {

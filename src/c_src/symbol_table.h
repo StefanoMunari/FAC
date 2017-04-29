@@ -13,7 +13,7 @@ typedef struct _entry {
 
 void installID(char* id, type_t type);
 void* lookupID(char* id, type_t type);
-void setValue(char * id, type_t type, void * value);
+void setValue(char * id, void * value);
 type_t getType(char * id);
 void freeTable();
 

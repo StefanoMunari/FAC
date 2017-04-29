@@ -72,7 +72,7 @@ type_t getType(char * _id) {
 }
 
 
-void setValue(char * _id, type_t type, void * value) {
+void setValue(char * _id, void * value) {
 	entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
@@ -83,7 +83,7 @@ void setValue(char * _id, type_t type, void * value) {
 		sprintf(err_buffer, err_message, _id);
 		yyerror(err_buffer);
 	}
-	check_type(e->type, type);
+	/*
 	switch(type){
 		case FRACT_T : 
 			e->value = malloc(sizeof(fract_t));
@@ -93,7 +93,7 @@ void setValue(char * _id, type_t type, void * value) {
 			e->value = malloc(sizeof(bool));
 			memcpy(e->value, value, sizeof(bool));
 			break;
-	}
+	}*/
 }
 
 void freeTable(){
