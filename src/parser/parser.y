@@ -123,17 +123,14 @@ bexpr BOP2 bexpr {
 declaration : 
 TYPE ID { installID($2,$1); }	
 
-var_assignment : 
-ID ASSIGNMENT aexpr {
-	fract_t f = $3; 
-	setValue($1, FRACT_T, &f);
-}
-| ID ASSIGNMENT bexpr {
-	bool t = $3;
-	setValue($1, BOOL_T, &t);
-
-}
+expr :
+aexpr
+| bexpr
 ;
+
+var_assignment : 
+ID ASSIGNMENT ID { setValue($1, lookupID($3)); }
+ID ASSIGNMENT expr { setValue($1, $3); }
 
 print_var : 
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
