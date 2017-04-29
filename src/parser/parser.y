@@ -11,16 +11,8 @@
 extern FILE * yyin;
 
 entry * symbol_table = NULL; // declaration of the variable
-
-
-
 int yylex ();
-
 void yyerror(char * s);
-
-
-
-
 %}
 
 %union {
@@ -65,7 +57,8 @@ void yyerror(char * s);
 %right UBOP1
 
 %%
-stmt : stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
+stmt : 
+stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | stmt bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
 | stmt declaration SEPARATOR { printf("DECLARATION\n"); }
 | stmt var_assignment SEPARATOR {printf("Assignment\n"); }
@@ -73,7 +66,9 @@ stmt : stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
 | stmt '\n'
 | /* empty */
 ;
-aexpr : aexpr AOP0 aexpr { 
+
+aexpr : 
+aexpr AOP0 aexpr { 
 	switch($2){
 		case SUM: $$ = sum($1, $3); break;
 		case DIFF: $$ = sum($1, minus($3)); break;
@@ -96,7 +91,8 @@ aexpr : aexpr AOP0 aexpr {
 | ID	{ $$ = *(fract_t*) lookupID($1, FRACT_T); }
 ;
 
-bexpr : bexpr BOP2 bexpr { 
+bexpr : 
+bexpr BOP2 bexpr { 
 		switch($2){
 			case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
 			case AND: $$ = $1 && $3; break;
@@ -123,9 +119,11 @@ bexpr : bexpr BOP2 bexpr {
 | ID	{ $$ = *(bool*)lookupID($1, BOOL_T); }
 ;
 
-declaration : TYPE ID { installID($2,$1); }	
+declaration : 
+TYPE ID { installID($2,$1); }	
 
-var_assignment : ID ASSIGNMENT aexpr {
+var_assignment : 
+ID ASSIGNMENT aexpr {
 	fract_t f = $3; 
 	setValue($1, FRACT_T, &f);
 }
@@ -136,7 +134,8 @@ var_assignment : ID ASSIGNMENT aexpr {
 }
 ;
 
-print_var : PRINT L_DEL_EXPR ID R_DEL_EXPR {
+print_var : 
+PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	type_t type = getType($3);
 	switch(type){
 		case FRACT_T: 
