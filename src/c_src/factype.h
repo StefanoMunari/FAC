@@ -1,5 +1,6 @@
 #ifndef _FACTYPE_H_
 #define _FACTYPE_H_
+#include <stdbool.h>
 
 typedef struct fract_t
 {
@@ -50,10 +51,22 @@ typedef enum
 	NEQ
 } relop_t;
 
+typedef union {
+	aop0_t aop0;
+	aop1_t aop1;
+	bop1_t bop1;
+	bop2_t bop2;
+	relop_t relop;
+} op_t;
+
+
 typedef enum 
 {
 	BOOL_T,
 	FRACT_T	
 } type_t;
+
+
+
 
 #endif/*_FACTYPE_H_*/
