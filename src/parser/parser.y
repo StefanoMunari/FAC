@@ -6,6 +6,7 @@
 #include "factype.h"
 #include "facmath.h"
 #include "facerr.h"
+#include "AST.h"
 #include "symbol_table.h"
 
 extern FILE * yyin;
@@ -13,7 +14,6 @@ extern FILE * yyin;
 entry * symbol_table = NULL; // declaration of the variable
 int yylex ();
 void yyerror(char * s);
-
 %}
 
 %union {
@@ -26,9 +26,14 @@ void yyerror(char * s);
 	aop1_t aop1;
 	bop1_t bop1;
 	bop2_t bop2;
+	value_t value;
+	AST_node * syntax_tree;
 }
-%type <fract> aexpr
-%type <bval> bexpr
+%type <syntax_tree> expr
+%type <syntax_tree> var_assignment;
+%type <syntax_tree> print_var;
+
+
 %token <bval> BOOL		/* Token for true and false literals */
 %token <fract> FRACT	   /* Token for the fract */
 %token SEPARATOR   /* Separator of statement */
@@ -58,97 +63,119 @@ void yyerror(char * s);
 %right UBOP1
 
 %%
+
+
 stmt : 
-stmt aexpr SEPARATOR { printf("RESULT: [%d|%d]\n", $2.num, $2.den); }
-| stmt bexpr SEPARATOR  { printf("%s\n", $2?"true":"false"); }
+| stmt expr SEPARATOR { freeASTNode($2); }
 | stmt declaration SEPARATOR { printf("DECLARATION\n"); }
-| stmt var_assignment SEPARATOR {printf("Assignment\n"); }
-| stmt print_var SEPARATOR 
+| stmt var_assignment SEPARATOR { printf("Var assignment"); freeASTNode($2);  }
+| stmt print_var SEPARATOR { freeASTNode($2); printf("PRINT VAR\n"); }
 | stmt '\n'
-| /* empty */
 ;
 
-aexpr : 
-aexpr AOP0 aexpr { 
-	switch($2){
-		case SUM: $$ = sum($1, $3); break;
-		case DIFF: $$ = sum($1, minus($3)); break;
+expr : 
+expr AOP0 expr { 
+	AST_node * node = newASTNode(2);
+	node->data->token = AOP0;
+	node->data->op.aop0 = $2;
+	node->children[0] = $1;
+	node->children[1] = $3;
+	$$ = node;
+}
+| expr AOP1 expr {
+	AST_node * node = newASTNode(2);
+	node->data->token = AOP1;
+	node->data->op.aop1 = $2;
+	node->children[0] = $1;
+	node->children[1] = $3;
+	$$ = node;
+}
+| AOP0 expr %prec USIGN { 
+	AST_node * node = newASTNode(1);
+	node->data->token = AOP0;
+	node->data->op.aop0 = $1;
+	node->children[0] = $2;
+	$$ = node;
+}
+| L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
+| FRACT {
+	AST_node * node = newASTNode(0);
+	node->data->token = FRACT;
+	node->data->type = FRACT_T;
+	node->data->value = malloc(sizeof(fract_t));
+	*(fract_t*)(node->data->value) = $1;
+	$$ = node;
 	}
+| expr BOP2 expr { 
+	AST_node * node = newASTNode(2);
+	node->data->token = BOP2;
+	node->data->op.bop2 = $2;
+	node->children[0] = $1;
+	node->children[1] = $3;
+	$$ = node;
 }
-| aexpr AOP1 aexpr {
-	switch($2){
-		case MULT: $$ = mult($1, $3); break;
-		case DIV: $$ = mult($1, reciprocal($3)); break;
-	}
+| expr RELOP expr {
+	AST_node * node = newASTNode(2);
+	node->data->token = RELOP;
+	node->data->op.relop = $2;
+	node->children[0] = $1;
+	node->children[1] = $3;
+	$$ = node;
 }
-| AOP0 aexpr %prec USIGN { 
-	switch($1) {
-		case SUM: $$ = $2; break;
-		case DIFF: $$ = minus($2); break;
-	}
+| BOP1 expr %prec UBOP1{
+	AST_node * node = newASTNode(1);
+	node->data->token = BOP1;
+	node->data->op.bop1 = $1;
+	node->children[0] = $2;
+	$$ = node;
 }
-| L_DEL_EXPR aexpr R_DEL_EXPR { $$ = $2; }
-| FRACT
-| ID	{ $$ = *(fract_t*) lookupID($1, FRACT_T); }
-;
-
-bexpr : 
-bexpr BOP2 bexpr { 
-		switch($2){
-			case IFF: $$ = (!$1 || $3) && ($1 || !$3); break;
-			case AND: $$ = $1 && $3; break;
-			case OR: $$ = $1 || $3; break;
-			case IMPLY: $$ = !$1 || $3; break;
-			case XOR: $$ = ($1 || $3) && !($1 && $3); break;
-		}
-	}	
-| aexpr RELOP aexpr {
-	switch($2){
-		case EQ:  $$ = $1.num*$3.den == $3.num*$1.den; break;
-		case LT:  $$ = $1.num*$3.den <  $3.num*$1.den; break;
-		case LEQ: $$ = $1.num*$3.den <= $3.num*$1.den; break;
-		case GT:  $$ = $1.num*$3.den >  $3.num*$1.den; break;
-		case GEQ: $$ = $1.num*$3.den >= $3.num*$1.den; break;
-		case NEQ: $$ = $1.num*$3.den != $3.num*$1.den; break;
-	}
+| BOOL	{ 
+	AST_node * node = newASTNode(0);	
+	node->data->token = BOOL;
+	node->data->type = BOOL_T;
+	node->data->value = malloc(sizeof(bool));
+	*(bool*)(node->data->value) = $1;
+	$$ = node;
 }
-| BOP1 bexpr %prec UBOP1{
-	$$ = !$2;
+| ID	{ 
+	AST_node * node = newASTNode(0);	
+	node->data = malloc(sizeof(record));
+	node->data->token = ID;
+	node->data->type = getType($1);
+	$$ = node;
 }
-| L_DEL_EXPR bexpr R_DEL_EXPR { $$ = $2; }
-| BOOL
-| ID	{ $$ = *(bool*)lookupID($1, BOOL_T); }
 ;
 
 declaration : 
-TYPE ID { installID($2,$1); }	
+TYPE ID { 
+	installID($2,$1); 
+}	
 
-expr :
-aexpr
-| bexpr
-;
 
 var_assignment : 
-ID ASSIGNMENT ID { setValue($1, lookupID($3)); }
-ID ASSIGNMENT expr { setValue($1, $3); }
+ID ASSIGNMENT expr { 
+	AST_node * id_node = newASTNode(0);
+	id_node->data->token = ID;
+	id_node->data->value = $1;
+	
+	AST_node * node = newASTNode(2);	
+	node->data->token = ASSIGNMENT;
+	node->children[0] = id_node;
+	node->children[1] = $3;
+	$$ = node;
+}
 
 print_var : 
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	type_t type = getType($3);
-	switch(type){
-		case FRACT_T: 
-		{
-			fract_t f = *(fract_t*) lookupID($3, FRACT_T); 
-			printf("VAR %s = [%d|%d]\n", $3, f.num, f.den);
-			break;
-		}
-		case BOOL_T:
-		{
-			bool b = (bool) lookupID($3, BOOL_T);
-			printf("VAR %s = %s\n", $3, b?"true":"false");
-			break;
-		}
-	}
+	AST_node * id_node = newASTNode(0);
+	id_node->data->token = ID;
+	id_node->data->value = $3;
+	
+	AST_node * node = newASTNode(1);
+	node->data->token = PRINT;
+	node->children[0] = id_node;
+	
+	$$ = node;
 }
 
 %%
