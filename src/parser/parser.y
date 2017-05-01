@@ -80,26 +80,21 @@ stmt :
 
 expr : 
 expr AOP0 expr { 
-	AST_node * node = newASTNode(2);
+	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AOP0;
 	node->data->op.aop0 = $2;
-	node->children[0] = $1;
-	node->children[1] = $3;
 	$$ = node;
 }
 | expr AOP1 expr {
-	AST_node * node = newASTNode(2);
+	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AOP1;
 	node->data->op.aop1 = $2;
-	node->children[0] = $1;
-	node->children[1] = $3;
 	$$ = node;
 }
 | AOP0 expr %prec USIGN { 
-	AST_node * node = newASTNode(1);
+	AST_node * node = newASTNode(1, $2);
 	node->data->token = AOP0;
 	node->data->op.aop0 = $1;
-	node->children[0] = $2;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
@@ -112,26 +107,21 @@ expr AOP0 expr {
 	$$ = node;
 	}
 | expr BOP2 expr { 
-	AST_node * node = newASTNode(2);
+	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = BOP2;
 	node->data->op.bop2 = $2;
-	node->children[0] = $1;
-	node->children[1] = $3;
 	$$ = node;
 }
 | expr RELOP expr {
-	AST_node * node = newASTNode(2);
+	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = RELOP;
 	node->data->op.relop = $2;
-	node->children[0] = $1;
-	node->children[1] = $3;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
-	AST_node * node = newASTNode(1);
+	AST_node * node = newASTNode(1, $2);
 	node->data->token = BOP1;
 	node->data->op.bop1 = $1;
-	node->children[0] = $2;
 	$$ = node;
 }
 | BOOL	{ 
@@ -144,7 +134,6 @@ expr AOP0 expr {
 }
 | ID	{ 
 	AST_node * node = newASTNode(0);	
-	node->data = malloc(sizeof(record));
 	node->data->token = ID;
 	node->data->type = getType($1);
 	$$ = node;
@@ -163,10 +152,8 @@ ID ASSIGNMENT expr {
 	id_node->data->token = ID;
 	id_node->data->value = $1;
 	
-	AST_node * node = newASTNode(2);	
+	AST_node * node = newASTNode(2, id_node, $3);	
 	node->data->token = ASSIGNMENT;
-	node->children[0] = id_node;
-	node->children[1] = $3;
 	$$ = node;
 }
 
