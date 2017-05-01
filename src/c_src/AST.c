@@ -25,15 +25,44 @@ AST_node * newASTNode(int number_of_children, ...) {
 
 
 void freeASTNode(AST_node * node){
+	if(node == NULL)
+		return;
 	int i;
-	printf("%d - Number of children %d \n", node->data->token, node->number_of_children);
 	/* Free children */
 	for(i = 0; i < node->number_of_children; i++){
 		freeASTNode(node->children[i]);
 	}
+	
+	freeASTNode(node->next);
+	
 	if(node->data->value != NULL)
 		free(node->data->value);
 	/* Free data */
 	free(node->data);
 	free(node);
+}
+
+
+
+void printASTNodeRec(AST_node * node, int tab){
+	int i;
+	for(i = 0; i < tab; i++){
+		putchar('\t');
+	}
+	printf("Token : %d\n", node->data->token);
+	
+	
+	for(i = 0; i < node->number_of_children; i++){
+		printASTNodeRec(node->children[i], tab+1);
+	}
+	
+	printASTNode(node->next);
+}
+
+void printASTNode(AST_node * node) {
+	if(node == NULL)
+		return;
+	putchar('\n');
+	printASTNodeRec(node, 0);
+	
 }

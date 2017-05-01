@@ -19,6 +19,7 @@ typedef struct AST_node_t {
 
 AST_node * newASTNode(int number_of_children, ...);
 void freeASTNode(AST_node *);
+void printASTNode(AST_node *);
 
 
 #endif /* __ABSTRACT_SYNTAX_TREE__H__ */
