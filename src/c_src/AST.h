@@ -21,7 +21,9 @@ typedef union {
 } op_t;
 
 
-
+/**
+ * struct defining the data part of the AST node
+ */
 typedef struct record_t{
 	int token;
 	op_t op;
@@ -29,12 +31,16 @@ typedef struct record_t{
 	void * value;
 } record;
 
+/**
+ * struct defining the Abstract syntax tree of fac
+ */
 typedef struct AST_node_t {
 	record * data;
 	unsigned char number_of_children;
 	struct AST_node_t ** children; 
 	struct AST_node_t * next; /* Pointer to the next stmt */
 } AST_node;
+
 /** Create a new AST node
  * @param number_of_children nodes
  * @param list of children
