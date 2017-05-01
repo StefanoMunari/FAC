@@ -1,7 +1,7 @@
 #ifndef __ABSTRACT_SYNTAX_TREE__H__
 #define __ABSTRACT_SYNTAX_TREE__H__
 #include "factype.h"
-
+#include <stdarg.h>
 
 typedef struct record_t{
 	int token;
@@ -17,7 +17,7 @@ typedef struct AST_node_t {
 	struct AST_node_t * next; 
 } AST_node;
 
-AST_node * newASTNode(int number_of_children);
+AST_node * newASTNode(int number_of_children, ...);
 void freeASTNode(AST_node *);
 
 
