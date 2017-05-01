@@ -51,7 +51,6 @@ typedef enum
 	NEQ
 } relop_t;
 
-
 typedef enum 
 {
 	BOOL_T,
@@ -61,4 +60,4 @@ typedef enum
 
 
 
-#endif/*_FACTYPE_H_*/
+#endif /*_FACTYPE_H_*/

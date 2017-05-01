@@ -19,7 +19,6 @@ bool recursive_type_checking_fract(AST_node * node){
 		case AOP1: return recursive_type_checking_fract(node->children[0]) &&
 						recursive_type_checking_fract(node->children[1]);
 		default: return false;
-		
 	}
 }
 
