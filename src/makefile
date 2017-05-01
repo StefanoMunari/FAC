@@ -22,7 +22,7 @@ lex.yy.c: generate_lexer
 	rm $(C_SRC_PATH)/lexer.fl 
 
 compile: lex.yy.c
-	gcc -O3 -o $(BIN)/fac $(C_SOURCES) -lfl && \
+	gcc -O3 -g -o $(BIN)/fac $(C_SOURCES) -lfl && \
 	rm $(C_SRC_PATH)/lex.yy.c
 
 run: compile
