@@ -74,10 +74,50 @@ AST_node * last;
 
 
 stmt : 
-| stmt expr SEPARATOR { freeASTNode($2); }
-| stmt declaration SEPARATOR { freeASTNode($2); printf("DECLARATION\n"); }
-| stmt var_assignment SEPARATOR { printf("Var assignment"); freeASTNode($2);  }
-| stmt print_var SEPARATOR { freeASTNode($2); printf("PRINT VAR\n"); }
+| stmt expr SEPARATOR {
+	printf("EXPR"); 
+	if(head == NULL){
+		head = $2;
+		last = head;
+		last->next = NULL;
+	} else {
+		last->next = $2;
+		last = $2;
+	}
+}
+| stmt declaration SEPARATOR { 
+	printf("DECLARATION\n");
+	if(head == NULL){
+		head = $2;
+		last = head;
+		last->next = NULL;
+	} else {
+		last->next = $2;
+		last = last->next;
+	}	
+}
+| stmt var_assignment SEPARATOR { 
+	printf("Var assignment\n"); 
+	if(head == NULL){
+		head = $2;
+		last = head;
+		last->next = NULL;
+	} else {
+		last->next = $2;
+		last = last->next;
+	}
+}
+| stmt print_var SEPARATOR { 
+	printf("Print Var");
+	if(head == NULL){
+		head = $2;
+		last = head;
+		last->next = NULL;
+	} else {
+		last->next = $2;
+		last = last->next;
+	}
+}
 | stmt '\n'
 ;
 
@@ -138,7 +178,7 @@ expr AOP0 expr {
 | ID	{ 
 	AST_node * node = newASTNode(0);	
 	node->data->token = ID;
-	node->data->type = getType($1);
+	//node->data->type = ($1);
 	$$ = node;
 }
 ;
@@ -148,7 +188,7 @@ TYPE ID {
 	AST_node * id_node = newASTNode(0);
 	id_node->data->token = ID;
 	id_node->data->value = $2;
-	
+
 	AST_node * node = newASTNode(1, id_node);
 	node->data->token = TYPE;
 	node->data->type = $1;
@@ -200,6 +240,11 @@ int main(int argc, char * argv[]) {
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
 	freeTable();
+	
+	
+	printf("\n--- The syntax Tree ---\n");
+	printASTNode(head);
+	freeASTNode(head);
 	return EXIT_SUCCESS;
 }
 
