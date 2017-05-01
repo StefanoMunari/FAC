@@ -51,14 +51,6 @@ typedef enum
 	NEQ
 } relop_t;
 
-typedef union {
-	aop0_t aop0;
-	aop1_t aop1;
-	bop1_t bop1;
-	bop2_t bop2;
-	relop_t relop;
-} op_t;
-
 
 typedef enum 
 {
