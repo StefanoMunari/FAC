@@ -14,6 +14,13 @@ extern FILE * yyin;
 entry * symbol_table = NULL; // declaration of the variable
 int yylex ();
 void yyerror(char * s);
+
+
+
+AST_node * head = NULL;
+AST_node * last;
+
+
 %}
 
 %union {
@@ -32,6 +39,7 @@ void yyerror(char * s);
 %type <syntax_tree> expr
 %type <syntax_tree> var_assignment;
 %type <syntax_tree> print_var;
+%type <syntax_tree> declaration;
 
 
 %token <bval> BOOL		/* Token for true and false literals */
@@ -67,7 +75,7 @@ void yyerror(char * s);
 
 stmt : 
 | stmt expr SEPARATOR { freeASTNode($2); }
-| stmt declaration SEPARATOR { printf("DECLARATION\n"); }
+| stmt declaration SEPARATOR { freeASTNode($2); printf("DECLARATION\n"); }
 | stmt var_assignment SEPARATOR { printf("Var assignment"); freeASTNode($2);  }
 | stmt print_var SEPARATOR { freeASTNode($2); printf("PRINT VAR\n"); }
 | stmt '\n'
@@ -137,7 +145,14 @@ expr AOP0 expr {
 
 declaration : 
 TYPE ID { 
-	installID($2,$1); 
+	AST_node * id_node = newASTNode(0);
+	id_node->data->token = ID;
+	id_node->data->value = $2;
+	
+	AST_node * node = newASTNode(1, id_node);
+	node->data->token = TYPE;
+	node->data->type = $1;
+	$$ = node;
 }	
 
 
