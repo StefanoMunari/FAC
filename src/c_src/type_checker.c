@@ -1,0 +1,87 @@
+#include "type_checker.h"
+#include "symbol_table.h"
+#include "parser.tab.h"
+#include <stdio.h>
+extern entry * symbol_table;
+
+bool recursive_type_checking_fract(AST_node * node){
+	switch(node->data->token){
+		case FRACT: return true;
+		case ID: return getType((char*) node->data->value) == FRACT_T;
+		case AOP0:
+			if(node->number_of_children == 1){
+				return recursive_type_checking_fract(node->children[0]);
+			}
+			else {
+				return recursive_type_checking_fract(node->children[0]) &&
+						recursive_type_checking_fract(node->children[1]);
+			}
+		case AOP1: return recursive_type_checking_fract(node->children[0]) &&
+						recursive_type_checking_fract(node->children[1]);
+		default: return false;
+		
+	}
+}
+
+bool recursive_type_checking_bool(AST_node * node){
+	switch(node->data->token){
+		case BOOL: return true;
+		case ID: return getType((char*) node->data->value) == BOOL_T;
+		case BOP1: return recursive_type_checking_bool(node->children[0]);
+		case BOP2: 
+			return recursive_type_checking_bool(node->children[0]) &&
+				recursive_type_checking_bool(node->children[1]);
+		case RELOP:
+			return recursive_type_checking_fract(node->children[0]) &&
+				recursive_type_checking_fract(node->children[1]);
+		
+		default: return false;
+						  
+	}
+}
+/**
+ * Check if the given expr has the right type
+ */
+bool recursive_type_checking(AST_node * AST, type_t type){
+	bool res; 
+	switch(type){
+		case FRACT_T: res = recursive_type_checking_fract(AST); break;
+		case BOOL_T: res = recursive_type_checking_bool(AST); break;
+	}
+	if(!res){
+		fprintf(stderr, "Type Mismatch!\n");
+		printASTNode(AST);
+		
+	}
+	return res;
+}
+
+
+bool type_checking(AST_node * AST) {
+	printf("Type checking ...\n");
+	AST_node * node = AST;
+	bool success = true;
+	while(node != NULL){
+		switch(node->data->token){
+			 case TYPE: /* Perform a declaration */
+				installID((char*) node->children[0]->data->value, node->data->type);
+				break;
+			 case ASSIGNMENT:
+			 { /* Perform an assignment */
+				type_t expected = getType(node->children[0]->data->value); 
+				success &= recursive_type_checking(node->children[1], expected);
+				break;
+			 }
+			case PRINT:
+			{ /* Check only if the ID is installed in the symbol table */
+				type_t expected = getType(node->children[0]->data->value);
+				break;
+			}
+		}
+		
+		node = node->next;
+	}
+	if(success == true){
+		printf("Type checking successful!\n");
+	}
+}

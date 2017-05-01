@@ -178,7 +178,8 @@ expr AOP0 expr {
 | ID	{ 
 	AST_node * node = newASTNode(0);	
 	node->data->token = ID;
-	//node->data->type = ($1);
+	node->data->value = strdup($1);
+	
 	$$ = node;
 }
 ;
@@ -187,7 +188,7 @@ declaration :
 TYPE ID { 
 	AST_node * id_node = newASTNode(0);
 	id_node->data->token = ID;
-	id_node->data->value = $2;
+	id_node->data->value = strdup($2);
 
 	AST_node * node = newASTNode(1, id_node);
 	node->data->token = TYPE;
@@ -200,7 +201,7 @@ var_assignment :
 ID ASSIGNMENT expr { 
 	AST_node * id_node = newASTNode(0);
 	id_node->data->token = ID;
-	id_node->data->value = $1;
+	id_node->data->value = strdup($1);
 	
 	AST_node * node = newASTNode(2, id_node, $3);	
 	node->data->token = ASSIGNMENT;
@@ -211,7 +212,7 @@ print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	AST_node * id_node = newASTNode(0);
 	id_node->data->token = ID;
-	id_node->data->value = $3;
+	id_node->data->value = strdup($3);
 	
 	AST_node * node = newASTNode(1);
 	node->data->token = PRINT;
@@ -244,6 +245,7 @@ int main(int argc, char * argv[]) {
 	
 	printf("\n--- The syntax Tree ---\n");
 	printASTNode(head);
+	type_checking(head);
 	freeASTNode(head);
 	return EXIT_SUCCESS;
 }
