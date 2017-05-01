@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include "parser.tab.h"
 AST_node * newASTNode(int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = malloc(sizeof(record));
@@ -44,12 +45,34 @@ void freeASTNode(AST_node * node){
 
 
 
+char * tokenString(int token){
+	switch(token){
+		case BOOL: return "BOOL"; break;
+		case FRACT: return "FRACT"; break;
+		case AOP0: return "AOP0"; break;
+		case AOP1: return "AOP1"; break;
+		case TYPE: return "TYPE"; break;
+		case BOP1: return "BOP1"; break;
+		case BOP2: return "BOP2"; break;
+		case RELOP: return "RELOP"; break;
+		case WHILE: return "WHILE"; break;
+		case IF: return "IF"; break;
+		case ELSE: return "ELSE"; break;
+		case SKIP: return "SKIP"; break;
+		case PRINT: return "PRINT"; break;
+		case ASSIGNMENT: return "ASSIGNMENT"; break;
+		case ID : return "ID"; break;
+	}
+	return "";
+}
+
+
 void printASTNodeRec(AST_node * node, int tab){
 	int i;
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	printf("Token : %d\n", node->data->token);
+	printf("Token : %s\n", tokenString(node->data->token));
 	
 	
 	for(i = 0; i < node->number_of_children; i++){
