@@ -8,6 +8,7 @@
 #include "facerr.h"
 #include "AST.h"
 #include "symbol_table.h"
+#include "type_checker.h"
 
 extern FILE * yyin;
 
