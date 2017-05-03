@@ -33,9 +33,9 @@ void freeASTNode(AST_node * node){
 	for(i = 0; i < node->number_of_children; i++){
 		freeASTNode(node->children[i]);
 	}
-	
+
 	freeASTNode(node->next);
-	
+
 	if(node->data->value != NULL)
 		free(node->data->value);
 	/* Free data */
@@ -53,8 +53,12 @@ char * tokenString(int token){
 		case AOP1: return "AOP1"; break;
 		case TYPE: return "TYPE"; break;
 		case BOP1: return "BOP1"; break;
-		case BOP2: return "BOP2"; break;
-		case RELOP: return "RELOP"; break;
+		case BOP2_0: return "BOP2_0"; break;
+		case BOP2_1: return "BOP2_1"; break;
+		case BOP2_2: return "BOP2_2"; break;
+		case BOP2_3: return "BOP2_3"; break;
+		case RELOP0: return "RELOP0"; break;
+		case RELOP1: return "RELOP1"; break;
 		case WHILE: return "WHILE"; break;
 		case IF: return "IF"; break;
 		case ELSE: return "ELSE"; break;
@@ -73,12 +77,12 @@ void printASTNodeRec(AST_node * node, int tab){
 		putchar('\t');
 	}
 	printf("Token : %s\n", tokenString(node->data->token));
-	
-	
+
+
 	for(i = 0; i < node->number_of_children; i++){
 		printASTNodeRec(node->children[i], tab+1);
 	}
-	
+
 	printASTNode(node->next);
 }
 
@@ -87,5 +91,5 @@ void printASTNode(AST_node * node) {
 		return;
 	putchar('\n');
 	printASTNodeRec(node, 0);
-	
+
 }
