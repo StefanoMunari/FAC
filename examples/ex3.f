@@ -2,7 +2,6 @@ bool b;
 fract f;
 b = true;
 f = [1|3];
-fract f;
 /* problematic assignment - wrong error */
 b = b;
 /* problematic assignment - wrong error */
