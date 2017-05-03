@@ -12,52 +12,65 @@ typedef struct value_t
 {
 	fract_t fract_val;
 	bool bool_val;
-	
+
 } value_t;
 
-typedef enum 
+typedef enum
 {
 	SUM,
-	DIFF	
+	DIFF
 } aop0_t;
 
-typedef enum 
+typedef enum
 {
 	MULT,
-	DIV	
+	DIV
 } aop1_t;
 
 typedef enum
-{ 
+{
 	NOT
 } bop1_t;
 
 typedef enum
-{ 
-	IFF, 
-	AND, 
-	OR, 
-	IMPLY, 
-	XOR
-} bop2_t;
+{
+	AND
+} bop2_0_t;
 
 typedef enum
 {
-	LT, 
-	LEQ, 
-	EQ, 
-	GEQ, 
-	GT, 
-	NEQ
-} relop_t;
+	OR
+} bop2_1_t;
 
-typedef enum 
+typedef enum
+{
+	IMPLY
+} bop2_2_t;
+
+typedef enum
+{
+	IFF,
+	XOR
+} bop2_3_t;
+
+typedef enum
+{
+	LT,
+	LEQ,
+	GEQ,
+	GT
+} relop0_t;
+
+typedef enum
+{
+	EQ,
+	NEQ
+} relop1_t;
+
+typedef enum
 {
 	BOOL_T,
-	FRACT_T	
+	FRACT_T
 } type_t;
-
-
-
 
 #endif /*_FACTYPE_H_*/
