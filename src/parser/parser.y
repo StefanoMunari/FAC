@@ -291,6 +291,9 @@ int main(int argc, char * argv[]) {
 	printf("\n--- The syntax Tree ---\n");
 	printASTNode(head);
 	type_checking(head);
+	
+	/* generate code ??? */
+	
 	freeASTNode(head);
 	return EXIT_SUCCESS;
 }
