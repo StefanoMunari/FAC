@@ -21,6 +21,7 @@ AST_node * newASTNode(int number_of_children, ...) {
 		va_end(ap);
 	}
 	node->data->value = NULL;
+	node->next = NULL;
 	return node;
 }
 
@@ -72,6 +73,8 @@ char * tokenString(int token){
 
 
 void printASTNodeRec(AST_node * node, int tab){
+	if(node == NULL)
+		return;
 	int i;
 	for(i = 0; i < tab; i++){
 		putchar('\t');
