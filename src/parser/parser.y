@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "factype.h"
+#include "factype_ast.h"
 #include "facmath.h"
 #include "facerr.h"
 #include "AST.h"
