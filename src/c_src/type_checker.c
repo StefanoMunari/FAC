@@ -60,8 +60,8 @@ bool recursive_type_checking(AST_node * AST, type_t type){
 }
 
 
-bool type_checking(AST_node * AST) {
-	printf("Type checking ...\n");
+bool type_checking_AST_node(AST_node * AST) {
+	
 	AST_node * node = AST;
 	bool success = true;
 	while(node != NULL){
@@ -86,5 +86,15 @@ bool type_checking(AST_node * AST) {
 	}
 	if(success == true){
 		printf("Type checking successful!\n");
+	}
+}
+
+bool type_checking(seq_tree * seqTree){
+	printf("Type checking ...\n");
+	seq_tree * cursor = seqTree;
+	bool success = true;
+	while(cursor != NULL){
+		success &= type_checking_AST_node(cursor->right);
+		cursor = cursor->left;
 	}
 }
