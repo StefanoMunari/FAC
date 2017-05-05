@@ -19,13 +19,13 @@ typedef enum
 {
 	SUM,
 	DIFF
-} aop0_t;
+} aop_0_t;
 
 typedef enum
 {
 	MULT,
 	DIV
-} aop1_t;
+} aop_1_t;
 
 typedef enum
 {
@@ -59,13 +59,13 @@ typedef enum
 	LEQ,
 	GEQ,
 	GT
-} relop0_t;
+} relop_0_t;
 
 typedef enum
 {
 	EQ,
 	NEQ
-} relop1_t;
+} relop_1_t;
 
 typedef enum
 {
