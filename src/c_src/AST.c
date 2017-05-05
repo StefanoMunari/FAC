@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "parser.tab.h"
+
 AST_node * newASTNode(int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = malloc(sizeof(record));
