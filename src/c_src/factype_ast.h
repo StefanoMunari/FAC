@@ -12,11 +12,6 @@ typedef enum
 
 typedef enum
 {
-	NOT
-} bop1_t;
-
-typedef enum
-{
 	NOT,
 	AND,
 	OR,
