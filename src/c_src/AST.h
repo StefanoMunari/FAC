@@ -6,6 +6,7 @@
 #ifndef __ABSTRACT_SYNTAX_TREE__H__
 #define __ABSTRACT_SYNTAX_TREE__H__
 #include "factype.h"
+#include "factype_ast.h"
 #include <stdarg.h>
 
 

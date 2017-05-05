@@ -64,26 +64,23 @@ bool type_checking_AST_node(AST_node * AST) {
 	
 	AST_node * node = AST;
 	bool success = true;
-	while(node != NULL){
-		switch(node->data->token){
-			 case TYPE: /* Perform a declaration */
-				installID((char*) node->children[0]->data->value, node->data->type);
-				break;
-			 case ASSIGNMENT:
-			 { /* Perform an assignment */
-				type_t expected = getType(node->children[0]->data->value);
-				success &= recursive_type_checking(node->children[1], expected);
-				break;
-			 }
-			case PRINT:
-			{ /* Check only if the ID is installed in the symbol table */
-				type_t expected = getType(node->children[0]->data->value);
-				break;
-			}
+	switch(node->data->token){
+		 case TYPE: /* Perform a declaration */
+			installID((char*) node->children[0]->data->value, node->data->type);
+			break;
+		 case ASSIGNMENT:
+		 { /* Perform an assignment */
+			type_t expected = getType(node->children[0]->data->value);
+			success &= recursive_type_checking(node->children[1], expected);
+			break;
+		 }
+		case PRINT:
+		{ /* Check only if the ID is installed in the symbol table */
+			type_t expected = getType(node->children[0]->data->value);
+			break;
 		}
-
-		node = node->next;
 	}
+
 	if(success == true){
 		printf("Type checking successful!\n");
 	}
