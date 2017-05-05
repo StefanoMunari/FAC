@@ -8,7 +8,7 @@
 #include "facerr.h"
 #include "AST.h"
 #include "symbol_table.h"
-#include "type_checker.h"
+//#include "type_checker.h"
 
 extern FILE * yyin;
 
@@ -17,8 +17,7 @@ int yylex ();
 void yyerror(char * s);
 
 
-AST_node * head = NULL;
-AST_node * last;
+seq_node * head = NULL;
 
 
 %}
@@ -38,9 +37,11 @@ AST_node * last;
 	relop0_t relop0;
 	relop1_t relop1;
 	value_t value;
+	seq_node * seq_tree;
 	AST_node * syntax_tree;
 }
 /* Non-Terminal symbols */
+%type <seq_tree> stmt;
 %type <syntax_tree> expr
 %type <syntax_tree> var_assignment;
 %type <syntax_tree> print_var;
@@ -92,51 +93,25 @@ AST_node * last;
 %right UBOP1
 %%
 
+program :
+stmt { head=$1; }
 
 stmt :
 | stmt expr SEPARATOR {
+	$$=newSeqNode($1, $2);
 	printf("EXPR");
-	if(head == NULL){
-		head = $2;
-		last = head;
-		last->next = NULL;
-	} else {
-		last->next = $2;
-		last = $2;
-	}
 }
 | stmt declaration SEPARATOR {
+	$$=newSeqNode($1, $2);
 	printf("DECLARATION\n");
-	if(head == NULL){
-		head = $2;
-		last = head;
-		last->next = NULL;
-	} else {
-		last->next = $2;
-		last = last->next;
-	}
 }
 | stmt var_assignment SEPARATOR {
+	$$=newSeqNode($1, $2);
 	printf("Var assignment\n");
-	if(head == NULL){
-		head = $2;
-		last = head;
-		last->next = NULL;
-	} else {
-		last->next = $2;
-		last = last->next;
-	}
 }
 | stmt print_var SEPARATOR {
+	$$=newSeqNode($1, $2);
 	printf("Print Var");
-	if(head == NULL){
-		head = $2;
-		last = head;
-		last->next = NULL;
-	} else {
-		last->next = $2;
-		last = last->next;
-	}
 }
 | stmt '\n'
 ;
@@ -289,10 +264,10 @@ int main(int argc, char * argv[]) {
 
 	printf("\n--- The syntax Tree ---\n");
 	printASTNode(head);
-	type_checking(head);
-	
+	//type_checking(head);
+
 	/* generate code ??? */
-	
+
 	freeASTNode(head);
 	return EXIT_SUCCESS;
 }
