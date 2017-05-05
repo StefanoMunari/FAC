@@ -9,7 +9,7 @@ bool recursive_type_checking_fract(AST_node * node){
 	switch(node->data->token){
 		case FRACT: return true;
 		case ID: return getType((char*) node->data->value) == FRACT_T;
-		case AOP0:
+		case AOP_0:
 			if(node->number_of_children == 1){
 				return recursive_type_checking_fract(node->children[0]);
 			}
@@ -17,7 +17,7 @@ bool recursive_type_checking_fract(AST_node * node){
 				return recursive_type_checking_fract(node->children[0]) &&
 						recursive_type_checking_fract(node->children[1]);
 			}
-		case AOP1: return recursive_type_checking_fract(node->children[0]) &&
+		case AOP_1: return recursive_type_checking_fract(node->children[0]) &&
 						recursive_type_checking_fract(node->children[1]);
 		default: return false;
 	}
@@ -34,8 +34,8 @@ bool recursive_type_checking_bool(AST_node * node){
 		case BOP2_3:
 			return recursive_type_checking_bool(node->children[0]) &&
 				recursive_type_checking_bool(node->children[1]);
-		case RELOP0:
-		case RELOP1:
+		case RELOP_0:
+		case RELOP_1:
 			return recursive_type_checking_fract(node->children[0]) &&
 				recursive_type_checking_fract(node->children[1]);
 		default: return false;

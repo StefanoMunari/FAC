@@ -4,10 +4,10 @@
 {IMPLY}	{ yylval.bop2_2 = IMPLY; return (BOP2_2); }
 {XOR}	{ yylval.bop2_3 = XOR; return (BOP2_3); }
 {IFF}	{ yylval.bop2_3 = IFF; return (BOP2_3); }
-{LT}	{ yylval.relop0 = LT; return (RELOP0); }
-{GT}	{ yylval.relop0 = GT; return (RELOP0); }
-{LEQ}	{ yylval.relop0 = LEQ; return (RELOP0); }
-{GEQ}	{ yylval.relop0 = GEQ; return (RELOP0); }
-{EQ}	{ yylval.relop1 = EQ; return (RELOP1); }
-{NEQ}	{ yylval.relop1 = NEQ; return (RELOP1); }
+{LT}	{ yylval.relop_0 = LT; return (RELOP_0); }
+{GT}	{ yylval.relop_0 = GT; return (RELOP_0); }
+{LEQ}	{ yylval.relop_0 = LEQ; return (RELOP_0); }
+{GEQ}	{ yylval.relop_0 = GEQ; return (RELOP_0); }
+{EQ}	{ yylval.relop_1 = EQ; return (RELOP_1); }
+{NEQ}	{ yylval.relop_1 = NEQ; return (RELOP_1); }
 {BOOL}	{ yylval.bval = ((yytext[0] == 't') ? true : false); return (BOOL); }
