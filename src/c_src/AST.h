@@ -37,7 +37,6 @@ typedef struct AST_node_t {
 	record * data;
 	unsigned char number_of_children;
 	struct AST_node_t ** children;
-	struct AST_node_t * next; /* Pointer to the next stmt */
 } AST_node;
 
 /** Create a new AST node
