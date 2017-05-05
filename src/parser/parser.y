@@ -1,3 +1,9 @@
+/**
+ * @file
+ * @brief parser - processes and convert a token stream into an AST
+ * @author <mirko.bez@studenti.unipd.it>
+ * @author <stefano.munari.1@studenti.unipd.it>
+ */
 %{
 #include <ctype.h>
 #include <stdio.h>
@@ -9,37 +15,52 @@
 #include "AST.h"
 #include "symbol_table.h"
 //#include "type_checker.h"
-
+/********************************************
+		GLOBAL SCOPE DECLARATIONS
+*********************************************/
+/** External vars **/
 extern FILE * yyin;
-
-entry * symbol_table = NULL; // declaration of the variable
+/** File-scoped vars **/
+static entry * symbol_table = NULL;
+static seq_node * head = NULL;
+/** BISON declarations **/
+/**
+* Lexical scanner
+*
+* @brief recognize tokens from the input stream and returns them to the Parser
+*/
 int yylex ();
-void yyerror(char * s);
-
-
-seq_node * head = NULL;
-
-
+/**
+ * Error handler of BISON
+ * @brief handle errors detected by the parser
+ * Exit the program with failure status code
+ * @param error message
+ */
+void yyerror(const char *);
 %}
-
+/********************************************
+		TRANSLATION RULES
+*********************************************/
+/* Types of grammar symbols */
 %union {
 	char * id;
 	bool bval;
 	fract_t fract;
 	type_t type;
-	aop0_t aop0;
-	aop1_t aop1;
+	AOP_0_t AOP_0;
+	AOP_1_t AOP_1;
 	bop1_t bop1;
 	bop2_0_t bop2_0;
 	bop2_1_t bop2_1;
 	bop2_2_t bop2_2;
 	bop2_3_t bop2_3;
-	relop0_t relop0;
-	relop1_t relop1;
+	RELOP_0_t RELOP_0;
+	RELOP_1_t RELOP_1;
 	value_t value;
 	seq_node * seq_tree;
 	AST_node * syntax_tree;
 }
+
 /* Non-Terminal symbols */
 %type <seq_tree> stmt;
 %type <syntax_tree> expr
@@ -55,16 +76,16 @@ seq_node * head = NULL;
 %token R_DEL_SCOPE		/* Scope right delimiter */
 %token L_DEL_EXPR		/* Expression left delimiter */
 %token R_DEL_EXPR		/* Expression right delimiter */
-%token <aop0> AOP0	   	/* Arithmetic operation: + and - */
-%token <aop1> AOP1	   	/* Arithmetic operation */
+%token <AOP_0> AOP_0	   	/* Arithmetic operation: + and - */
+%token <AOP_1> AOP_1	   	/* Arithmetic operation */
 %token <type> TYPE		/* Token for types: fract and bool */
 %token <bop1> BOP1		/* Boolean operation with arity 1 */
 %token <bop2_0> BOP2_0	/* Boolean operation with arity 2: "&&"*/
 %token <bop2_1> BOP2_1	/* Boolean operation with arity 2: "||"*/
 %token <bop2_2> BOP2_2	/* Boolean operation with arity 2: "->"*/
 %token <bop2_3> BOP2_3	/* Boolean operation with arity 2: "<->","X"*/
-%token <relop0> RELOP0	/* Relation operation "<",">=",...: highest precedence*/
-%token <relop1> RELOP1	/* Relation operation "==","!=": lowest precedence*/
+%token <RELOP_0> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
+%token <RELOP_1> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
 %token WHILE			/* token for the while symbol */
 %token IF				/* token for "if" symbol */
 %token ELSE 			/* token for "else" symbol */
@@ -74,24 +95,28 @@ seq_node * head = NULL;
 %token <id> ID 			/* token for variable identifier symbol */
 
 /*
-*	Associativity and Precedence rules (enforcing)
-*	Precedence defined in ascending order
+* Associativity and Precedence rules (enforcing)
+* Precedence defined in ascending order
 */
 %right ASSIGNMENT
 %right BOP2_3
 %right BOP2_2
 %left BOP2_1
 %left BOP2_0
-%left RELOP1
-%left RELOP0
+%left RELOP_1
+%left RELOP_0
 
-%left AOP0
-%left AOP1
+%left AOP_0
+%left AOP_1
 
 %right BOP1
 %right USIGN
 %right UBOP1
 %%
+/*
+* Context-Free-Grammar productions
+* and the related semantic actions
+*/
 
 program :
 stmt { head=$1; }
@@ -117,22 +142,22 @@ stmt :
 ;
 
 expr :
-expr AOP0 expr {
+expr AOP_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AOP0;
-	node->data->op.aop0 = $2;
+	node->data->token = AST_AOP;
+	node->data->op.aop = aop(AOP_0, $2);
 	$$ = node;
 }
-| expr AOP1 expr {
+| expr AOP_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AOP1;
-	node->data->op.aop1 = $2;
+	node->data->token = AST_AOP;
+	node->data->op.aop = aop(AOP_1, $2);
 	$$ = node;
 }
-| AOP0 expr %prec USIGN {
+| AOP_0 expr %prec USIGN {
 	AST_node * node = newASTNode(1, $2);
-	node->data->token = AOP0;
-	node->data->op.aop0 = $1;
+	node->data->token = AST_AOP;
+	node->data->op.aop = aop(AOP_0, $1);
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
@@ -146,38 +171,38 @@ expr AOP0 expr {
 	}
 | expr BOP2_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = BOP2_0;
-	node->data->op.bop2_0 = $2;
+	node->data->token = AST_BOP2;
+	node->data->op.bop2 = bop2(BOP2_0, $2);
 	$$ = node;
 }
 | expr BOP2_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = BOP2_1;
-	node->data->op.bop2_1 = $2;
+	node->data->token = AST_BOP2;
+	node->data->op.bop2 = bop2(BOP2_1, $2);
 	$$ = node;
 }
 | expr BOP2_2 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = BOP2_2;
-	node->data->op.bop2_2 = $2;
+	node->data->token = AST_BOP2;
+	node->data->op.bop2 = bop2(BOP2_2, $2);
 	$$ = node;
 }
 | expr BOP2_3 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = BOP2_3;
-	node->data->op.bop2_3 = $2;
+	node->data->token = AST_BOP2;
+	node->data->op.bop2 = bop2(BOP2_3, $2);
 	$$ = node;
 }
-| expr RELOP0 expr {
+| expr RELOP_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = RELOP0;
-	node->data->op.relop0 = $2;
+	node->data->token = AST_RELOP;
+	node->data->op.relop = relop(RELOP_0, $2);
 	$$ = node;
 }
-| expr RELOP1 expr {
+| expr RELOP_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = RELOP1;
-	node->data->op.relop1 = $2;
+	node->data->token = AST_RELOP;
+	node->data->op.relop = relop(RELOP_1, $2);
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
@@ -241,6 +266,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 }
 
 %%
+/* Entrypoint of the program */
 int main(int argc, char * argv[]) {
 	if(argc < 2){
 		fprintf(stderr, "Usage: %s <file-to-interpret>", argv[0]);
@@ -272,7 +298,7 @@ int main(int argc, char * argv[]) {
 	return EXIT_SUCCESS;
 }
 
-void yyerror(char * s) {
-	fprintf(stderr, "%s\n", s);
+void yyerror(const char * err_msg) {
+	fprintf(stderr, "%s\n", err_msg);
 	exit(EXIT_FAILURE);
 }
