@@ -29,14 +29,8 @@ bool recursive_type_checking_bool(AST_node * node){
 		case ID: return getType((char*) node->data->value) == BOOL_T;
 		case BOP1: return recursive_type_checking_bool(node->children[0]);
 		case BOP2_0:
-			return recursive_type_checking_bool(node->children[0]) &&
-				recursive_type_checking_bool(node->children[1]);
 		case BOP2_1:
-			return recursive_type_checking_bool(node->children[0]) &&
-				recursive_type_checking_bool(node->children[1]);
 		case BOP2_2:
-			return recursive_type_checking_bool(node->children[0]) &&
-				recursive_type_checking_bool(node->children[1]);
 		case BOP2_3:
 			return recursive_type_checking_bool(node->children[0]) &&
 				recursive_type_checking_bool(node->children[1]);
