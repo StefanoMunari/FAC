@@ -13,15 +13,10 @@
  * union encoding all possible expr operations
  */
 typedef union {
-	aop0_t aop0;
-	aop1_t aop1;
+	aop_t aop;
 	bop1_t bop1;
-	bop2_0_t bop2_0;
-	bop2_1_t bop2_1;
-	bop2_2_t bop2_2;
-	bop2_3_t bop2_3;
-	relop0_t relop0;
-	relop1_t relop1;
+	bop2_t bop2;
+	relop_t relop;
 } op_t;
 
 
