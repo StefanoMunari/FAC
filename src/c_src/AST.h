@@ -1,7 +1,9 @@
 /**
- * @author <mirko.bez@studenti.unipd.it>,<stefano.munari.1@studenti.unipd.it>
- * @file AST.h
- * @brief file defining the syntax tree data structure and its API
+ * @file
+ * @brief Abstract Syntax Tree (AST) -
+ *	provides a minimal interface to manipulate its internal data structures
+ * @author <mirko.bez@studenti.unipd.it>
+ * @author <stefano.munari.1@studenti.unipd.it>
  */
 #ifndef __ABSTRACT_SYNTAX_TREE__H__
 #define __ABSTRACT_SYNTAX_TREE__H__
