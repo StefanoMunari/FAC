@@ -22,7 +22,6 @@ AST_node * newASTNode(int number_of_children, ...) {
 		va_end(ap);
 	}
 	node->data->value = NULL;
-	node->next = NULL;
 	return node;
 }
 
@@ -36,7 +35,6 @@ void freeASTNode(AST_node * node){
 		freeASTNode(node->children[i]);
 	}
 
-	freeASTNode(node->next);
 
 	if(node->data->value != NULL)
 		free(node->data->value);
@@ -82,7 +80,6 @@ void printASTNodeRec(AST_node * node, int tab){
 		printASTNodeRec(node->children[i], tab+1);
 	}
 
-	printASTNode(node->next);
 }
 
 void printASTNode(AST_node * node) {
