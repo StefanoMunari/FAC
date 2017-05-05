@@ -35,8 +35,6 @@ bool recursive_type_checking_bool(AST_node * node){
 			return recursive_type_checking_bool(node->children[0]) &&
 				recursive_type_checking_bool(node->children[1]);
 		case RELOP0:
-			return recursive_type_checking_fract(node->children[0]) &&
-				recursive_type_checking_fract(node->children[1]);
 		case RELOP1:
 			return recursive_type_checking_fract(node->children[0]) &&
 				recursive_type_checking_fract(node->children[1]);
