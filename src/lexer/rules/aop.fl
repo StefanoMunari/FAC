@@ -1,4 +1,4 @@
-{SUM}	{ yylval.aop0 = SUM; return (AOP0); }
-{DIFF}	{ yylval.aop0 = DIFF; return (AOP0); }
-{MULT}	{ yylval.aop1 = MULT; return (AOP1); }
-{DIV}	{ yylval.aop1 = DIV; return (AOP1); }
+{SUM}	{ yylval.aop_0 = SUM; return (AOP_0); }
+{DIFF}	{ yylval.aop_0 = DIFF; return (AOP_0); }
+{MULT}	{ yylval.aop_1 = MULT; return (AOP_1); }
+{DIV}	{ yylval.aop_1 = DIV; return (AOP_1); }
