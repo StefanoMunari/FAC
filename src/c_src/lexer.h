@@ -7,7 +7,7 @@
 #include <limits.h>
 #include "facerr.h"
 #include "factype.h"
-#include "AST.h"
+#include "ast.h"
 
 typedef unsigned int uint;
 

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "AST.h"
+#include "ast.h"
 #include "seq_tree.h"
 
 #include "factype.h"
