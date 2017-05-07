@@ -15,5 +15,5 @@ typedef struct seq_node {
 
 seq_node * newSeqNode(seq_node *, AST_node *);
 void freeSeqNode(seq_node *);
-
+int printSeqNode(seq_node *);
 #endif /* __SEQ_TREE__H__ */
