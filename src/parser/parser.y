@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "AST.h"
 #include "seq_tree.h"
 
 #include "factype.h"
 #include "factype_ast.h"
 #include "facmath.h"
 #include "facerr.h"
-#include "AST.h"
 #include "symbol_table.h"
 //#include "type_checker.h"
 /********************************************
@@ -78,16 +78,16 @@ void yyerror(const char *);
 %token R_DEL_SCOPE		/* Scope right delimiter */
 %token L_DEL_EXPR		/* Expression left delimiter */
 %token R_DEL_EXPR		/* Expression right delimiter */
-%token <AOP_0> AOP_0	   	/* Arithmetic operation: + and - */
-%token <AOP_1> AOP_1	   	/* Arithmetic operation */
+%token <aop_0> AOP_0	   	/* Arithmetic operation: + and - */
+%token <aop_1> AOP_1	   	/* Arithmetic operation */
 %token <type> TYPE		/* Token for types: fract and bool */
 %token <bop1> BOP1		/* Boolean operation with arity 1 */
 %token <bop2_0> BOP2_0	/* Boolean operation with arity 2: "&&"*/
 %token <bop2_1> BOP2_1	/* Boolean operation with arity 2: "||"*/
 %token <bop2_2> BOP2_2	/* Boolean operation with arity 2: "->"*/
 %token <bop2_3> BOP2_3	/* Boolean operation with arity 2: "<->","X"*/
-%token <RELOP_0> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
-%token <RELOP_1> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
+%token <relop_0> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
+%token <relop_1> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
 %token WHILE			/* token for the while symbol */
 %token IF				/* token for "if" symbol */
 %token ELSE 			/* token for "else" symbol */

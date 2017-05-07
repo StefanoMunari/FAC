@@ -1,5 +1,10 @@
 #include "factype_ast.h"
+#include "AST.h"
+#include "seq_tree.h"
+#include "factype.h"
+#include "parser.tab.h" //Include the tokens
 #include <assert.h>
+#include <stdlib.h>
 /**
 * @brief exploit the enum representation of parser's types to compute
 *	the corresponding AST arithmetic type representation
@@ -8,7 +13,7 @@
 * @see parser.tab.h for the values used in the 'case' statements
 */
 aop_t aop(int aop_type, int aop_value){
-	assert(aop_value >= 0) && assert(aop_value <= 1);
+	assert((aop_value >= 0) && (aop_value <= 1));
 	switch(aop_type){
 		case AOP_0:
 			return aop_value;
@@ -17,6 +22,8 @@ aop_t aop(int aop_type, int aop_value){
     	//add the offset given by the previous enum (AOP_0)
     		return aop_value+2;
     		break;
+    	default:
+			assert(false);
 	}
 };
 /**
@@ -39,9 +46,11 @@ bop2_t bop2(int bop2_type, int bop2_value){
 			return 2;
 			break;
     	case BOP2_3:
-    	assert(bop2_value >= 0) && assert(bop2_value <= 1);
-    	//add the offset given by the previous enums
+			assert((bop2_value >= 0) && (bop2_value <= 1));
+			//add the offset given by the previous enums
     		return bop2_value+3;
-    		break;
+			break;
+    	default:
+			assert(false);
 	}
 };
