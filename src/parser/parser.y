@@ -5,10 +5,12 @@
  * @author <stefano.munari.1@studenti.unipd.it>
  */
 %{
-#include <ctype.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "seq_tree.h"
+
+#include "factype.h"
 #include "factype_ast.h"
 #include "facmath.h"
 #include "facerr.h"
@@ -52,15 +54,15 @@ void yyerror(const char *);
 	bool bval;
 	fract_t fract;
 	type_t type;
-	AOP_0_t AOP_0;
-	AOP_1_t AOP_1;
+	aop_0_t aop_0;
+	aop_1_t aop_1;
 	bop1_t bop1;
 	bop2_0_t bop2_0;
 	bop2_1_t bop2_1;
 	bop2_2_t bop2_2;
 	bop2_3_t bop2_3;
-	RELOP_0_t RELOP_0;
-	RELOP_1_t RELOP_1;
+	relop_0_t relop_0;
+	relop_1_t relop_1;
 	value_t value;
 	seq_node * seq_tree;
 	AST_node * syntax_tree;
