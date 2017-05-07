@@ -25,7 +25,7 @@ aop_t aop(int aop_type, int aop_value){
     	default:
 			assert(false);
 	}
-};
+}
 /**
 * @brief exploit the enum representation of parser's types to compute
 *	the corresponding AST boolean type representation
@@ -53,4 +53,6 @@ bop2_t bop2(int bop2_type, int bop2_value){
     	default:
 			assert(false);
 	}
-};
+}
+
+
