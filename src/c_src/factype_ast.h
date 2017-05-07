@@ -64,6 +64,6 @@ bop2_t bop2(int, int);
  * @param a relational operator used in the parser (a value)
  * @return relop_t the relational operator type used in the AST (a value)
  */
-relop_t bop2(int, int);
+relop_t relop(int, int);
 
 #endif /*_FACTYPE_AST_H_*/
