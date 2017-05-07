@@ -46,6 +46,7 @@ bool recursive_type_checking(AST_node * AST, type_t type){
 	switch(type){
 		case FRACT_T: res = recursive_type_checking_fract(AST); break;
 		case BOOL_T: res = recursive_type_checking_bool(AST); break;
+		default: fprintf(stderr, "Type not recognized\n"); exit(EXIT_FAILURE); break;
 	}
 	if(!res){
 		fprintf(stderr, "Type Mismatch in instruction + %s!\n", type==FRACT_T?"FRACT":"BOOL");
@@ -75,7 +76,7 @@ bool type_checking_AST_node(AST_node * AST) {
 		{ /* Check only if the ID is installed in the symbol table */
 			printf("PRINT\n");
 			//equivalent to checking it the type is already defined
-			type_t expected = getType(node->children[0]->data->value);
+			getType(node->children[0]->data->value);
 			break;
 		}
 	}
