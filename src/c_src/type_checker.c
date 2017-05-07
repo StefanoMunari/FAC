@@ -1,4 +1,5 @@
 #include "factype.h"
+#include "factype_ast.h"
 #include "type_checker.h"
 #include "symbol_table.h"
 #include "parser.tab.h"
@@ -9,7 +10,7 @@ bool recursive_type_checking_fract(AST_node * node){
 	switch(node->data->token){
 		case FRACT: return true;
 		case ID: return getType((char*) node->data->value) == FRACT_T;
-		case AOP_0:
+		case AST_AOP:
 			if(node->number_of_children == 1){
 				return recursive_type_checking_fract(node->children[0]);
 			}
@@ -17,9 +18,8 @@ bool recursive_type_checking_fract(AST_node * node){
 				return recursive_type_checking_fract(node->children[0]) &&
 						recursive_type_checking_fract(node->children[1]);
 			}
-		case AOP_1: return recursive_type_checking_fract(node->children[0]) &&
-						recursive_type_checking_fract(node->children[1]);
-		default: return false;
+		default:
+			return false;
 	}
 }
 
@@ -28,14 +28,10 @@ bool recursive_type_checking_bool(AST_node * node){
 		case BOOL: return true;
 		case ID: return getType((char*) node->data->value) == BOOL_T;
 		case BOP1: return recursive_type_checking_bool(node->children[0]);
-		case BOP2_0:
-		case BOP2_1:
-		case BOP2_2:
-		case BOP2_3:
+		case AST_BOP2:
 			return recursive_type_checking_bool(node->children[0]) &&
 				recursive_type_checking_bool(node->children[1]);
-		case RELOP_0:
-		case RELOP_1:
+		case AST_RELOP:
 			return recursive_type_checking_fract(node->children[0]) &&
 				recursive_type_checking_fract(node->children[1]);
 		default: return false;
@@ -52,7 +48,7 @@ bool recursive_type_checking(AST_node * AST, type_t type){
 		case BOOL_T: res = recursive_type_checking_bool(AST); break;
 	}
 	if(!res){
-		fprintf(stderr, "Type Mismatch!\n");
+		fprintf(stderr, "Type Mismatch in instruction + %s!\n", type==FRACT_T?"FRACT":"BOOL");
 		printASTNode(AST);
 
 	}
@@ -78,6 +74,7 @@ bool type_checking_AST_node(AST_node * AST) {
 		case PRINT:
 		{ /* Check only if the ID is installed in the symbol table */
 			printf("PRINT\n");
+			//equivalent to checking it the type is already defined
 			type_t expected = getType(node->children[0]->data->value);
 			break;
 		}
@@ -85,6 +82,7 @@ bool type_checking_AST_node(AST_node * AST) {
 
 	if(success == true){
 		printf("Type checking successful!\n");
+	} else {
 	}
 }
 
@@ -92,7 +90,8 @@ bool type_checking(seq_node * seqTree){
 	if(seqTree == NULL){
 		return true;
 	}
-	type_checking(seqTree->left);
+	bool res = type_checking(seqTree->left);
 	printf("Perform my own type checking ...\n");
-	type_checking_AST_node(seqTree->right);
+	res &= type_checking_AST_node(seqTree->right);
+	return res;
 }
