@@ -27,7 +27,7 @@ extern FILE * yyin;
 entry * symbol_table = NULL;
 
 /** File-scoped vars **/
-static seq_node * head = NULL;
+seq_node * head = NULL;
 /** BISON declarations **/
 /**
 * Lexical scanner
@@ -143,7 +143,7 @@ stmt :
 	$$=newSeqNode($1, $2);
 	printf("Print Var");
 }
-| stmt '\n'
+| stmt '\n' { }
 ;
 
 expr :
@@ -296,7 +296,7 @@ int main(int argc, char * argv[]) {
 	printf("\n--- The syntax Tree ---\n");
 	//printASTNode(head);
 	type_checking(head);
-	
+	printSeqNode(head);
 	/* generate code ??? */
 	freeSeqNode(head);
 	//freeASTNode(head);
