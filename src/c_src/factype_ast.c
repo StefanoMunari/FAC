@@ -56,7 +56,20 @@ bop2_t bop2(int bop2_type, int bop2_value){
 }
 
 relop_t relop(int relop_type, int relop_value){
-	return 0;
+	assert(relop_value >= 0);
+	switch(relop_type){
+		case RELOP_0:
+			assert(relop_value <= 3);
+			return relop_value;
+			break;
+    	case RELOP_1:
+			assert(relop_value <= 1);
+			//add the offset given by the previous enums
+			return relop_value+3;
+			break;
+    	default:
+			assert(false);
+	}
 }
 
 
