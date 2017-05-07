@@ -7,31 +7,8 @@
  */
 #ifndef __ABSTRACT_SYNTAX_TREE__H__
 #define __ABSTRACT_SYNTAX_TREE__H__
-#include "factype.h"
-#include "factype_ast.h"
+#include "ast_record.h"
 #include <stdarg.h>
-
-
-/**
- * union encoding all possible expr operations
- */
-typedef union {
-	aop_t aop;
-	bop1_t bop1;
-	bop2_t bop2;
-	relop_t relop;
-} op_t;
-
-
-/**
- * struct defining the data part of the AST node
- */
-typedef struct record_t{
-	int token;
-	op_t op;
-	type_t type;
-	void * value;
-} record;
 
 /**
  * struct defining the Abstract syntax tree of fac
