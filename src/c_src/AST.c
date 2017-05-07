@@ -50,16 +50,11 @@ char * tokenString(int token){
 	switch(token){
 		case BOOL: return "BOOL"; break;
 		case FRACT: return "FRACT"; break;
-		case AOP_0: return "AOP_0"; break;
-		case AOP_1: return "AOP_1"; break;
+		case AST_AOP: return "AOP"; break;
 		case TYPE: return "TYPE"; break;
 		case BOP1: return "BOP1"; break;
-		case BOP2_0: return "BOP2_0"; break;
-		case BOP2_1: return "BOP2_1"; break;
-		case BOP2_2: return "BOP2_2"; break;
-		case BOP2_3: return "BOP2_3"; break;
-		case RELOP_0: return "RELOP_0"; break;
-		case RELOP_1: return "RELOP_1"; break;
+		case AST_BOP2: return "BOP2"; break;
+		case AST_RELOP: return "RELOP"; break;
 		case WHILE: return "WHILE"; break;
 		case IF: return "IF"; break;
 		case ELSE: return "ELSE"; break;
