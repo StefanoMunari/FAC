@@ -11,11 +11,11 @@
 #include <stdarg.h>
 
 /**
- * struct defining the Abstract syntax tree of fac
+ * @brief Abstract Syntax Tree (AST) node
  */
-typedef struct AST_node_t {
+typedef struct AST_node {
 	record * data;
-	unsigned char number_of_children;
+	unsigned int number_of_children;
 	struct AST_node_t ** children;
 } AST_node;
 
