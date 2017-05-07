@@ -1,5 +1,5 @@
 #include "seq_tree.h"
-
+#include <stdlib.h>
 
 seq_node * newSeqNode(seq_node * left, AST_node * right){
 	seq_node * this=malloc(sizeof(seq_node));

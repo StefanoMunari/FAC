@@ -86,9 +86,9 @@ bool type_checking_AST_node(AST_node * AST) {
 	}
 }
 
-bool type_checking(seq_tree * seqTree){
+bool type_checking(seq_node * seqTree){
 	printf("Type checking ...\n");
-	seq_tree * cursor = seqTree;
+	seq_node * cursor = seqTree;
 	bool success = true;
 	while(cursor != NULL){
 		success &= type_checking_AST_node(cursor->right);
