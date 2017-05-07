@@ -300,11 +300,13 @@ int main(int argc, char * argv[]) {
 
 	printf("\n--- The syntax Tree ---\n");
 	//printASTNode(head);
-	type_checking(head);
+	if(!type_checking(head)){
+		fprintf(stderr, "Error, type checking failed\n");
+		return EXIT_FAILURE;
+	}
 	printSeqNode(head);
 	/* generate code ??? */
 	freeSeqNode(head);
-	//freeASTNode(head);
 	return EXIT_SUCCESS;
 }
 
