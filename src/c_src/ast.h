@@ -5,8 +5,8 @@
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
  */
-#ifndef __ABSTRACT_SYNTAX_TREE__H__
-#define __ABSTRACT_SYNTAX_TREE__H__
+#ifndef __AST__H__
+#define __AST__H__
 #include "ast_record.h"
 #include <stdarg.h>
 
@@ -38,4 +38,4 @@ void freeASTNode(AST_node * root);
 void printASTNode(AST_node * root);
 
 
-#endif /* __ABSTRACT_SYNTAX_TREE__H__ */
+#endif /* __AST__H__ */
