@@ -5,7 +5,7 @@
  */
 #ifndef __SEQ_TREE__H__
 #define __SEQ_TREE__H__
-#include "AST.h"
+#include "ast.h"
 
 typedef struct seq_node {
 	struct seq_node * left;

@@ -1,5 +1,5 @@
 #include "factype_ast.h"
-#include "AST.h"
+#include "ast.h"
 #include "seq_tree.h"
 #include "factype.h"
 #include "parser.tab.h" //Include the tokens
