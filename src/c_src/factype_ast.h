@@ -57,5 +57,13 @@ aop_t aop(int, int);
  * @return bop2_t the boolean operator type used in the AST (a value)
  */
 bop2_t bop2(int, int);
+/**
+ * constructor of Relational OPerator Type with for AST
+ * @brief constructs relational operators for the AST
+ * @param a class of relational operators used in the parser (a class type)
+ * @param a relational operator used in the parser (a value)
+ * @return relop_t the relational operator type used in the AST (a value)
+ */
+relop_t bop2(int, int);
 
 #endif /*_FACTYPE_AST_H_*/
