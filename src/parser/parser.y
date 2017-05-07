@@ -16,7 +16,8 @@
 #include "facmath.h"
 #include "facerr.h"
 #include "symbol_table.h"
-//#include "type_checker.h"
+#include "type_checker.h"
+
 /********************************************
 		GLOBAL SCOPE DECLARATIONS
 *********************************************/
