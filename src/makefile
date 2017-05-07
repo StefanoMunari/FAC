@@ -5,6 +5,9 @@ C_SRC_PATH = $(PWD)/c_src
 C_SOURCES = $(wildcard $(PWD)/c_src/*.c)
 BIN = bin
 
+C_FLAG = -O3 -g
+
+
 all: compile
 
 generate_parser:
@@ -22,7 +25,7 @@ lex.yy.c: generate_lexer
 	rm $(C_SRC_PATH)/lexer.fl 
 
 compile: lex.yy.c
-	gcc -O3 -g -o $(BIN)/fac $(C_SOURCES) -lfl && \
+	gcc $(C_FLAG) -o $(BIN)/fac $(C_SOURCES) -lfl && \
 	rm $(C_SRC_PATH)/lex.yy.c
 
 run: compile
