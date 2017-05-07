@@ -55,4 +55,9 @@ bop2_t bop2(int bop2_type, int bop2_value){
 	}
 }
 
+relop_t relop(int relop_type, int relop_value){
+	return 0;
+	
+}
+
 
