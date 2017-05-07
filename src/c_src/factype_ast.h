@@ -41,6 +41,10 @@ typedef enum
 	AST_NEQ
 } relop_t;
 
+#define AST_AOP 285
+#define AST_BOP2 286
+#define AST_RELOP 287
+
 /**
  * Arithmetic OPerator Type constructor for AST
  * @brief constructs arithmetic operators for the AST
