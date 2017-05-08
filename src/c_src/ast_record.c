@@ -3,11 +3,11 @@
 #include <stdio.h>
 
 record * ASTRecord(unsigned int token, op_t op, void * value){
-	record * record = malloc(sizeof(record));
-	record->token = token;
-	record->op = op;
-	record->value = value;
-	return record;
+	record * r = malloc(sizeof(record));
+	r->token = token;
+	r->op = op;
+	r->value = value;
+	return r;
 }
 
 void freeASTRecord(record * this){
