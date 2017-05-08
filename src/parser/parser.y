@@ -227,9 +227,8 @@ var_assignment :
 ID ASSIGNMENT expr {
 	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($1);
-
-	AST_node * node = newASTNode(ASSIGNMENT, 2, id_node, $3);
-	$$ = node;
+	
+	$$ = newASTNode(ASSIGNMENT, 2, id_node, $3);
 }
 
 print_var :
@@ -237,8 +236,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($3);
 
-	AST_node * node = newASTNode(PRINT, 1, id_node);
-	$$ = node;
+	$$ = newASTNode(PRINT, 1, id_node);
 }
 
 %%
