@@ -76,12 +76,12 @@ void yyerror(const char *);
 %token <op> AOP_1	   	/* Arithmetic operation */
 %token <op> TYPE		/* Token for types: fract and bool */
 %token <op> BOP1		/* Boolean operation with arity 1 */
-%token <op> BOP2_0	/* Boolean operation with arity 2: "&&"*/
-%token <op> BOP2_1	/* Boolean operation with arity 2: "||"*/
-%token <op> BOP2_2	/* Boolean operation with arity 2: "->"*/
-%token <op> BOP2_3	/* Boolean operation with arity 2: "<->","X"*/
-%token <op> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
-%token <op> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
+%token <op> BOP2_0		/* Boolean operation with arity 2: "&&"*/
+%token <op> BOP2_1		/* Boolean operation with arity 2: "||"*/
+%token <op> BOP2_2		/* Boolean operation with arity 2: "->"*/
+%token <op> BOP2_3		/* Boolean operation with arity 2: "<->","X"*/
+%token <op> RELOP_0		/* Relation operation "<",">=",...: highest precedence*/
+%token <op> RELOP_1		/* Relation operation "==","!=": lowest precedence*/
 %token WHILE			/* token for the while symbol */
 %token IF				/* token for "if" symbol */
 %token ELSE 			/* token for "else" symbol */
