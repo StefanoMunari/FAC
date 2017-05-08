@@ -13,8 +13,11 @@
 #ifndef _FACTYPE_AST_H_
 #define _FACTYPE_AST_H_
 #include "factype.h"
-#include <limits.h>
 
+/**
+* @brief tokens of the Abstract Syntax Tree (AST).
+* It represents the AST category of tokens
+*/
 typedef enum {
 	AST_ID,
 	AST_FRACT,
@@ -30,14 +33,7 @@ typedef enum {
 	AST_SKIP,
 	AST_IF,
 	AST_ELSE,
-	
 	AST_END_MARKER
 } AST_category;
-
-/*
-#define AST_AOP (INT_MAX-2)
-#define AST_BOP2 (INT_MAX-1)
-#define AST_RELOP INT_MAX
-*/
 
 #endif /*_FACTYPE_AST_H_*/
