@@ -121,7 +121,7 @@ program :
 stmt { head=$1; }
 
 stmt :
-| stmt expr SEPARATOR {
+stmt expr SEPARATOR {
 	$$=$1;
 	fprintf(stderr, "Warning: statement expr with no effect\n");
 }
@@ -265,7 +265,7 @@ int main(int argc, char * argv[]) {
 	printf("\n--- The syntax Tree ---\n");
 	//printASTNode(head);
 	if(!type_checking(head)){
-		fprintf(stderr, "Error, type checking failed\n");
+		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
 	printSeqNode(head);
