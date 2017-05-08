@@ -13,33 +13,7 @@
 #ifndef _FACTYPE_AST_H_
 #define _FACTYPE_AST_H_
 #include "factype.h"
-/* Arithmetic OPerator Type */
-typedef enum
-{
-	AST_SUM,
-	AST_DIFF,
-	AST_MULT,
-	AST_DIV
-} aop_t;
-/* Boolean OPerator Type */
-typedef enum
-{
-	AST_AND,
-	AST_OR,
-	AST_IMPLY,
-	AST_IFF,
-	AST_XOR
-} bop2_t;
-/* RELational OPerator Type */
-typedef enum
-{
-	AST_LT,
-	AST_LEQ,
-	AST_GEQ,
-	AST_GT,
-	AST_EQ,
-	AST_NEQ
-} relop_t;
+
 
 #define AST_AOP 285
 #define AST_BOP2 286
