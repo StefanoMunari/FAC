@@ -6,7 +6,6 @@
  */
 #ifndef __TYPE__CHECKER__H__
 #define __TYPE__CHECKER__H__
-#include "ast.h"
 #include "seq_tree.h"
 
 /** Performs type checking on an AST
