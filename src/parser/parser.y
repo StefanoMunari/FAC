@@ -147,97 +147,82 @@ stmt :
 
 expr :
 expr AOP_0 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_AOP;
+	AST_node * node = newASTNode(AST_AOP, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr AOP_1 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_AOP;
+	AST_node * node = newASTNode(AST_AOP, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | AOP_0 expr %prec USIGN {
-	AST_node * node = newASTNode(1, $2);
-	node->data->token = AST_AOP;
+	AST_node * node = newASTNode(AST_AOP, 1, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {
-	AST_node * node = newASTNode(0);
-	node->data->token = FRACT;
+	AST_node * node = newASTNode(FRACT, 0);
 	node->data->value = malloc(sizeof(fract_t));
 	*(fract_t*)(node->data->value) = $1;
 	$$ = node;
 	}
 | expr BOP2_0 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_BOP2;
+	AST_node * node = newASTNode(AST_BOP2, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_1 expr {
-	AST_node * node = newASTNode(2, $1, $3);
+	AST_node * node = newASTNode(AST_BOP2, 2, $1, $3);
 	node->data->token = AST_BOP2;
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_2 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_BOP2;
+	AST_node * node = newASTNode(AST_BOP2, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_3 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_BOP2;
+	AST_node * node = newASTNode(AST_BOP2, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_0 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_RELOP;
+	AST_node * node = newASTNode(AST_RELOP, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_1 expr {
-	AST_node * node = newASTNode(2, $1, $3);
-	node->data->token = AST_RELOP;
+	AST_node * node = newASTNode(AST_RELOP, 2, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
-	AST_node * node = newASTNode(1, $2);
-	node->data->token = BOP1;
+	AST_node * node = newASTNode(BOP1, 1, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | BOOL	{
-	AST_node * node = newASTNode(0);
-	node->data->token = BOOL;
+	AST_node * node = newASTNode(BOOL, 0);
 	node->data->value = malloc(sizeof(bool));
 	*(bool*)(node->data->value) = $1;
 	$$ = node;
 }
 | ID	{
-	AST_node * node = newASTNode(0);
-	node->data->token = ID;
+	AST_node * node = newASTNode(ID, 0);
 	node->data->value = strdup($1);
-
 	$$ = node;
 }
 ;
 
 declaration :
 TYPE ID {
-	AST_node * id_node = newASTNode(0);
-	id_node->data->token = ID;
+	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($2);
 
-	AST_node * node = newASTNode(1, id_node);
-	node->data->token = TYPE;
+	AST_node * node = newASTNode(TYPE, 1, id_node);
 	node->data->type = $1;
 	$$ = node;
 }
@@ -245,23 +230,19 @@ TYPE ID {
 
 var_assignment :
 ID ASSIGNMENT expr {
-	AST_node * id_node = newASTNode(0);
-	id_node->data->token = ID;
+	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($1);
 
-	AST_node * node = newASTNode(2, id_node, $3);
-	node->data->token = ASSIGNMENT;
+	AST_node * node = newASTNode(ASSIGNMENT, 2, id_node, $3);
 	$$ = node;
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	AST_node * id_node = newASTNode(0);
-	id_node->data->token = ID;
+	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($3);
 
-	AST_node * node = newASTNode(1);
-	node->data->token = PRINT;
+	AST_node * node = newASTNode(PRINT, 1);
 	node->children[0] = id_node;
 
 	$$ = node;
