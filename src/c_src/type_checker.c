@@ -12,9 +12,8 @@ static bool recursive_type_check(AST_node * AST, type_t type);
 static bool type_check_AST_node(AST_node * AST);
 
 bool type_check(seq_node * seqTree){
-	if(seqTree == NULL){
+	if(seqTree == NULL)
 		return true;
-	}
 	bool res = type_check(seqTree->left);
 
 	res &= type_check_AST_node(seqTree->right);
@@ -26,16 +25,16 @@ bool type_check(seq_node * seqTree){
 static
 bool recursive_type_check_fract(AST_node * node){
 	switch(node->data->token){
-		case FRACT: return true;
-		case ID: return getType((char*) node->data->value) == FRACT_T;
+		case FRACT:
+			return true;
+		case ID:
+			return getType((char*) node->data->value) == FRACT_T;
 		case AST_AOP:
-			if(node->number_of_children == 1){
+			if(node->number_of_children == 1)
 				return recursive_type_check_fract(node->children[0]);
-			}
-			else {
+			else
 				return recursive_type_check_fract(node->children[0]) &&
 						recursive_type_check_fract(node->children[1]);
-			}
 		default:
 			return false;
 	}
@@ -44,16 +43,20 @@ bool recursive_type_check_fract(AST_node * node){
 static
 bool recursive_type_check_bool(AST_node * node){
 	switch(node->data->token){
-		case BOOL: return true;
-		case ID: return getType((char*) node->data->value) == BOOL_T;
-		case BOP1: return recursive_type_check_bool(node->children[0]);
+		case BOOL:
+			return true;
+		case ID:
+			return getType((char*) node->data->value) == BOOL_T;
+		case BOP1:
+			return recursive_type_check_bool(node->children[0]);
 		case AST_BOP2:
 			return recursive_type_check_bool(node->children[0]) &&
 				recursive_type_check_bool(node->children[1]);
 		case AST_RELOP:
 			return recursive_type_check_fract(node->children[0]) &&
 				recursive_type_check_fract(node->children[1]);
-		default: return false;
+		default:
+			return false;
 
 	}
 }
@@ -64,21 +67,25 @@ static
 bool recursive_type_check(AST_node * AST, type_t type){
 	bool res;
 	switch(type){
-		case FRACT_T: res = recursive_type_check_fract(AST); break;
-		case BOOL_T: res = recursive_type_check_bool(AST); break;
-		default: fprintf(stderr, "Type not recognized\n"); exit(EXIT_FAILURE); break;
+		case FRACT_T:
+			res = recursive_type_check_fract(AST);
+			break;
+		case BOOL_T:
+			res = recursive_type_check_bool(AST);
+			break;
+		default:
+			fprintf(stderr, "Type not recognized\n");
+			exit(EXIT_FAILURE);
 	}
 	if(!res){
 		fprintf(stderr, "Type Mismatch in instruction + %s!\n", type==FRACT_T?"FRACT":"BOOL");
 		printASTNode(AST);
-
 	}
 	return res;
 }
 
 static
 bool type_check_AST_node(AST_node * AST) {
-
 	AST_node * node = AST;
 	bool success = true;
 	switch(node->data->token){
@@ -100,9 +107,7 @@ bool type_check_AST_node(AST_node * AST) {
 		default:
 			printf("%d token not recognized by typechecker\n", node->data->token);
 	}
-
-	if(success == true){
+	if(success == true)
 		printf("Type checking successful!\n");
-	}
 	return success;
 }
