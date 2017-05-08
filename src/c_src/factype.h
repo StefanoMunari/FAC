@@ -16,56 +16,30 @@ typedef struct value_t
 } value_t;
 
 typedef enum
-{
+{	
+	/* AOP0 */
 	SUM,
-	DIFF
-} aop_0_t;
-
-typedef enum
-{
+	DIFF,
+	/* AOP1 */
 	MULT,
-	DIV
-} aop_1_t;
-
-typedef enum
-{
-	NOT
-} bop1_t;
-
-typedef enum
-{
-	AND
-} bop2_0_t;
-
-typedef enum
-{
-	OR
-} bop2_1_t;
-
-typedef enum
-{
-	IMPLY
-} bop2_2_t;
-
-typedef enum
-{
+	DIV,
+	/* BOP1 */
+	NOT,
+	/* BOP2 */
+	AND,
+	OR,
+	IMPLY,
 	IFF,
-	XOR
-} bop2_3_t;
-
-typedef enum
-{
+	XOR,
+	/* RELOP_0 */
 	LT,
 	LEQ,
 	GEQ,
-	GT
-} relop_0_t;
-
-typedef enum
-{
+	GT,
+	/* RELOP_1 */
 	EQ,
 	NEQ
-} relop_1_t;
+} op_t;
 
 typedef enum
 {
