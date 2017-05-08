@@ -25,9 +25,9 @@ bool type_check(seq_node * seqTree){
 static
 bool recursive_type_check_fract(AST_node * node){
 	switch(node->data->token){
-		case FRACT:
+		case AST_FRACT:
 			return true;
-		case ID:
+		case AST_ID:
 			return getType((char*) node->data->value) == FRACT_T;
 		case AST_AOP:
 			if(node->number_of_children == 1)
@@ -43,11 +43,11 @@ bool recursive_type_check_fract(AST_node * node){
 static
 bool recursive_type_check_bool(AST_node * node){
 	switch(node->data->token){
-		case BOOL:
+		case AST_BOOL:
 			return true;
-		case ID:
+		case AST_ID:
 			return getType((char*) node->data->value) == BOOL_T;
-		case BOP1:
+		case AST_BOP1:
 			return recursive_type_check_bool(node->children[0]);
 		case AST_BOP2:
 			return recursive_type_check_bool(node->children[0]) &&
@@ -89,16 +89,16 @@ bool type_check_AST_node(AST_node * AST) {
 	AST_node * node = AST;
 	bool success = true;
 	switch(node->data->token){
-		 case TYPE: /* Perform a declaration */
+		 case AST_DECLARATION: /* Perform a declaration */
 			installID((char*) node->children[0]->data->value, node->data->type);
 			break;
-		 case ASSIGNMENT:
+		 case AST_ASSIGNMENT:
 		 { /* Perform an assignment */
 			type_t expected = getType(node->children[0]->data->value);
 			success &= recursive_type_check(node->children[1], expected);
 			break;
 		 }
-		case PRINT:
+		case AST_PRINT:
 		{ /* Check only if the ID is installed in the symbol table */
 			//equivalent to checking it the type is already defined
 			getType(node->children[0]->data->value);
