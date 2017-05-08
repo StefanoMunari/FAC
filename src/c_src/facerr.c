@@ -5,17 +5,18 @@ void err_handler(char* err, err_input mode){
 		case FAC_STRING: /*string*/
 			fprintf(stderr, err, yytext);
 			break;
-		case FAC_LINE: /*line*/ 
+		case FAC_LINE: /*line*/
 			fprintf(stderr, err, line_counter);
 			break;
-		case FAC_LINE_STRING: /*line + string*/ 
+		case FAC_LINE_STRING: /*line + string*/
 			fprintf(stderr, err, line_counter, yytext);
 			break;
-		case FAC_STANDARD_ERROR: 
-			/* standard error means that errno was set, therefore perror can be used */
+		case FAC_STANDARD_ERROR:
+			/* standard error means that errno was set,
+			   therefore perror can be used */
 			perror(err);
 			break;
-		default: 
+		default:
 			fprintf(stderr, "%s\n", err);
 	}
 }

@@ -11,9 +11,9 @@ extern uint line_counter;
 
 /** enumeration type used in error handling */
 typedef enum _err_input {
-	FAC_STANDARD_ERROR, 
-	FAC_STRING, 
-	FAC_LINE, 
+	FAC_STANDARD_ERROR,
+	FAC_STRING,
+	FAC_LINE,
 	FAC_LINE_STRING,
 } err_input;
 /**
