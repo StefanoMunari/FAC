@@ -237,9 +237,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($3);
 
-	AST_node * node = newASTNode(PRINT, 1);
-	node->children[0] = id_node;
-
+	AST_node * node = newASTNode(PRINT, 1, id_node);
 	$$ = node;
 }
 
