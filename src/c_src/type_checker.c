@@ -6,6 +6,24 @@
 #include <stdio.h>
 extern entry * symbol_table;
 
+static bool recursive_type_check_fract(AST_node * node);
+static bool recursive_type_check_bool(AST_node * node);
+static bool recursive_type_check(AST_node * AST, type_t type);
+static bool type_check_AST_node(AST_node * AST);
+
+bool type_check(seq_node * seqTree){
+	if(seqTree == NULL){
+		return true;
+	}
+	bool res = type_check(seqTree->left);
+
+	res &= type_check_AST_node(seqTree->right);
+	return res;
+}
+/********************************************
+			PRIVATE FUNCTIONS
+*********************************************/
+static
 bool recursive_type_check_fract(AST_node * node){
 	switch(node->data->token){
 		case FRACT: return true;
@@ -23,6 +41,7 @@ bool recursive_type_check_fract(AST_node * node){
 	}
 }
 
+static
 bool recursive_type_check_bool(AST_node * node){
 	switch(node->data->token){
 		case BOOL: return true;
@@ -41,6 +60,7 @@ bool recursive_type_check_bool(AST_node * node){
 /**
  * Check if the given expr has the right type
  */
+static
 bool recursive_type_check(AST_node * AST, type_t type){
 	bool res;
 	switch(type){
@@ -56,7 +76,7 @@ bool recursive_type_check(AST_node * AST, type_t type){
 	return res;
 }
 
-
+static
 bool type_check_AST_node(AST_node * AST) {
 
 	AST_node * node = AST;
@@ -85,14 +105,4 @@ bool type_check_AST_node(AST_node * AST) {
 		printf("Type checking successful!\n");
 	}
 	return success;
-}
-
-bool type_check(seq_node * seqTree){
-	if(seqTree == NULL){
-		return true;
-	}
-	bool res = type_check(seqTree->left);
-
-	res &= type_check_AST_node(seqTree->right);
-	return res;
 }
