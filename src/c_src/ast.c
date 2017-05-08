@@ -7,9 +7,11 @@
 #include "factypetoken_ast.h"
 
 
-AST_node * newASTNode(int number_of_children, ...) {
+AST_node * newASTNode(int token, int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = malloc(sizeof(record));
+	node->data->token = token;
+	node->data->op = -1;
 	node->number_of_children = number_of_children;
 	if(node->number_of_children == 0)
 		node->children = NULL;

@@ -24,7 +24,7 @@ typedef struct AST_node {
  * @param list of children
  * @return a new initialized node with the children given in the list
  */
-AST_node * newASTNode(int number_of_children, ...);
+AST_node * newASTNode(int token, int number_of_children, ...);
 /**
  * Free (recursively) the syntax three given in input
  * @param root the root of the syntax tree
