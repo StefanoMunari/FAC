@@ -6,6 +6,7 @@
 #include "parser.tab.h"
 #include "factypetoken_ast.h"
 
+
 AST_node * newASTNode(int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = malloc(sizeof(record));
@@ -26,6 +27,7 @@ AST_node * newASTNode(int number_of_children, ...) {
 	node->data->value = NULL;
 	return node;
 }
+
 
 
 void freeASTNode(AST_node * node){
