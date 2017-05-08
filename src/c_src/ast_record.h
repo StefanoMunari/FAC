@@ -12,10 +12,13 @@
  * @brief record of the AST
  */
 typedef struct record{
-	int token;
+	unsigned int token;
 	op_t op;
 	type_t type;
 	void * value;
 } record;
+
+record * ASTRecord(unsigned int, op_t, void *);
+void freeASTRecord(record *);
 
 #endif /* __AST_RECORD__H__ */

@@ -8,7 +8,7 @@ y.tab.c: #generate parser.y
 	bison -d parser.y
 
 #compile: y.tab.c
-#	gcc -O3 -o parser 
+#	gcc -O3 -o parser
 
 #run: compile
 #	./parser
