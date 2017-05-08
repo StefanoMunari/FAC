@@ -11,7 +11,7 @@
 /**
  * @brief record of the AST
  */
-typedef struct record{
+typedef struct record {
 	AST_category token;
 	op_t op;
 	type_t type;

@@ -23,10 +23,8 @@
 *********************************************/
 /** External vars **/
 extern FILE * yyin;
-
-/** Declaring the symbol table */
+/** Shared vars */
 entry * symbol_table = NULL;
-
 /** File-scoped vars **/
 seq_node * head = NULL;
 /** BISON declarations **/
