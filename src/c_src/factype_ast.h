@@ -13,10 +13,11 @@
 #ifndef _FACTYPE_AST_H_
 #define _FACTYPE_AST_H_
 #include "factype.h"
+#include <limits.h>
 
 
-#define AST_AOP 500
-#define AST_BOP2 501
-#define AST_RELOP 502
+#define AST_AOP (INT_MAX-2)
+#define AST_BOP2 (INT_MAX-1)
+#define AST_RELOP INT_MAX
 
 #endif /*_FACTYPE_AST_H_*/

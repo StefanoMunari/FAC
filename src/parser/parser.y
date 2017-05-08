@@ -232,7 +232,6 @@ var_assignment :
 ID ASSIGNMENT expr {
 	AST_node * id_node = newASTNode(ID, 0);
 	id_node->data->value = strdup($1);
-	
 	$$ = newASTNode(ASSIGNMENT, 2, id_node, $3);
 }
 
