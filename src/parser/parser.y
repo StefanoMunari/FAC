@@ -163,7 +163,6 @@ expr AOP_0 expr {
 | FRACT {
 	AST_node * node = newASTNode(0);
 	node->data->token = FRACT;
-	node->data->type = FRACT_T;
 	node->data->value = malloc(sizeof(fract_t));
 	*(fract_t*)(node->data->value) = $1;
 	$$ = node;
@@ -213,7 +212,6 @@ expr AOP_0 expr {
 | BOOL	{
 	AST_node * node = newASTNode(0);
 	node->data->token = BOOL;
-	node->data->type = BOOL_T;
 	node->data->value = malloc(sizeof(bool));
 	*(bool*)(node->data->value) = $1;
 	$$ = node;
