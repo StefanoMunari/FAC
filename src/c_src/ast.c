@@ -66,7 +66,9 @@ void printASTNode(AST_node * node) {
 
 }
 
-/* Private functions */
+/********************************************
+			PRIVATE FUNCTIONS
+*********************************************/
 /*
 static char * tokenString(int token){
 	switch(token){
