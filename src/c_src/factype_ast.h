@@ -41,29 +41,8 @@ typedef enum
 	AST_NEQ
 } relop_t;
 
-/**
- * Arithmetic OPerator Type constructor for AST
- * @brief constructs arithmetic operators for the AST
- * @param a class of arithmetic operators used in the parser (a class type)
- * @param an arithmetic operator used in the parser (a value)
- * @return aop_t the arithmetic operator type used in the AST (a value)
- */
-aop_t aop(int, int);
-/**
- * constructor of Boolean OPerator Type with arity=2 for AST
- * @brief constructs boolean operators for the AST
- * @param a class of boolean operators used in the parser (a class type)
- * @param a boolean operator used in the parser (a value)
- * @return bop2_t the boolean operator type used in the AST (a value)
- */
-bop2_t bop2(int, int);
-/**
- * constructor of Relational OPerator Type with for AST
- * @brief constructs relational operators for the AST
- * @param a class of relational operators used in the parser (a class type)
- * @param a relational operator used in the parser (a value)
- * @return relop_t the relational operator type used in the AST (a value)
- */
-relop_t relop(int, int);
+#define AST_AOP 285
+#define AST_BOP2 286
+#define AST_RELOP 287
 
 #endif /*_FACTYPE_AST_H_*/
