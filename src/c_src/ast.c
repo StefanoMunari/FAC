@@ -1,6 +1,6 @@
 #include "ast.h"
 #include "factype_ast.h"
-#include "parser.tab.h"
+//#include "parser.tab.h"
 #include "seq_tree.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -49,7 +49,7 @@ void printASTNodeRec(AST_node * node, int tab){
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	printf("Token : %s\n", tokenString(node->data->token));
+	//printf("Token : %s\n", tokenString(node->data->token));
 
 
 	for(i = 0; i < node->number_of_children; i++){
@@ -67,7 +67,7 @@ void printASTNode(AST_node * node) {
 }
 
 /* Private functions */
-
+/*
 static char * tokenString(int token){
 	switch(token){
 		case BOOL: return "BOOL"; break;
@@ -87,3 +87,4 @@ static char * tokenString(int token){
 	}
 	return "";
 }
+*/
