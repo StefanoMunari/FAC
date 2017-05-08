@@ -16,7 +16,7 @@
 typedef struct AST_node {
 	record * data;
 	unsigned int number_of_children;
-	struct AST_node_t ** children;
+	struct AST_node ** children;
 } AST_node;
 
 /** Create a new AST node

@@ -3,7 +3,6 @@
 #include "type_checker.h"
 #include "symbol_table.h"
 #include "parser.tab.h"
-#include "factypetoken_ast.h"
 #include <stdio.h>
 extern entry * symbol_table;
 
