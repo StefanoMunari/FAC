@@ -64,7 +64,6 @@ bool type_checking_AST_node(AST_node * AST) {
 	bool success = true;
 	switch(node->data->token){
 		 case TYPE: /* Perform a declaration */
-			printf("TYPE\n");
 			installID((char*) node->children[0]->data->value, node->data->type);
 			break;
 		 case ASSIGNMENT:
@@ -75,7 +74,6 @@ bool type_checking_AST_node(AST_node * AST) {
 		 }
 		case PRINT:
 		{ /* Check only if the ID is installed in the symbol table */
-			printf("PRINT\n");
 			//equivalent to checking it the type is already defined
 			getType(node->children[0]->data->value);
 			break;
@@ -95,6 +93,5 @@ bool type_checking(seq_node * seqTree){
 	bool res = type_checking(seqTree->left);
 	
 	res &= type_checking_AST_node(seqTree->right);
-	printf("%s\n", res?"true":"false");
 	return res;
 }

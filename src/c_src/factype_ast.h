@@ -15,8 +15,8 @@
 #include "factype.h"
 
 
-#define AST_AOP 285
-#define AST_BOP2 286
-#define AST_RELOP 287
+#define AST_AOP 500
+#define AST_BOP2 501
+#define AST_RELOP 502
 
 #endif /*_FACTYPE_AST_H_*/
