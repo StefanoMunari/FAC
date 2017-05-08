@@ -17,14 +17,14 @@ AST_node * ASTNode(int token, int number_of_children, ...) {
 		node->children = NULL;
 	else {
 		node->children = (AST_node**)malloc(sizeof(AST_node*) * number_of_children);
-		assert(node->children != NULL);
-		va_list ap;
-		va_start(ap, number_of_children);
-		int i;
-		for(i = 0; i < number_of_children; i++){
-			node->children[i] = va_arg(ap, AST_node*);
+		va_list args_iterator;
+		va_start(args_iterator, number_of_children);
+		{
+			int i;
+			for(i = 0; i < number_of_children; i++)
+				node->children[i] = va_arg(args_iterator, AST_node*);
 		}
-		va_end(ap);
+		va_end(args_iterator);
 	}
 	node->data->value = NULL;
 	return node;
