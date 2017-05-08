@@ -6,6 +6,7 @@
 #include "factype_ast.h"
 #include "parser.tab.h"
 
+static char * tokenString(int token);
 
 AST_node * ASTNode(int token, int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
@@ -49,29 +50,6 @@ void freeASTNode(AST_node * node){
 	free(node);
 }
 
-
-
-char * tokenString(int token){
-	switch(token){
-		case BOOL: return "BOOL"; break;
-		case FRACT: return "FRACT"; break;
-		case AST_AOP: return "AOP"; break;
-		case TYPE: return "TYPE"; break;
-		case BOP1: return "BOP1"; break;
-		case AST_BOP2: return "BOP2"; break;
-		case AST_RELOP: return "RELOP"; break;
-		case WHILE: return "WHILE"; break;
-		case IF: return "IF"; break;
-		case ELSE: return "ELSE"; break;
-		case SKIP: return "SKIP"; break;
-		case PRINT: return "PRINT"; break;
-		case ASSIGNMENT: return "ASSIGNMENT"; break;
-		case ID : return "ID"; break;
-	}
-	return "";
-}
-
-
 void printASTNodeRec(AST_node * node, int tab){
 	if(node == NULL)
 		return;
@@ -94,4 +72,26 @@ void printASTNode(AST_node * node) {
 	putchar('\n');
 	printASTNodeRec(node, 0);
 
+}
+
+/* Private functions */
+
+static char * tokenString(int token){
+	switch(token){
+		case BOOL: return "BOOL"; break;
+		case FRACT: return "FRACT"; break;
+		case AST_AOP: return "AOP"; break;
+		case TYPE: return "TYPE"; break;
+		case BOP1: return "BOP1"; break;
+		case AST_BOP2: return "BOP2"; break;
+		case AST_RELOP: return "RELOP"; break;
+		case WHILE: return "WHILE"; break;
+		case IF: return "IF"; break;
+		case ELSE: return "ELSE"; break;
+		case SKIP: return "SKIP"; break;
+		case PRINT: return "PRINT"; break;
+		case ASSIGNMENT: return "ASSIGNMENT"; break;
+		case ID : return "ID"; break;
+	}
+	return "";
 }
