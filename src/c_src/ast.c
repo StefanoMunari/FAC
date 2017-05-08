@@ -7,7 +7,7 @@
 #include "parser.tab.h"
 
 
-AST_node * newASTNode(int token, int number_of_children, ...) {
+AST_node * ASTNode(int token, int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = malloc(sizeof(record));
 	node->data->token = token;
