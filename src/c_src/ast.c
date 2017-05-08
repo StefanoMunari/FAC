@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <assert.h>
 #include "seq_tree.h"
+#include "factype_ast.h"
 #include "parser.tab.h"
-#include "factypetoken_ast.h"
 
 
 AST_node * newASTNode(int token, int number_of_children, ...) {

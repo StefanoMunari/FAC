@@ -7,14 +7,13 @@
  */
 #ifndef __AST_RECORD__H__
 #define __AST_RECORD__H__
-#include "ast_optype.h"
 #include "factype.h"
 /**
  * @brief record of the AST
  */
 typedef struct record{
 	int token;
-	ast_op_t op;
+	op_t op;
 	type_t type;
 	void * value;
 } record;
