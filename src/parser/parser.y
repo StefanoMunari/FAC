@@ -54,15 +54,7 @@ void yyerror(const char *);
 	bool bval;
 	fract_t fract;
 	type_t type;
-	aop_0_t aop_0;
-	aop_1_t aop_1;
-	bop1_t bop1;
-	bop2_0_t bop2_0;
-	bop2_1_t bop2_1;
-	bop2_2_t bop2_2;
-	bop2_3_t bop2_3;
-	relop_0_t relop_0;
-	relop_1_t relop_1;
+	op_t op;
 	value_t value;
 	seq_node * seq_tree;
 	AST_node * syntax_tree;
@@ -83,16 +75,16 @@ void yyerror(const char *);
 %token R_DEL_SCOPE		/* Scope right delimiter */
 %token L_DEL_EXPR		/* Expression left delimiter */
 %token R_DEL_EXPR		/* Expression right delimiter */
-%token <aop_0> AOP_0	   	/* Arithmetic operation: + and - */
-%token <aop_1> AOP_1	   	/* Arithmetic operation */
-%token <type> TYPE		/* Token for types: fract and bool */
-%token <bop1> BOP1		/* Boolean operation with arity 1 */
-%token <bop2_0> BOP2_0	/* Boolean operation with arity 2: "&&"*/
-%token <bop2_1> BOP2_1	/* Boolean operation with arity 2: "||"*/
-%token <bop2_2> BOP2_2	/* Boolean operation with arity 2: "->"*/
-%token <bop2_3> BOP2_3	/* Boolean operation with arity 2: "<->","X"*/
-%token <relop_0> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
-%token <relop_1> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
+%token <op> AOP_0	   	/* Arithmetic operation: + and - */
+%token <op> AOP_1	   	/* Arithmetic operation */
+%token <op> TYPE		/* Token for types: fract and bool */
+%token <op> BOP1		/* Boolean operation with arity 1 */
+%token <op> BOP2_0	/* Boolean operation with arity 2: "&&"*/
+%token <op> BOP2_1	/* Boolean operation with arity 2: "||"*/
+%token <op> BOP2_2	/* Boolean operation with arity 2: "->"*/
+%token <op> BOP2_3	/* Boolean operation with arity 2: "<->","X"*/
+%token <op> RELOP_0	/* Relation operation "<",">=",...: highest precedence*/
+%token <op> RELOP_1	/* Relation operation "==","!=": lowest precedence*/
 %token WHILE			/* token for the while symbol */
 %token IF				/* token for "if" symbol */
 %token ELSE 			/* token for "else" symbol */
@@ -152,19 +144,19 @@ expr :
 expr AOP_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_AOP;
-	node->data->op.aop = aop(AOP_0, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr AOP_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_AOP;
-	node->data->op.aop = aop(AOP_1, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | AOP_0 expr %prec USIGN {
 	AST_node * node = newASTNode(1, $2);
 	node->data->token = AST_AOP;
-	node->data->op.aop = aop(AOP_0, $1);
+	node->data->op = $1;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
@@ -179,43 +171,43 @@ expr AOP_0 expr {
 | expr BOP2_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_BOP2;
-	node->data->op.bop2 = bop2(BOP2_0, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_BOP2;
-	node->data->op.bop2 = bop2(BOP2_1, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_2 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_BOP2;
-	node->data->op.bop2 = bop2(BOP2_2, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_3 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_BOP2;
-	node->data->op.bop2 = bop2(BOP2_3, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_0 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_RELOP;
-	node->data->op.relop = relop(RELOP_0, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_1 expr {
 	AST_node * node = newASTNode(2, $1, $3);
 	node->data->token = AST_RELOP;
-	node->data->op.relop = relop(RELOP_1, $2);
+	node->data->op = $2;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
 	AST_node * node = newASTNode(1, $2);
 	node->data->token = BOP1;
-	node->data->op.bop1 = $1;
+	node->data->op = $1;
 	$$ = node;
 }
 | BOOL	{
