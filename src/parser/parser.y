@@ -254,7 +254,11 @@ int main(int argc, char * argv[]) {
 
 	yyin = fp;
 
-	yyparse();
+	switch(yyparse()){
+		case 1: yyerror("Input contains a synntax error\n"); return EXIT_FAILURE; break;
+		case 2: yyerror("Memory exhausted\n"); return EXIT_FAILURE; break;
+		case 0: /* successful */ break;
+	}
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
