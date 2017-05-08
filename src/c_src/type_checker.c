@@ -77,7 +77,9 @@ bool type_checking_AST_node(AST_node * AST) {
 			//equivalent to checking it the type is already defined
 			getType(node->children[0]->data->value);
 			break;
-		}
+		} 
+		default:
+			printf("%d token not recognized by typechecker\n", node->data->token);
 	}
 
 	if(success == true){
