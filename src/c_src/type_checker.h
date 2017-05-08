@@ -8,7 +8,7 @@
 #define __TYPE__CHECKER__H__
 #include "seq_tree.h"
 
-/** Performs type checking on an AST
+/** Performs type checking by pre-order traversing the AST
  * @param seq_node the root of the AST
  * @return bool true if the type checking is successful, false otherwise
  */

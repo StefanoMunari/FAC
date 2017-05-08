@@ -13,7 +13,7 @@ static void check_type (type_t type0, type_t type1) {
 
 void installID(char* _id, type_t _type) {
 	entry * e;
-	
+
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e != NULL) { /* ID ALREADY INSTALLED -> ERROR */
 		char* err_message="The id %s is already installed";
@@ -24,13 +24,13 @@ void installID(char* _id, type_t _type) {
 		yyerror(err_buffer);
 	}
 	e = (entry*)malloc(sizeof(entry));
-	
+
 	e->id = malloc(sizeof(char) * (strlen(_id) + 1)); //strlen does not take into account '\0'
 	strcpy(e->id, _id);
 	e->type = _type;
 	e->value = NULL;
-	
-	HASH_ADD_KEYPTR(hh, symbol_table, e->id, strlen(e->id), e); 
+
+	HASH_ADD_KEYPTR(hh, symbol_table, e->id, strlen(e->id), e);
 }
 
 
@@ -85,11 +85,11 @@ void setValue(char * _id, void * value) {
 	}
 	/*
 	switch(type){
-		case FRACT_T : 
+		case FRACT_T :
 			e->value = malloc(sizeof(fract_t));
 			memcpy(e->value, value, sizeof(fract_t));
 			break;
-		case BOOL_T : 
+		case BOOL_T :
 			e->value = malloc(sizeof(bool));
 			memcpy(e->value, value, sizeof(bool));
 			break;
@@ -104,5 +104,5 @@ void freeTable(){
 			free(e->value);
 		HASH_DEL(symbol_table, e);
 		free(e);
-	} 
+	}
 }
