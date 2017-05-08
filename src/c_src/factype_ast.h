@@ -15,9 +15,29 @@
 #include "factype.h"
 #include <limits.h>
 
+typedef enum {
+	AST_ID,
+	AST_FRACT,
+	AST_BOOL,
+	AST_AOP,
+	AST_BOP1,
+	AST_BOP2,
+	AST_RELOP,
+	AST_PRINT,
+	AST_WHILE,
+	AST_ASSIGNMENT,
+	AST_DECLARATION,
+	AST_SKIP,
+	AST_IF,
+	AST_ELSE,
+	
+	AST_END_MARKER
+} AST_category;
 
+/*
 #define AST_AOP (INT_MAX-2)
 #define AST_BOP2 (INT_MAX-1)
 #define AST_RELOP INT_MAX
+*/
 
 #endif /*_FACTYPE_AST_H_*/

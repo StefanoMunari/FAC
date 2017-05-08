@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-static char * tokenString(int token);
+static char * tokenString(AST_category token);
 
 AST_node * ASTNode(unsigned int token, int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
@@ -49,7 +49,7 @@ void printASTNodeRec(AST_node * node, int tab){
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	//printf("Token : %s\n", tokenString(node->data->token));
+	printf("Token : %s\n", tokenString(node->data->token));
 
 
 	for(i = 0; i < node->number_of_children; i++){
@@ -69,24 +69,24 @@ void printASTNode(AST_node * node) {
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
-/*
-static char * tokenString(int token){
+
+static char * tokenString(AST_category token){
 	switch(token){
-		case BOOL: return "BOOL"; break;
-		case FRACT: return "FRACT"; break;
+		case AST_BOOL: return "BOOL"; break;
+		case AST_FRACT: return "FRACT"; break;
 		case AST_AOP: return "AOP"; break;
-		case TYPE: return "TYPE"; break;
-		case BOP1: return "BOP1"; break;
+		case AST_DECLARATION: return "TYPE"; break;
+		case AST_BOP1: return "BOP1"; break;
 		case AST_BOP2: return "BOP2"; break;
 		case AST_RELOP: return "RELOP"; break;
-		case WHILE: return "WHILE"; break;
-		case IF: return "IF"; break;
-		case ELSE: return "ELSE"; break;
-		case SKIP: return "SKIP"; break;
-		case PRINT: return "PRINT"; break;
-		case ASSIGNMENT: return "ASSIGNMENT"; break;
-		case ID : return "ID"; break;
+		case AST_WHILE: return "WHILE"; break;
+		case AST_IF: return "IF"; break;
+		case AST_ELSE: return "ELSE"; break;
+		case AST_SKIP: return "SKIP"; break;
+		case AST_PRINT: return "PRINT"; break;
+		case AST_ASSIGNMENT: return "ASSIGNMENT"; break;
+		case AST_ID : return "ID"; break;
 	}
 	return "";
 }
-*/
+
