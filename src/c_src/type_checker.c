@@ -58,7 +58,7 @@ bool recursive_type_checking(AST_node * AST, type_t type){
 
 
 bool type_checking_AST_node(AST_node * AST) {
-	
+
 	AST_node * node = AST;
 	bool success = true;
 	switch(node->data->token){
@@ -76,14 +76,14 @@ bool type_checking_AST_node(AST_node * AST) {
 			//equivalent to checking it the type is already defined
 			getType(node->children[0]->data->value);
 			break;
-		} 
+		}
 		default:
 			printf("%d token not recognized by typechecker\n", node->data->token);
 	}
 
 	if(success == true){
 		printf("Type checking successful!\n");
-	} 
+	}
 	return success;
 }
 
@@ -92,7 +92,7 @@ bool type_checking(seq_node * seqTree){
 		return true;
 	}
 	bool res = type_checking(seqTree->left);
-	
+
 	res &= type_checking_AST_node(seqTree->right);
 	return res;
 }
