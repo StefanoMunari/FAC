@@ -1,13 +1,13 @@
-{NOT}	{ yylval.bop1 = NOT; return (BOP1); }
-{AND}	{ yylval.bop2_0 = AND; return (BOP2_0); }
-{OR}	{ yylval.bop2_1 = OR; return (BOP2_1); }
-{IMPLY}	{ yylval.bop2_2 = IMPLY; return (BOP2_2); }
-{XOR}	{ yylval.bop2_3 = XOR; return (BOP2_3); }
-{IFF}	{ yylval.bop2_3 = IFF; return (BOP2_3); }
-{LT}	{ yylval.relop_0 = LT; return (RELOP_0); }
-{GT}	{ yylval.relop_0 = GT; return (RELOP_0); }
-{LEQ}	{ yylval.relop_0 = LEQ; return (RELOP_0); }
-{GEQ}	{ yylval.relop_0 = GEQ; return (RELOP_0); }
-{EQ}	{ yylval.relop_1 = EQ; return (RELOP_1); }
-{NEQ}	{ yylval.relop_1 = NEQ; return (RELOP_1); }
+{NOT}	{ yylval.op = NOT; return (BOP1); }
+{AND}	{ yylval.op = AND; return (BOP2_0); }
+{OR}	{ yylval.op = OR; return (BOP2_1); }
+{IMPLY}	{ yylval.op = IMPLY; return (BOP2_2); }
+{XOR}	{ yylval.op = XOR; return (BOP2_3); }
+{IFF}	{ yylval.op = IFF; return (BOP2_3); }
+{LT}	{ yylval.op = LT; return (RELOP_0); }
+{GT}	{ yylval.op = GT; return (RELOP_0); }
+{LEQ}	{ yylval.op = LEQ; return (RELOP_0); }
+{GEQ}	{ yylval.op = GEQ; return (RELOP_0); }
+{EQ}	{ yylval.op = EQ; return (RELOP_1); }
+{NEQ}	{ yylval.op = NEQ; return (RELOP_1); }
 {BOOL}	{ yylval.bval = ((yytext[0] == 't') ? true : false); return (BOOL); }
