@@ -12,6 +12,6 @@
  * @param seq_node the root of the AST
  * @return bool true if the type checking is successful, false otherwise
  */
-bool type_checking(seq_node *);
+bool type_check(seq_node *);
 
 #endif /* __TYPE__CHECKER__H__ */

@@ -272,7 +272,7 @@ int main(int argc, char * argv[]) {
 
 	printf("\n--- The syntax Tree ---\n");
 	//printASTNode(head);
-	if(!type_checking(head)){
+	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
