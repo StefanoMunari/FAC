@@ -121,7 +121,8 @@ program :
 stmt { head=$1; }
 
 stmt :
-stmt expr SEPARATOR {
+/* empty */ { }
+| stmt expr SEPARATOR {
 	$$=$1;
 	fprintf(stderr, "Warning: statement expr with no effect\n");
 }
@@ -137,7 +138,7 @@ stmt expr SEPARATOR {
 	$$=newSeqNode($1, $2);
 	printf("Print Var");
 }
-| stmt '\n' { }
+| stmt '\n' { $$ = $1; }
 ;
 
 expr :
