@@ -1,18 +1,16 @@
 #include "ast.h"
+#include "factype_ast.h"
+#include "parser.tab.h"
+#include "seq_tree.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "seq_tree.h"
-#include "factype_ast.h"
-#include "parser.tab.h"
 
 static char * tokenString(int token);
 
-AST_node * ASTNode(int token, int number_of_children, ...) {
+AST_node * ASTNode(unsigned int token, int number_of_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
-	node->data = malloc(sizeof(record));
-	node->data->token = token;
-	node->data->op = -1;
+	node->data = (record *) ASTRecord(token, -1, NULL);
 	node->number_of_children = number_of_children;
 	if(node->number_of_children == 0)
 		node->children = NULL;
@@ -22,31 +20,25 @@ AST_node * ASTNode(int token, int number_of_children, ...) {
 		va_start(args_iterator, number_of_children);
 		{
 			int i;
-			for(i = 0; i < number_of_children; i++)
+			for(i = 0; i < number_of_children; ++i)
 				node->children[i] = va_arg(args_iterator, AST_node*);
 		}
 		va_end(args_iterator);
 	}
-	node->data->value = NULL;
 	return node;
 }
-
-
 
 void freeASTNode(AST_node * node){
 	if(node == NULL)
 		return;
-	int i;
-	/* Free children */
-	for(i = 0; i < node->number_of_children; i++){
-		freeASTNode(node->children[i]);
+	{
+		int i;
+		/* Free children */
+		for(i = 0; i < node->number_of_children; ++i)
+			freeASTNode(node->children[i]);
 	}
-
-
-	if(node->data->value != NULL)
-		free(node->data->value);
-	/* Free data */
-	free(node->data);
+	/* Free resources */
+	freeASTRecord(node->data);
 	free(node);
 }
 
