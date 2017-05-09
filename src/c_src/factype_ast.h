@@ -12,8 +12,6 @@
  */
 #ifndef _FACTYPE_AST_H_
 #define _FACTYPE_AST_H_
-#include "factype.h"
-
 /**
 * @brief tokens of the Abstract Syntax Tree (AST).
 * It represents the AST category of tokens
