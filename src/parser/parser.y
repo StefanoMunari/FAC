@@ -140,6 +140,10 @@ stmt :
 	$$=newSeqNode($1, $2);
 	printf("Print Var");
 }
+| stmt SKIP SEPARATOR {
+	AST_node * skip_node = ASTNode(AST_SKIP, 0);
+	$$=newSeqNode($1, skip_node);
+}
 | stmt '\n' { $$ = $1; }
 ;
 
