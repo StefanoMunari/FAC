@@ -28,6 +28,13 @@ bool type_check_AST_node(AST_node * AST) {
 			getType(node->children[0]->data->value);
 			break;
 		}
+		case AST_IF:
+		{
+			result &= type_check_ast_expr(node->children[0], BOOL_T);
+			result &= type_check_AST_node(node->children[1]);
+			result &= type_check_AST_node(node->children[2]);
+			break;
+		}
 		default:
 		{
 			char* err_message="%d token not recognized by type_checker";
