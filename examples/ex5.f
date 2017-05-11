@@ -6,7 +6,7 @@ condition = true;
 
 while(condition){
 	if(aux){
-		aux = false
+		aux = false;
 	}else{
 		skip;
 	}
