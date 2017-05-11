@@ -145,16 +145,7 @@ stmt :
 	AST_node * skip_node = ASTNode(AST_SKIP, 0);
 	$$=newSeqNode($1, skip_node);
 }
-| stmt ifrule {
-	$$ = newSeqNode($1, $2);
-}
 | stmt '\n' { $$ = $1; }
-;
-
-ifrule:
-IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = ASTNode(AST_IF, 3, $3, $6, $10);
-}
 ;
 
 expr :
