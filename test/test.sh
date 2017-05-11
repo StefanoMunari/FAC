@@ -11,10 +11,13 @@ fi
 print "Executing all examples in f directory.."
 for filename in ../examples/ex*.f; do
 	output=`$program $filename 2>&1 >/dev/null`
-	if [ $? -ne 0 ] 
+	res=$?
+	if [ $res -ne 0 ] 
 	then
-		echo "$filename test was not successful"
+		echo "#################################"
+		echo "$filename test was not successful with code $res ..."
 		echo $output
+		echo "#################################"
 	fi
 done
  
