@@ -42,11 +42,11 @@ bool type_check_fract(AST_node * node){
 		case AST_ID:
 			return getType((char*) node->data->value) == FRACT_T;
 		case AST_AOP:
-			if(node->number_of_children == 1)
-				return type_check_fract(node->children[0]);
+			if(node->number_of_AST_children == 1)
+				return type_check_fract(node->AST_children[0]);
 			else
-				return type_check_fract(node->children[0]) &&
-						type_check_fract(node->children[1]);
+				return type_check_fract(node->AST_children[0]) &&
+						type_check_fract(node->AST_children[1]);
 		default:
 			return false;
 	}
@@ -60,13 +60,13 @@ bool type_check_bool(AST_node * node){
 		case AST_ID:
 			return getType((char*) node->data->value) == BOOL_T;
 		case AST_BOP1:
-			return type_check_bool(node->children[0]);
+			return type_check_bool(node->AST_children[0]);
 		case AST_BOP2:
-			return type_check_bool(node->children[0]) &&
-				type_check_bool(node->children[1]);
+			return type_check_bool(node->AST_children[0]) &&
+				type_check_bool(node->AST_children[1]);
 		case AST_RELOP:
-			return type_check_fract(node->children[0]) &&
-				type_check_fract(node->children[1]);
+			return type_check_fract(node->AST_children[0]) &&
+				type_check_fract(node->AST_children[1]);
 		default:
 			return false;
 	}
