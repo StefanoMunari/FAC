@@ -15,8 +15,10 @@
  */
 typedef struct AST_node {
 	record * data;
-	unsigned int number_of_children;
-	struct AST_node ** children;
+	unsigned int number_of_AST_children;
+	unsigned int number_of_SEQ_children;
+	struct AST_node ** AST_children;
+	struct seq_node ** SEQ_children;
 } AST_node;
 
 /** Create a new AST node
@@ -24,7 +26,7 @@ typedef struct AST_node {
  * @param list of children
  * @return a new initialized node with the children given in the list
  */
-AST_node * ASTNode(unsigned int token, int number_of_children, ...);
+AST_node * ASTNode(unsigned int token, const int number_of_children, const int number_of_SEQ_children, ...);
 /**
  * Free (recursively) the syntax three given in input
  * @param root the root of the syntax tree
@@ -37,5 +39,6 @@ void freeASTNode(AST_node * root);
  */
 void printASTNode(AST_node * root);
 
+char * tokenString(AST_category token);
 
 #endif /* __AST__H__ */

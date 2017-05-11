@@ -5,25 +5,34 @@
 #include <stdio.h>
 #include <assert.h>
 
-static char * tokenString(AST_category token);
+char * tokenString(AST_category token);
 
-AST_node * ASTNode(unsigned int token, int number_of_children, ...) {
+AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const int number_of_SEQ_children, ...) {
 	AST_node * node = malloc(sizeof(AST_node));
 	node->data = (record *) ASTRecord(token, -1, NULL);
-	node->number_of_children = number_of_children;
-	if(node->number_of_children == 0)
-		node->children = NULL;
-	else {
-		node->children = (AST_node**)malloc(sizeof(AST_node*) * number_of_children);
-		va_list args_iterator;
-		va_start(args_iterator, number_of_children);
-		{
-			int i;
-			for(i = 0; i < number_of_children; ++i)
-				node->children[i] = va_arg(args_iterator, AST_node*);
+	node->number_of_AST_children = number_of_AST_children;
+	node->number_of_SEQ_children = number_of_SEQ_children;
+	
+	
+	
+	node->AST_children = (AST_node**)malloc(sizeof(AST_node*) * number_of_AST_children);
+	node->SEQ_children = (seq_node**)malloc(sizeof(seq_node*) * number_of_SEQ_children);
+	
+	va_list args_iterator;
+	va_start(args_iterator, number_of_SEQ_children);
+	{
+		int i;
+		for(i = 0; i < number_of_AST_children; ++i) {
+			
+			node->AST_children[i] = va_arg(args_iterator, AST_node*);
+			
 		}
-		va_end(args_iterator);
+		for(i = 0; i < number_of_SEQ_children; ++i){
+			node->SEQ_children[i] = va_arg(args_iterator, seq_node*);
+		}
 	}
+	va_end(args_iterator);
+	
 	return node;
 }
 
@@ -33,8 +42,10 @@ void freeASTNode(AST_node * node){
 	{
 		int i;
 		/* Free children */
-		for(i = 0; i < node->number_of_children; ++i)
-			freeASTNode(node->children[i]);
+		for(i = 0; i < node->number_of_AST_children; ++i)
+			freeASTNode(node->AST_children[i]);
+		for(i = 0; i < node->number_of_SEQ_children; ++i)
+			freeSeqNode(node->SEQ_children[i]);
 	}
 	/* Free resources */
 	freeASTRecord(node->data);
@@ -51,8 +62,11 @@ void printASTNodeRec(AST_node * node, int tab){
 	printf("Token : %s\n", tokenString(node->data->token));
 
 
-	for(i = 0; i < node->number_of_children; i++){
-		printASTNodeRec(node->children[i], tab+1);
+	for(i = 0; i < node->number_of_AST_children; i++){
+		printASTNodeRec(node->AST_children[i], tab+1);
+	}
+	for(i = 0; i < node->number_of_SEQ_children; ++i){
+		printSeqNode(node->SEQ_children[i]);
 	}
 
 }
@@ -69,7 +83,7 @@ void printASTNode(AST_node * node) {
 			PRIVATE FUNCTIONS
 *********************************************/
 
-static char * tokenString(AST_category token){
+char * tokenString(AST_category token){
 	switch(token){
 		case AST_BOOL: return "BOOL"; break;
 		case AST_FRACT: return "FRACT"; break;

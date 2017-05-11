@@ -64,6 +64,7 @@ void yyerror(const char *);
 %type <syntax_tree> print_var;
 %type <syntax_tree> declaration;
 %type <syntax_tree> ifrule;
+%type <syntax_tree> whilerule;
 
 /* Tokens */
 %token <bval> BOOL		/* Token for true and false literals */
@@ -137,79 +138,99 @@ stmt :
 	printf("Print Var");
 }
 | stmt SKIP SEPARATOR {
-	AST_node * skip_node = ASTNode(AST_SKIP, 0);
+	AST_node * skip_node = ASTNode(AST_SKIP, 0, 0);
 	$$=newSeqNode($1, skip_node);
 }
-| stmt '\n' { $$ = $1; }
+| stmt ifrule {
+	$$ = newSeqNode($1, $2);
+}
+| stmt whilerule {
+	printf("Building the seq_node for WHILE\n");
+	$$ = newSeqNode($1, $2);
+}
 ;
 
+whilerule:
+WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
+	printf("WHILE RULE");
+	$$ = ASTNode(AST_WHILE, 1, 1, $3, $6);
+} 
+
+
+ifrule:
+IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
+	printf("IF RULE");
+}
+;
+
+>>>>>>> Modified structure of AST in order to contain two different children arrays on for SEQ ad one for AST
 expr :
 expr AOP_0 expr {
-	AST_node * node = ASTNode(AST_AOP, 2, $1, $3);
+	AST_node * node = ASTNode(AST_AOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr AOP_1 expr {
-	AST_node * node = ASTNode(AST_AOP, 2, $1, $3);
+	AST_node * node = ASTNode(AST_AOP, 2, 0,  $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | AOP_0 expr %prec USIGN {
-	AST_node * node = ASTNode(AST_AOP, 1, $2);
+	AST_node * node = ASTNode(AST_AOP, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {
-	AST_node * node = ASTNode(AST_FRACT, 0);
+	AST_node * node = ASTNode(AST_FRACT, 0, 0);
 	node->data->value = malloc(sizeof(fract_t));
 	*(fract_t*)(node->data->value) = $1;
 	$$ = node;
 	}
 | expr BOP2_0 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, $1, $3);
+	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_1 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, $1, $3);
+	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
 	node->data->token = AST_BOP2;
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_2 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, $1, $3);
+	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_3 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, $1, $3);
+	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_0 expr {
-	AST_node * node = ASTNode(AST_RELOP, 2, $1, $3);
+	AST_node * node = ASTNode(AST_RELOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_1 expr {
-	AST_node * node = ASTNode(AST_RELOP, 2, $1, $3);
+	AST_node * node = ASTNode(AST_RELOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
-	AST_node * node = ASTNode(AST_BOP1, 1, $2);
+	AST_node * node = ASTNode(AST_BOP1, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | BOOL	{
-	AST_node * node = ASTNode(AST_BOOL, 0);
+	AST_node * node = ASTNode(AST_BOOL, 0, 0);
 	node->data->value = malloc(sizeof(bool));
 	*(bool*)(node->data->value) = $1;
 	$$ = node;
 }
 | ID	{
-	AST_node * node = ASTNode(AST_ID, 0);
+	AST_node * node = ASTNode(AST_ID, 0, 0);
 	node->data->value = strdup($1);
 	$$ = node;
 }
@@ -217,10 +238,10 @@ expr AOP_0 expr {
 
 declaration :
 TYPE ID {
-	AST_node * id_node = ASTNode(AST_ID, 0);
+	AST_node * id_node = ASTNode(AST_ID, 0, 0);
 	id_node->data->value = strdup($2);
 
-	AST_node * node = ASTNode(AST_DECLARATION, 1, id_node);
+	AST_node * node = ASTNode(AST_DECLARATION, 1, 0, id_node);
 	node->data->type = $1;
 	$$ = node;
 }
@@ -228,17 +249,17 @@ TYPE ID {
 
 var_assignment :
 ID ASSIGNMENT expr {
-	AST_node * id_node = ASTNode(AST_ID, 0);
+	AST_node * id_node = ASTNode(AST_ID, 0, 0);
 	id_node->data->value = strdup($1);
-	$$ = ASTNode(AST_ASSIGNMENT, 2, id_node, $3);
+	$$ = ASTNode(AST_ASSIGNMENT, 2, 0, id_node, $3);
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	AST_node * id_node = ASTNode(AST_ID, 0);
+	AST_node * id_node = ASTNode(AST_ID, 0, 0);
 	id_node->data->value = strdup($3);
 
-	$$ = ASTNode(AST_PRINT, 1, id_node);
+	$$ = ASTNode(AST_PRINT, 1, 0, id_node);
 }
 
 %%
