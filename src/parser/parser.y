@@ -310,8 +310,13 @@ int main(int argc, char * argv[]) {
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
+
 	//tac(head);
 	printSeqNode(head);
+
+	tac(head);
+	//printSeqNode(head);
+
 	/* generate code ??? */
 	freeSeqNode(head);
 	return EXIT_SUCCESS;
