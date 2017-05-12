@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief parser - processes and convert a token stream into an AST
+ * @brief parser - processes and convert a token stream into an ast
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
  */
@@ -63,7 +63,7 @@ extern uint line_counter;
 	op_t op;
 	value_t value;
 	seq_node * seq_tree;
-	AST_node * syntax_tree;
+	ast_node * syntax_tree;
 }
 
 /* Non-Terminal symbols */
@@ -148,7 +148,7 @@ stmt :
 	printf("Print Var");
 }
 | stmt SKIP SEPARATOR {
-	AST_node * skip_node = ASTNode(AST_SKIP, 0, 0);
+	ast_node * skip_node = astNode(ast_SKIP, 0, 0);
 	$$=newSeqNode($1, skip_node);
 }
 | stmt ifrule {
@@ -165,84 +165,84 @@ stmt :
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	printf("WHILE RULE\n");
-	$$ = ASTNode(AST_WHILE, 1, 1, $3, $6);
+	$$ = astNode(ast_WHILE, 1, 1, $3, $6);
 }
 ; 
 
 
 ifrule:
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = ASTNode(AST_IF, 1, 2, $3, $6, $10);
+	$$ = astNode(ast_IF, 1, 2, $3, $6, $10);
 }
 ;
 
 expr :
 expr AOP_0 expr {
-	AST_node * node = ASTNode(AST_AOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_AOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr AOP_1 expr {
-	AST_node * node = ASTNode(AST_AOP, 2, 0,  $1, $3);
+	ast_node * node = astNode(ast_AOP, 2, 0,  $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | AOP_0 expr %prec USIGN {
-	AST_node * node = ASTNode(AST_AOP, 1, 0, $2);
+	ast_node * node = astNode(ast_AOP, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {
-	AST_node * node = ASTNode(AST_FRACT, 0, 0);
+	ast_node * node = astNode(ast_FRACT, 0, 0);
 	node->data->value = malloc(sizeof(fract_t));
 	*(fract_t*)(node->data->value) = $1;
 	$$ = node;
 	}
 | expr BOP2_0 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_1 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
-	node->data->token = AST_BOP2;
+	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
+	node->data->token = ast_BOP2;
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_2 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_3 expr {
-	AST_node * node = ASTNode(AST_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_0 expr {
-	AST_node * node = ASTNode(AST_RELOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_RELOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_1 expr {
-	AST_node * node = ASTNode(AST_RELOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_RELOP, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
-	AST_node * node = ASTNode(AST_BOP1, 1, 0, $2);
+	ast_node * node = astNode(ast_BOP1, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | BOOL	{
-	AST_node * node = ASTNode(AST_BOOL, 0, 0);
+	ast_node * node = astNode(ast_BOOL, 0, 0);
 	node->data->value = malloc(sizeof(bool));
 	*(bool*)(node->data->value) = $1;
 	$$ = node;
 }
 | ID	{
-	AST_node * node = ASTNode(AST_ID, 0, 0);
+	ast_node * node = astNode(ast_ID, 0, 0);
 	node->data->value = strdup($1);
 	$$ = node;
 }
@@ -250,10 +250,10 @@ expr AOP_0 expr {
 
 declaration :
 TYPE ID {
-	AST_node * id_node = ASTNode(AST_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, 0, 0);
 	id_node->data->value = strdup($2);
 
-	AST_node * node = ASTNode(AST_DECLARATION, 1, 0, id_node);
+	ast_node * node = astNode(ast_DECLARATION, 1, 0, id_node);
 	node->data->type = $1;
 	$$ = node;
 }
@@ -261,17 +261,17 @@ TYPE ID {
 
 var_assignment :
 ID ASSIGNMENT expr {
-	AST_node * id_node = ASTNode(AST_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, 0, 0);
 	id_node->data->value = strdup($1);
-	$$ = ASTNode(AST_ASSIGNMENT, 2, 0, id_node, $3);
+	$$ = astNode(ast_ASSIGNMENT, 2, 0, id_node, $3);
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	AST_node * id_node = ASTNode(AST_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, 0, 0);
 	id_node->data->value = strdup($3);
 
-	$$ = ASTNode(AST_PRINT, 1, 0, id_node);
+	$$ = astNode(ast_PRINT, 1, 0, id_node);
 }
 
 %%
@@ -302,7 +302,7 @@ int main(int argc, char * argv[]) {
 
 
 	printf("\n--- The syntax Tree ---\n");
-	//printASTNode(head);
+	//printastNode(head);
 	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
