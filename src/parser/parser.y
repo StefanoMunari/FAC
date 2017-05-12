@@ -136,7 +136,7 @@ stmt :
 | stmt var_assignment SEPARATOR {
 	printf("Var assignment\n");
 	$$=newSeqNode($1, $2);
-	
+
 }
 | stmt print_var SEPARATOR {
 	$$=newSeqNode($1, $2);
@@ -162,7 +162,7 @@ WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	printf("WHILE RULE\n");
 	$$ = astNode(ast_WHILE, 1, 1, $3, $6);
 }
-; 
+;
 
 
 ifrule:
@@ -302,7 +302,8 @@ int main(int argc, char * argv[]) {
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
-	printSeqNode(head);
+	tac(head);
+	//printSeqNode(head);
 	/* generate code ??? */
 	freeSeqNode(head);
 	return EXIT_SUCCESS;
