@@ -3,12 +3,12 @@
 #include "factype.h"
 #include "../lib/uthash.h"
 
-typedef struct _entry {
+typedef struct symbol_table_entry {
 	char * id; /* key */
 	type_t type; /* type */
 	void * value; /* Concrete value */
 	UT_hash_handle hh; /* makes this structure hashable */
-} entry;
+} symbol_table_entry;
 
 
 void installID(char* id, type_t type);
