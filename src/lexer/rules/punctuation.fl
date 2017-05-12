@@ -1,4 +1,4 @@
-\n					{ ++line_counter; return '\n'; }
+\n					{ ++line_counter; }
 {SPACE}*			{ /* get rid of spaces */ }
 {SEPARATOR}			{ return (SEPARATOR); }
 {L_DEL_EXPR}		{ return (L_DEL_EXPR); }
