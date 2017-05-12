@@ -7,6 +7,7 @@
 %{
 #include <stdio.h>
 #include <stdbool.h>
+#include <assert.h>
 #include <stdlib.h>
 #include "ast.h"
 #include "seq_tree.h"
@@ -46,6 +47,8 @@ seq_node * head = NULL;
  * @param error message
  */
 void yyerror(const char *);
+
+
 %}
 /********************************************
 		TRANSLATION RULES
@@ -125,7 +128,7 @@ program :
 stmt { head=$1; }
 
 stmt :
-/* empty */ { }
+/* empty */ { $$ = NULL; }
 | stmt expr SEPARATOR {
 	$$=$1;
 	fprintf(stderr, "Warning: statement expr with no effect\n");
@@ -135,8 +138,9 @@ stmt :
 	printf("DECLARATION\n");
 }
 | stmt var_assignment SEPARATOR {
-	$$=newSeqNode($1, $2);
 	printf("Var assignment\n");
+	$$=newSeqNode($1, $2);
+	
 }
 | stmt print_var SEPARATOR {
 	$$=newSeqNode($1, $2);
@@ -144,6 +148,8 @@ stmt :
 }
 | stmt SKIP SEPARATOR {
 	AST_node * skip_node = ASTNode(AST_SKIP, 0, 0);
+	assert(skip_node->AST_children == NULL);
+	assert(skip_node->SEQ_children == NULL);
 	$$=newSeqNode($1, skip_node);
 }
 | stmt ifrule {
@@ -155,16 +161,19 @@ stmt :
 }
 ;
 
+
+
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	printf("WHILE RULE");
+	printf("WHILE RULE\n");
 	$$ = ASTNode(AST_WHILE, 1, 1, $3, $6);
-} 
+}
+; 
 
 
 ifrule:
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
-	printf("IF RULE");
+	$$ = ASTNode(AST_IF, 1, 2, $3, $6, $10);
 }
 ;
 
@@ -307,6 +316,6 @@ int main(int argc, char * argv[]) {
 }
 
 void yyerror(const char * err_msg) {
-	fprintf(stderr, "%s\n", err_msg);
+	fprintf(stderr, "Line ??? : %s \n", err_msg);
 	exit(EXIT_FAILURE);
 }
