@@ -31,16 +31,23 @@ bool type_check_AST_node(AST_node * AST) {
 		case AST_IF:
 		{
 			result &= type_check_ast_expr(node->AST_children[0], BOOL_T);
-			result &= type_check(node->SEQ_children[0]);
-			result &= type_check(node->SEQ_children[1]);
+			{
+				int i = 0;
+				for(i = 0; i < node->number_of_SEQ_children; ++i){
+					result &= type_check(node->SEQ_children[i]);
+				}
+			}
 			break;
 		}
 		case AST_WHILE:
 		{
 			result &= type_check_ast_expr(node->AST_children[0], BOOL_T);
-			//TODO test statemeent
+			result &= type_check(node->SEQ_children[0], BOOL_T);
 			break;
 		}
+		case AST_SKIP:
+			result = true;
+			break;
 		default:
 		{
 			char* err_message="%s token not recognized by type_checker";

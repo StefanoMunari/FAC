@@ -8,15 +8,19 @@
 char * tokenString(AST_category token);
 
 AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const int number_of_SEQ_children, ...) {
-	AST_node * node = malloc(sizeof(AST_node));
+	assert(number_of_AST_children >= 0 && number_of_SEQ_children >= 0);
+
+	AST_node * node = calloc(1, sizeof(AST_node));
 	node->data = (record *) ASTRecord(token, -1, NULL);
 	node->number_of_AST_children = number_of_AST_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
 	
 	
 	
-	node->AST_children = (AST_node**)malloc(sizeof(AST_node*) * number_of_AST_children);
-	node->SEQ_children = (seq_node**)malloc(sizeof(seq_node*) * number_of_SEQ_children);
+	
+	node->AST_children = (AST_node**)calloc(number_of_AST_children, sizeof(AST_node*));
+	node->SEQ_children = (seq_node**)calloc(number_of_SEQ_children, sizeof(seq_node*));
+	
 	
 	va_list args_iterator;
 	va_start(args_iterator, number_of_SEQ_children);
@@ -33,6 +37,15 @@ AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const i
 	}
 	va_end(args_iterator);
 	
+	
+	if(node->number_of_AST_children == 0){
+		node->AST_children = NULL;
+	} 
+	if(node->number_of_SEQ_children == 0){
+		node->SEQ_children = NULL;
+	}
+	
+	
 	return node;
 }
 
@@ -42,10 +55,13 @@ void freeASTNode(AST_node * node){
 	{
 		int i;
 		/* Free children */
-		for(i = 0; i < node->number_of_AST_children; ++i)
+		for(i = 0; i < node->number_of_AST_children; ++i) {
 			freeASTNode(node->AST_children[i]);
-		for(i = 0; i < node->number_of_SEQ_children; ++i)
+		}
+		
+		for(i = 0; i < node->number_of_SEQ_children; ++i) {
 			freeSeqNode(node->SEQ_children[i]);
+		}
 	}
 	/* Free resources */
 	freeASTRecord(node->data);
