@@ -23,7 +23,7 @@ if (((b0 X b1) <-> b2) <> b3){
 		print(f);
 	}
 }else{
-	f = f + [1|1]
+	f = f + [1|1];
 	print (f);
 	if (f >= f){
 		print(f);

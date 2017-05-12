@@ -15,13 +15,13 @@ f = [1|1];
 if (((b0 X b1) <-> b2) <> b3){
 	print (f);
 }else{
-	f = f + [1|1]
+	f = f + [1|1];
 	print (f);
 }
 
 if ((!(b0 || b1) -> b2) && !b3){
 	print (b0);
 }else{
-	f = f + [1|2]
+	f = f + [1|2];
 	print (f);
 }
