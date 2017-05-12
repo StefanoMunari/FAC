@@ -5,8 +5,8 @@
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
  */
-#ifndef __ast__H__
-#define __ast__H__
+#ifndef __AST__H__
+#define __AST__H__
 #include "ast_record.h"
 #include <stdarg.h>
 
@@ -41,4 +41,4 @@ void printastNode(ast_node * root);
 
 char * tokenString(ast_category token);
 
-#endif /* __ast__H__ */
+#endif /* __AST__H__ */

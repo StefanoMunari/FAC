@@ -14,38 +14,38 @@ ast_node * astNode(unsigned int token, const int number_of_ast_children, const i
 	node->data = (record *) astRecord(token, -1, NULL);
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
-	
-	
-	
-	
+
+
+
+
 	node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
 	node->SEQ_children = (seq_node**)calloc(number_of_SEQ_children, sizeof(seq_node*));
-	
-	
+
+
 	va_list args_iterator;
 	va_start(args_iterator, number_of_SEQ_children);
 	{
 		int i;
 		for(i = 0; i < number_of_ast_children; ++i) {
-			
+
 			node->ast_children[i] = va_arg(args_iterator, ast_node*);
-			
+
 		}
 		for(i = 0; i < number_of_SEQ_children; ++i){
 			node->SEQ_children[i] = va_arg(args_iterator, seq_node*);
 		}
 	}
 	va_end(args_iterator);
-	
-	
+
+
 	if(node->number_of_ast_children == 0){
 		node->ast_children = NULL;
-	} 
+	}
 	if(node->number_of_SEQ_children == 0){
 		node->SEQ_children = NULL;
 	}
-	
-	
+
+
 	return node;
 }
 
@@ -58,7 +58,7 @@ void freeastNode(ast_node * node){
 		for(i = 0; i < node->number_of_ast_children; ++i) {
 			freeastNode(node->ast_children[i]);
 		}
-		
+
 		for(i = 0; i < node->number_of_SEQ_children; ++i) {
 			freeSeqNode(node->SEQ_children[i]);
 		}
