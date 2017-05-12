@@ -68,9 +68,9 @@ void freeastNode(ast_node * node){
 	free(node);
 }
 
-void printastNodeRec(ast_node * node, int tab){
+int printastNodeRec(ast_node * node, int instruction, int tab){
 	if(node == NULL)
-		return;
+		return instruction;
 	int i;
 	for(i = 0; i < tab; i++){
 		putchar('\t');
@@ -79,19 +79,20 @@ void printastNodeRec(ast_node * node, int tab){
 
 
 	for(i = 0; i < node->number_of_ast_children; i++){
-		printastNodeRec(node->ast_children[i], tab+1);
+		instruction = printastNodeRec(node->ast_children[i], instruction, tab+1);
 	}
 	for(i = 0; i < node->number_of_SEQ_children; ++i){
-		printSeqNode(node->SEQ_children[i]);
+		instruction = printSeqNodeRec(node->SEQ_children[i], instruction, tab+1);
 	}
+	return instruction;
 
 }
 
-void printastNode(ast_node * node) {
+int printastNode(ast_node * node) {
 	if(node == NULL)
-		return;
+		return 0;
 	putchar('\n');
-	printastNodeRec(node, 0);
+	return printastNodeRec(node, 0, 0);
 
 }
 

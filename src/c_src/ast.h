@@ -37,7 +37,9 @@ void freeastNode(ast_node * root);
  * Print a syntax tree on the screen (only the tokens)
  * @param root the root of the syntax tree
  */
-void printastNode(ast_node * root);
+int printastNode(ast_node * root);
+
+int printastNodeRec(ast_node * node, int instruction, int tab);
 
 char * tokenString(ast_category token);
 
