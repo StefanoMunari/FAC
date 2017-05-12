@@ -8,7 +8,7 @@ then
 	make
 	cd ../test/
 fi
-print "Executing all examples in f directory.."
+echo "Executing all examples in f directory.."
 for filename in ../examples/ex*.f; do
 	output=`$program $filename 2>&1 >/dev/null`
 	res=$?
