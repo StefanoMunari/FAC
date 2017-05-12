@@ -171,7 +171,6 @@ IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt
 }
 ;
 
->>>>>>> Modified structure of AST in order to contain two different children arrays on for SEQ ad one for AST
 expr :
 expr AOP_0 expr {
 	AST_node * node = ASTNode(AST_AOP, 2, 0, $1, $3);
