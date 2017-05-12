@@ -16,35 +16,35 @@ b3 = false;
 f = [1|1];
 
 if (((b0 X b1) <-> b2) <> b3){
-	print (f);
+	print(f);
 	if (f <= f){
-		print(f)
+		print(f);
 	}else{
-		print(f)
+		print(f);
 	}
 }else{
 	f = f + [1|1]
 	print (f);
 	if (f >= f){
-		print(f)
+		print(f);
 	}else{
-		print(f)
+		print(f);
 	}
 }
 
 if ((!(b0 || b1) -> b2) && !b3){
 	print (b0);
 	if (f == f){
-		print(f)
+		print(f);
 	}else{
-		print(f)
+		print(f);
 	}
 }else{
-	f = f + [1|2]
+	f = f + [1|2];
 	print (f);
 	if (f <> f){
-		print(f)
+		print(f);
 	}else{
-		print(f)
+		print(f);
 	}
 }
