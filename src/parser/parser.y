@@ -43,6 +43,7 @@ int yylex ();
  */
 void yyerror(const char *);
 
+extern uint line_counter;
 
 %}
 /********************************************
@@ -143,8 +144,6 @@ stmt :
 }
 | stmt SKIP SEPARATOR {
 	AST_node * skip_node = ASTNode(AST_SKIP, 0, 0);
-	assert(skip_node->AST_children == NULL);
-	assert(skip_node->SEQ_children == NULL);
 	$$=newSeqNode($1, skip_node);
 }
 | stmt ifrule {
@@ -311,6 +310,6 @@ int main(int argc, char * argv[]) {
 }
 
 void yyerror(const char * err_msg) {
-	fprintf(stderr, "Line ??? : %s \n", err_msg);
+	fprintf(stderr, "Line %d : %s \n", line_counter, err_msg);
 	exit(EXIT_FAILURE);
 }
