@@ -226,7 +226,7 @@ expr AOP_0 expr {
 	$$ = node;
 }
 | expr RELOP_1 expr {
-	ast_node * node = astNode(ast_RELOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_RELOP1, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }

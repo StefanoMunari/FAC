@@ -75,8 +75,11 @@ int printastNodeRec(ast_node * node, int instruction, int tab){
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	printf("Token : %s\n", tokenString(node->data->token));
-
+	printf("Token : %s", tokenString(node->data->token));
+	if(node->data->token == ast_ID){
+		printf(" %s", (char*)node->data->value);
+	}
+	putchar('\n');
 
 	for(i = 0; i < node->number_of_ast_children; i++){
 		instruction = printastNodeRec(node->ast_children[i], instruction, tab+1);
