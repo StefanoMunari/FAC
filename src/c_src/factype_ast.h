@@ -24,6 +24,7 @@ typedef enum {
 	ast_BOP1,
 	ast_BOP2,
 	ast_RELOP,
+	ast_RELOP1,
 	ast_PRINT,
 	ast_WHILE,
 	ast_ASSIGNMENT,

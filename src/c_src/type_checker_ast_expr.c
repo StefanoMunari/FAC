@@ -52,6 +52,59 @@ bool type_check_fract(ast_node * node){
 	}
 }
 
+typedef struct _type_inference_struct {
+	type_t type;
+	bool success;
+} type_inference_struct;
+
+static 
+type_inference_struct type_inference(ast_node * node){
+	type_inference_struct tis;
+	switch(node->data->token){
+		case ast_BOOL:
+			tis.type = BOOL_T;
+			tis.success = true;
+			break;
+		case ast_FRACT:
+			tis.type = FRACT_T;
+			tis.success = true;
+			break;
+		case ast_ID:
+			tis.type = getType((char*) node->data->value);
+			tis.success = true;
+			break;
+		case ast_AOP:
+			tis.type = FRACT_T;
+			tis.success = type_check_fract(node->ast_children[0]) &&
+				type_check_fract(node->ast_children[1]);
+			break;
+		case ast_BOP1:
+		case ast_BOP2:
+			tis.type = BOOL_T;
+			tis.success = type_check_ast_expr(node, BOOL_T);
+			break;
+		case ast_RELOP1:
+		{
+			type_inference_struct tis1 = type_inference(node->ast_children[0]);
+			type_inference_struct tis2 = type_inference(node->ast_children[1]);
+			if(tis1.type == tis2.type && tis1.success && tis2.success){
+				tis.success = true;
+				tis.type = tis2.type;
+				
+			}
+			else {
+				tis.type = false;
+			}
+			break;
+		}
+		case ast_RELOP:
+			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
+			break;
+			
+	}
+	return tis;
+}
+
 static
 bool type_check_bool(ast_node * node){
 	switch(node->data->token){
@@ -64,6 +117,25 @@ bool type_check_bool(ast_node * node){
 		case ast_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
+		case ast_RELOP1:
+			{
+				type_inference_struct tis = type_inference(node);
+				if(!tis.success){
+					return false;
+				} else {
+					switch(tis.type){
+						case FRACT_T: 
+							return type_check_fract(node->ast_children[0]) &&
+								type_check_fract(node->ast_children[1]);
+						
+						case BOOL_T:
+							return type_check_bool(node->ast_children[0]) && 
+								type_check_bool(node->ast_children[1]);
+							
+					}
+				}
+			
+			}	
 		case ast_RELOP:
 			return type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
