@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-extern entry * symbol_table;
+extern symbol_table_entry * symbol_table;
 extern void yyerror(char *);
 
 static void check_type (type_t type0, type_t type1) {
@@ -12,7 +12,7 @@ static void check_type (type_t type0, type_t type1) {
 };
 
 void installID(char* _id, type_t _type) {
-	entry * e;
+	symbol_table_entry * e;
 
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e != NULL) { /* ID ALREADY INSTALLED -> ERROR */
@@ -23,7 +23,7 @@ void installID(char* _id, type_t _type) {
 		sprintf(err_buffer, err_message, _id);
 		yyerror(err_buffer);
 	}
-	e = (entry*)malloc(sizeof(entry));
+	e = (symbol_table_entry*)malloc(sizeof(symbol_table_entry));
 
 	e->id = malloc(sizeof(char) * (strlen(_id) + 1)); //strlen does not take into account '\0'
 	strcpy(e->id, _id);
@@ -35,7 +35,7 @@ void installID(char* _id, type_t _type) {
 
 
 void* lookupID(char* _id, type_t type) {
-	entry * e;
+	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
 		char* err_message="Failed lookup: The variable %s is not yet installed";
@@ -58,7 +58,7 @@ void* lookupID(char* _id, type_t type) {
 }
 
 type_t getType(char * _id) {
-	entry * e;
+	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
 		char* err_message="Failed lookup: The variable %s is not yet installed";
@@ -73,7 +73,7 @@ type_t getType(char * _id) {
 
 
 void setValue(char * _id, void * value) {
-	entry * e;
+	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
 		char* err_message="The variable cannot be assigned because %s is not yet installed";
@@ -97,7 +97,7 @@ void setValue(char * _id, void * value) {
 }
 
 void freeTable(){
-	entry * e, *tmp;
+	symbol_table_entry * e, *tmp;
 	HASH_ITER(hh, symbol_table, e, tmp) {
 		free(e->id);
 		if(e->value != NULL)

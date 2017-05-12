@@ -8,15 +8,15 @@
  */
 typedef struct tac_value{
 	int constant;
-	symbol_table_entry * address;
-	tac_entry * instruction;
+	symbol_table_symbol_table_entry * address;
+	tac_symbol_table_entry * instruction;
 }
 
-typedef struct tac_entry
+typedef struct tac_symbol_table_entry
 {
 	op_t op;
 	tac_value * arg0;
 	tac_value * arg1;
-} tac_entry;
+} tac_symbol_table_entry;
 
-tac_entry * tac(AST_node * node);
+tac_symbol_table_entry * tac(AST_node * node);
