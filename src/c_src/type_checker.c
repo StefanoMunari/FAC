@@ -6,6 +6,6 @@ bool type_check(seq_node * seqTree){
 	if(seqTree == NULL)
 		return true;
 	bool result = type_check(seqTree->left);
-	result &= type_check_AST_node(seqTree->right);
+	result &= type_check_ast_node(seqTree->right);
 	return result;
 }

@@ -5,20 +5,20 @@
 #include <stdio.h>
 #include <assert.h>
 
-char * tokenString(AST_category token);
+char * tokenString(ast_category token);
 
-AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const int number_of_SEQ_children, ...) {
-	assert(number_of_AST_children >= 0 && number_of_SEQ_children >= 0);
+ast_node * astNode(unsigned int token, const int number_of_ast_children, const int number_of_SEQ_children, ...) {
+	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
 
-	AST_node * node = calloc(1, sizeof(AST_node));
-	node->data = (record *) ASTRecord(token, -1, NULL);
-	node->number_of_AST_children = number_of_AST_children;
+	ast_node * node = calloc(1, sizeof(ast_node));
+	node->data = (record *) astRecord(token, -1, NULL);
+	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
 	
 	
 	
 	
-	node->AST_children = (AST_node**)calloc(number_of_AST_children, sizeof(AST_node*));
+	node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
 	node->SEQ_children = (seq_node**)calloc(number_of_SEQ_children, sizeof(seq_node*));
 	
 	
@@ -26,9 +26,9 @@ AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const i
 	va_start(args_iterator, number_of_SEQ_children);
 	{
 		int i;
-		for(i = 0; i < number_of_AST_children; ++i) {
+		for(i = 0; i < number_of_ast_children; ++i) {
 			
-			node->AST_children[i] = va_arg(args_iterator, AST_node*);
+			node->ast_children[i] = va_arg(args_iterator, ast_node*);
 			
 		}
 		for(i = 0; i < number_of_SEQ_children; ++i){
@@ -38,8 +38,8 @@ AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const i
 	va_end(args_iterator);
 	
 	
-	if(node->number_of_AST_children == 0){
-		node->AST_children = NULL;
+	if(node->number_of_ast_children == 0){
+		node->ast_children = NULL;
 	} 
 	if(node->number_of_SEQ_children == 0){
 		node->SEQ_children = NULL;
@@ -49,14 +49,14 @@ AST_node * ASTNode(unsigned int token, const int number_of_AST_children, const i
 	return node;
 }
 
-void freeASTNode(AST_node * node){
+void freeastNode(ast_node * node){
 	if(node == NULL)
 		return;
 	{
 		int i;
 		/* Free children */
-		for(i = 0; i < node->number_of_AST_children; ++i) {
-			freeASTNode(node->AST_children[i]);
+		for(i = 0; i < node->number_of_ast_children; ++i) {
+			freeastNode(node->ast_children[i]);
 		}
 		
 		for(i = 0; i < node->number_of_SEQ_children; ++i) {
@@ -64,11 +64,11 @@ void freeASTNode(AST_node * node){
 		}
 	}
 	/* Free resources */
-	freeASTRecord(node->data);
+	freeastRecord(node->data);
 	free(node);
 }
 
-void printASTNodeRec(AST_node * node, int tab){
+void printastNodeRec(ast_node * node, int tab){
 	if(node == NULL)
 		return;
 	int i;
@@ -78,8 +78,8 @@ void printASTNodeRec(AST_node * node, int tab){
 	printf("Token : %s\n", tokenString(node->data->token));
 
 
-	for(i = 0; i < node->number_of_AST_children; i++){
-		printASTNodeRec(node->AST_children[i], tab+1);
+	for(i = 0; i < node->number_of_ast_children; i++){
+		printastNodeRec(node->ast_children[i], tab+1);
 	}
 	for(i = 0; i < node->number_of_SEQ_children; ++i){
 		printSeqNode(node->SEQ_children[i]);
@@ -87,11 +87,11 @@ void printASTNodeRec(AST_node * node, int tab){
 
 }
 
-void printASTNode(AST_node * node) {
+void printastNode(ast_node * node) {
 	if(node == NULL)
 		return;
 	putchar('\n');
-	printASTNodeRec(node, 0);
+	printastNodeRec(node, 0);
 
 }
 
@@ -99,22 +99,22 @@ void printASTNode(AST_node * node) {
 			PRIVATE FUNCTIONS
 *********************************************/
 
-char * tokenString(AST_category token){
+char * tokenString(ast_category token){
 	switch(token){
-		case AST_BOOL: return "BOOL"; break;
-		case AST_FRACT: return "FRACT"; break;
-		case AST_AOP: return "AOP"; break;
-		case AST_DECLARATION: return "TYPE"; break;
-		case AST_BOP1: return "BOP1"; break;
-		case AST_BOP2: return "BOP2"; break;
-		case AST_RELOP: return "RELOP"; break;
-		case AST_WHILE: return "WHILE"; break;
-		case AST_IF: return "IF"; break;
-		case AST_ELSE: return "ELSE"; break;
-		case AST_SKIP: return "SKIP"; break;
-		case AST_PRINT: return "PRINT"; break;
-		case AST_ASSIGNMENT: return "ASSIGNMENT"; break;
-		case AST_ID : return "ID"; break;
+		case ast_BOOL: return "BOOL"; break;
+		case ast_FRACT: return "FRACT"; break;
+		case ast_AOP: return "AOP"; break;
+		case ast_DECLARATION: return "TYPE"; break;
+		case ast_BOP1: return "BOP1"; break;
+		case ast_BOP2: return "BOP2"; break;
+		case ast_RELOP: return "RELOP"; break;
+		case ast_WHILE: return "WHILE"; break;
+		case ast_IF: return "IF"; break;
+		case ast_ELSE: return "ELSE"; break;
+		case ast_SKIP: return "SKIP"; break;
+		case ast_PRINT: return "PRINT"; break;
+		case ast_ASSIGNMENT: return "ASSIGNMENT"; break;
+		case ast_ID : return "ID"; break;
 	}
 	return "";
 }

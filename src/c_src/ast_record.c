@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <assert.h>
 
-record * ASTRecord(AST_category token, op_t op, void * value){
-	assert(token < AST_END_MARKER);
+record * astRecord(ast_category token, op_t op, void * value){
+	assert(token < ast_END_MARKER);
 	record * r = calloc(1, sizeof(record));
 	r->token = token;
 	r->op = op;
@@ -12,7 +12,7 @@ record * ASTRecord(AST_category token, op_t op, void * value){
 	return r;
 }
 
-void freeASTRecord(record * this){
+void freeastRecord(record * this){
 	if(this == NULL)
 		return;
 	free(this->value);
