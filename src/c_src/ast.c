@@ -7,11 +7,11 @@
 
 char * tokenString(ast_category token);
 
-ast_node * astNode(unsigned int token, const int number_of_ast_children, const int number_of_SEQ_children, ...) {
+ast_node * astNode(unsigned int token, int line, const int number_of_ast_children, const int number_of_SEQ_children, ...) {
 	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
 
 	ast_node * node = calloc(1, sizeof(ast_node));
-	node->data = (record *) astRecord(token, -1, NULL);
+	node->data = (record *) astRecord(token, line, -1, NULL);
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
 
