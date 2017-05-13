@@ -7,7 +7,7 @@ typedef unsigned int uint;
 
 extern char* yytext;
 extern int yyleng;
-extern uint line_counter;
+extern int yylineno;
 
 /** enumeration type used in error handling */
 typedef enum _err_input {

@@ -6,10 +6,10 @@ void err_handler(char* err, err_input mode){
 			fprintf(stderr, err, yytext);
 			break;
 		case FAC_LINE: /*line*/
-			fprintf(stderr, err, line_counter);
+			fprintf(stderr, err, yylineno);
 			break;
 		case FAC_LINE_STRING: /*line + string*/
-			fprintf(stderr, err, line_counter, yytext);
+			fprintf(stderr, err, yylineno, yytext);
 			break;
 		case FAC_STANDARD_ERROR:
 			/* standard error means that errno was set,
