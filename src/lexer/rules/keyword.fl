@@ -1,5 +1,5 @@
-{WHILE}															{ return (WHILE); }
-{IF}															{ return (IF); }
-{ELSE}															{ return (ELSE); }
-{SKIP}															{ return (SKIP); }
-{PRINT}/{SPACE}*{L_DEL_EXPR}{SPACE}*{ID}{SPACE}*{R_DEL_EXPR}	{ return (PRINT); }
+{WHILE}															{ setYYlloc(); return (WHILE); }
+{IF}															{ setYYlloc(); return (IF); }
+{ELSE}															{ setYYlloc(); return (ELSE); }
+{SKIP}															{ setYYlloc(); return (SKIP); }
+{PRINT}/{SPACE}*{L_DEL_EXPR}{SPACE}*{ID}{SPACE}*{R_DEL_EXPR}	{ setYYlloc(); return (PRINT); }

@@ -18,3 +18,18 @@ fract_t tokenize_fract(){
 	f.den = denumerator;
 	return normalizeFract(f);
 }
+
+
+void setYYllocLine() {
+	yylloc.first_line = yylloc.last_line = yylineno;
+}
+
+void setYYllocCol() {
+	yylloc.first_column = yylloc.last_column;
+	yylloc.last_column = yylloc.first_column + strlen(yytext);
+}
+
+void setYYlloc(){
+	setYYllocLine();
+	setYYllocCol();
+}
