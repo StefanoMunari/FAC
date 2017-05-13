@@ -23,7 +23,6 @@ void freeSeqNode(seq_node * this){
 int printSeqNodeRec(seq_node * this, int instruction, int tab){
 	if(this == NULL)
 		return instruction;
-	int i;
 	
 	instruction = printSeqNodeRec(this->left, instruction, tab);
 	printTab(tab);
@@ -34,7 +33,7 @@ int printSeqNodeRec(seq_node * this, int instruction, int tab){
 }
 
 int printSeqNode(seq_node * this){
-	printSeqNodeRec(this, 1, 0);
+	return printSeqNodeRec(this, 1, 0);
 }
 
 void printTab(int tab){
