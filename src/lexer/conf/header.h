@@ -7,3 +7,5 @@
 /* BISON generated - always as last included */
 #include "parser.tab.h"
 uint line_counter= 1;
+
+#define YY_NO_INPUT
