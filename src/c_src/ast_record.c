@@ -3,9 +3,10 @@
 #include <stdio.h>
 #include <assert.h>
 
-record * astRecord(ast_category token, op_t op, void * value){
+record * astRecord(ast_category token, int line, op_t op, void * value){
 	assert(token < ast_END_MARKER);
 	record * r = calloc(1, sizeof(record));
+	r->line = line;
 	r->token = token;
 	r->op = op;
 	r->value = value;

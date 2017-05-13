@@ -14,12 +14,13 @@
  */
 typedef struct record {
 	ast_category token;
+	int line;
 	op_t op;
 	type_t type;
 	void * value;
 } record;
 
-record * astRecord(ast_category, op_t, void *);
+record * astRecord(ast_category, int line, op_t, void *);
 void freeastRecord(record *);
 
 #endif /* __AST_RECORD__H__ */
