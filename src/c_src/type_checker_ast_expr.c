@@ -51,13 +51,12 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 			break;
 		default:
 		{
-			char* err_message="Type not recognized by type_checker";
-			yyerror(err_message);
+			fprintf(stderr, "Line %d: Type not recognized by type_checker\n", ast->data->line);
 			result = false;
 		}
 	}
 	if(!result){
-		fprintf(stderr, "Type Mismatch in instruction + %s!\n", type==FRACT_T?"FRACT":"BOOL");
+		fprintf(stderr, "Type Mismatch on line %d: Expected type %s!\n", ast->data->line, type==FRACT_T?"FRACT":"BOOL");
 		printastNode(ast);
 	}
 	return result;
