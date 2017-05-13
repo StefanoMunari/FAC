@@ -1,5 +1,5 @@
-{FRACT}	 		{ setYYlloc();  yylval.fract = tokenize_fract(); return (FRACT); }
-{ERROR_FRACT}	{ err_handler("Line %u: 0 is not a valid denominator!\n", FAC_LINE); }
+{FRACT}	 		{ setYYlloc(); yylval.fract = tokenize_fract(); return (FRACT); }
+{ERROR_FRACT}	{ setYYlloc(); err_handler("Line %u: 0 is not a valid denominator!\n", FAC_LINE); }
 
 
 
