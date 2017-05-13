@@ -1,3 +1,4 @@
+#include "type_checker.h"
 #include "type_checker_ast.h"
 #include "type_checker_ast_expr.h"
 #include "symbol_table.h"
@@ -42,7 +43,7 @@ bool type_check_ast_node(ast_node * ast) {
 		case ast_WHILE:
 		{
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
-			result &= type_check(node->SEQ_children[0], BOOL_T);
+			result &= type_check(node->SEQ_children[0]);
 			break;
 		}
 		case ast_SKIP:
