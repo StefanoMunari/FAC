@@ -5,7 +5,7 @@ C_SRC_PATH = $(PWD)/c_src
 C_SOURCES = $(wildcard $(PWD)/c_src/*.c)
 BIN = bin
 
-C_FLAG = -O3 -g
+C_FLAG = -O3 -g -Wall -Werror
 
 
 all: compile
