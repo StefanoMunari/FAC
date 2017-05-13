@@ -111,6 +111,7 @@ char * tokenString(ast_category token){
 		case ast_DECLARATION: return "TYPE"; break;
 		case ast_BOP1: return "BOP1"; break;
 		case ast_BOP2: return "BOP2"; break;
+		case ast_RELOP1: return "RELOP1 (EQ or NEQ)"; break;
 		case ast_RELOP: return "RELOP"; break;
 		case ast_WHILE: return "WHILE"; break;
 		case ast_IF: return "IF"; break;
@@ -119,6 +120,8 @@ char * tokenString(ast_category token){
 		case ast_PRINT: return "PRINT"; break;
 		case ast_ASSIGNMENT: return "ASSIGNMENT"; break;
 		case ast_ID : return "ID"; break;
+		default:
+			break;
 	}
 	return "";
 }
