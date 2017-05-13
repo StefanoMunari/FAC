@@ -89,8 +89,7 @@ type_inference_struct type_inference(ast_node * node){
 			type_inference_struct tis2 = type_inference(node->ast_children[1]);
 			if(tis1.type == tis2.type && tis1.success && tis2.success){
 				tis.success = true;
-				tis.type = tis2.type;
-				
+				tis.type = BOOL_T;
 			}
 			else {
 				tis.type = false;
@@ -99,6 +98,7 @@ type_inference_struct type_inference(ast_node * node){
 		}
 		case ast_RELOP:
 			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
+			tis.type = BOOL_T;
 			break;
 			
 	}
@@ -117,7 +117,7 @@ bool type_check_bool(ast_node * node){
 		case ast_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-		case ast_RELOP1: /* Perform type inference to know which type of equality do we need */
+		case ast_RELOP1: 
 			{
 				type_inference_struct tis = type_inference(node);
 				return tis.success;
