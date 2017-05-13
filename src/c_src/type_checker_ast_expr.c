@@ -9,6 +9,27 @@ extern void yyerror(char *);
 static bool type_check_fract(ast_node *);
 static bool type_check_bool(ast_node *);
 
+/** Internal struct to perform type inference */
+typedef struct type_inference_struct {
+	type_t type;
+	bool success;
+} type_inference_struct;
+
+/**
+ * Help function for type_check_bool used to implement overloading
+ * of EQ and NEQ operator that can be used both for mathematical 
+ * and boolean expression. 
+ * 
+ * Functionality: 
+ * 1) it infers the types of lhs and rhs. 
+ * 2) if both have the same type then it is well typed, otherwise it
+ * is not.
+ */
+static type_inference_struct type_inference(ast_node * node);
+
+
+
+
 bool type_check_ast_expr(ast_node * ast, type_t type){
 	bool result;
 	switch(type){
@@ -53,10 +74,34 @@ bool type_check_fract(ast_node * node){
 	}
 }
 
-typedef struct _type_inference_struct {
-	type_t type;
-	bool success;
-} type_inference_struct;
+static
+bool type_check_bool(ast_node * node){
+	switch(node->data->token){
+		case ast_BOOL:
+			return true;
+		case ast_ID:
+			return getType((char*) node->data->value) == BOOL_T;
+		case ast_BOP1:
+			return type_check_bool(node->ast_children[0]);
+		case ast_BOP2:
+			return type_check_bool(node->ast_children[0]) &&
+				type_check_bool(node->ast_children[1]);
+		case ast_RELOP1: 
+			{
+				type_inference_struct tis = type_inference(node);
+				return tis.success;
+			}	
+		case ast_RELOP:
+			return type_check_fract(node->ast_children[0]) &&
+				type_check_fract(node->ast_children[1]);
+		default:
+			return false;
+	}
+}
+
+
+
+
 
 static 
 type_inference_struct type_inference(ast_node * node){
@@ -102,35 +147,9 @@ type_inference_struct type_inference(ast_node * node){
 			tis.type = BOOL_T;
 			break;
 		default: /* other ast_types are not expression */
-			yyerror("ERROR in expression\n");
 			tis.success = false;
 			break;
 			
 	}
 	return tis;
-}
-
-static
-bool type_check_bool(ast_node * node){
-	switch(node->data->token){
-		case ast_BOOL:
-			return true;
-		case ast_ID:
-			return getType((char*) node->data->value) == BOOL_T;
-		case ast_BOP1:
-			return type_check_bool(node->ast_children[0]);
-		case ast_BOP2:
-			return type_check_bool(node->ast_children[0]) &&
-				type_check_bool(node->ast_children[1]);
-		case ast_RELOP1: 
-			{
-				type_inference_struct tis = type_inference(node);
-				return tis.success;
-			}	
-		case ast_RELOP:
-			return type_check_fract(node->ast_children[0]) &&
-				type_check_fract(node->ast_children[1]);
-		default:
-			return false;
-	}
 }
