@@ -6,7 +6,17 @@
 
 extern void yyerror(char *);
 
+/**
+ * Checks if node is an expression of type fract
+ * @param node a node to check
+ * @return true if node is of type fract, false otherwise.
+ */
 static bool type_check_fract(ast_node *);
+/**
+ * Checks if node is an expression of type bool
+ * @param node a node to check
+ * @return true if node is of type bool, false otherwise.
+ */
 static bool type_check_bool(ast_node *);
 
 /** Internal struct to perform type inference */
