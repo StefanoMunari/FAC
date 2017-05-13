@@ -22,6 +22,7 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 		{
 			char* err_message="Type not recognized by type_checker";
 			yyerror(err_message);
+			result = false;
 		}
 	}
 	if(!result){
@@ -99,6 +100,10 @@ type_inference_struct type_inference(ast_node * node){
 		case ast_RELOP:
 			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
 			tis.type = BOOL_T;
+			break;
+		default: /* other ast_types are not expression */
+			yyerror("ERROR in expression\n");
+			tis.success = false;
 			break;
 			
 	}
