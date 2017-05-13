@@ -1,1 +1,1 @@
-{ID}   { yylval.id = strdup (yytext); return (ID); }
+{ID}   { setYYlloc();  yylval.id = strdup (yytext); return (ID); }

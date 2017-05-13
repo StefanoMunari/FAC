@@ -1,2 +1,2 @@
-bool	{ yylval.type = BOOL_T; return (TYPE); }
-fract	{ yylval.type = FRACT_T; return (TYPE); }
+bool	{ setYYlloc();  yylval.type = BOOL_T; return (TYPE); }
+fract	{ setYYlloc();  yylval.type = FRACT_T; return (TYPE); }
