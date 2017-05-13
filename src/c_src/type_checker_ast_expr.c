@@ -117,24 +117,10 @@ bool type_check_bool(ast_node * node){
 		case ast_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-		case ast_RELOP1:
+		case ast_RELOP1: /* Perform type inference to know which type of equality do we need */
 			{
 				type_inference_struct tis = type_inference(node);
-				if(!tis.success){
-					return false;
-				} else {
-					switch(tis.type){
-						case FRACT_T: 
-							return type_check_fract(node->ast_children[0]) &&
-								type_check_fract(node->ast_children[1]);
-						
-						case BOOL_T:
-							return type_check_bool(node->ast_children[0]) && 
-								type_check_bool(node->ast_children[1]);
-							
-					}
-				}
-			
+				return tis.success;
 			}	
 		case ast_RELOP:
 			return type_check_fract(node->ast_children[0]) &&
