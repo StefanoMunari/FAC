@@ -143,7 +143,7 @@ stmt :
 	printf("Print Var");
 }
 | stmt SKIP SEPARATOR {
-	ast_node * skip_node = astNode(ast_SKIP, 0, 0);
+	ast_node * skip_node = astNode(ast_SKIP, @2.first_line, 0, 0);
 	$$=newSeqNode($1, skip_node);
 }
 | stmt ifrule {
@@ -159,85 +159,84 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	printf("WHILE RULE %d\n", @1.first_line);
-	$$ = astNode(ast_WHILE, 1, 1, $3, $6);
+	$$ = astNode(ast_WHILE, @1.first_line, 1, 1, $3, $6);
 }
 ;
 
 
 ifrule:
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(ast_IF, 1, 2, $3, $6, $10);
+	$$ = astNode(ast_IF, @1.first_line, 1, 2, $3, $6, $10);
 }
 ;
 
 expr :
 expr AOP_0 expr {
-	ast_node * node = astNode(ast_AOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_AOP, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr AOP_1 expr {
-	ast_node * node = astNode(ast_AOP, 2, 0,  $1, $3);
+	ast_node * node = astNode(ast_AOP, @2.first_line, 2, 0,  $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | AOP_0 expr %prec USIGN {
-	ast_node * node = astNode(ast_AOP, 1, 0, $2);
+	ast_node * node = astNode(ast_AOP, @1.first_line, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {
-	ast_node * node = astNode(ast_FRACT, 0, 0);
+	ast_node * node = astNode(ast_FRACT, @1.first_line, 0, 0);
 	node->data->value = malloc(sizeof(fract_t));
 	*(fract_t*)(node->data->value) = $1;
 	$$ = node;
 	}
 | expr BOP2_0 expr {
-	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_1 expr {
-	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, @2.first_line, 2, 0, $1, $3);
 	node->data->token = ast_BOP2;
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_2 expr {
-	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr BOP2_3 expr {
-	ast_node * node = astNode(ast_BOP2, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_BOP2, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_0 expr {
-	ast_node * node = astNode(ast_RELOP, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_RELOP, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | expr RELOP_1 expr {
-	ast_node * node = astNode(ast_RELOP1, 2, 0, $1, $3);
+	ast_node * node = astNode(ast_RELOP1, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
 }
 | BOP1 expr %prec UBOP1{
-	ast_node * node = astNode(ast_BOP1, 1, 0, $2);
+	ast_node * node = astNode(ast_BOP1, @1.first_line, 1, 0, $2);
 	node->data->op = $1;
 	$$ = node;
 }
 | BOOL	{
-	ast_node * node = astNode(ast_BOOL, 0, 0);
+	ast_node * node = astNode(ast_BOOL, @1.first_line, 0, 0);
 	node->data->value = malloc(sizeof(bool));
 	*(bool*)(node->data->value) = $1;
 	$$ = node;
 }
 | ID	{
-	ast_node * node = astNode(ast_ID, 0, 0);
+	ast_node * node = astNode(ast_ID, @1.first_line, 0, 0);
 	node->data->value = strdup($1);
 	$$ = node;
 }
@@ -245,10 +244,10 @@ expr AOP_0 expr {
 
 declaration :
 TYPE ID {
-	ast_node * id_node = astNode(ast_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, @2.first_line, 0, 0);
 	id_node->data->value = strdup($2);
 
-	ast_node * node = astNode(ast_DECLARATION, 1, 0, id_node);
+	ast_node * node = astNode(ast_DECLARATION, @1.first_line, 1, 0, id_node);
 	node->data->type = $1;
 	$$ = node;
 }
@@ -256,17 +255,17 @@ TYPE ID {
 
 var_assignment :
 ID ASSIGNMENT expr {
-	ast_node * id_node = astNode(ast_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, @1.first_line, 0, 0);
 	id_node->data->value = strdup($1);
-	$$ = astNode(ast_ASSIGNMENT, 2, 0, id_node, $3);
+	$$ = astNode(ast_ASSIGNMENT, @2.first_line, 2, 0, id_node, $3);
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	ast_node * id_node = astNode(ast_ID, 0, 0);
+	ast_node * id_node = astNode(ast_ID, @3.first_line, 0, 0);
 	id_node->data->value = strdup($3);
 
-	$$ = astNode(ast_PRINT, 1, 0, id_node);
+	$$ = astNode(ast_PRINT, @1.first_line, 1, 0, id_node);
 }
 
 %%
