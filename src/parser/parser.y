@@ -159,7 +159,7 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	printf("WHILE RULE\n");
+	printf("WHILE RULE %d\n", @1.first_line);
 	$$ = astNode(ast_WHILE, 1, 1, $3, $6);
 }
 ;
@@ -310,6 +310,6 @@ int main(int argc, char * argv[]) {
 }
 
 void yyerror(const char * err_msg) {
-	fprintf(stderr, "Line %d : %s \n", line_counter, err_msg);
+	fprintf(stderr, "Error around line %d : %s \n", yylineno, err_msg);
 	exit(EXIT_FAILURE);
 }
