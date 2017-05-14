@@ -168,6 +168,10 @@ ifrule:
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
 	$$ = astNode(ast_IF, @1.first_line, 1, 2, $3, $6, $10);
 }
+|
+IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
+	$$ = astNode(ast_IF, @1.first_line, 1, 1, $3, $6);
+}
 ;
 
 expr :
