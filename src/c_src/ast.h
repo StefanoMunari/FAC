@@ -14,10 +14,15 @@
  * @brief Abstract Syntax Tree (ast) node
  */
 typedef struct ast_node {
+	/** Field containing the real data				*/
 	record * data;
+	/** number of children of type ast_node			*/
 	unsigned int number_of_ast_children;
+	/** number of children of type seq_node			*/
 	unsigned int number_of_SEQ_children;
+	/** pointers to the children of type ast_node	*/
 	struct ast_node ** ast_children;
+	/** pointers to the children of type seq_node	*/
 	struct seq_node ** SEQ_children;
 } ast_node;
 
