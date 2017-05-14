@@ -10,6 +10,7 @@ then
 fi
 echo "Executing all examples in f directory.."
 for filename in ../examples/ex*.f; do
+	echo "Executing $filename.."
 	output=`$program $filename 2>&1 >/dev/null`
 	res=$?
 	if [ $res -ne 0 ] 
