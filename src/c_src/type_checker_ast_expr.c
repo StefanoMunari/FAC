@@ -67,11 +67,11 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 static
 bool type_check_fract(ast_node * node){
 	switch(node->data->token){
-		case ast_FRACT:
+		case AST_FRACT:
 			return true;
-		case ast_ID:
+		case AST_ID:
 			return getType((char*) node->data->value) == FRACT_T;
-		case ast_AOP:
+		case AST_AOP:
 			if(node->number_of_ast_children == 1)
 				return type_check_fract(node->ast_children[0]);
 			else
@@ -85,13 +85,13 @@ bool type_check_fract(ast_node * node){
 static
 bool type_check_bool(ast_node * node){
 	switch(node->data->token){
-		case ast_BOOL:
+		case AST_BOOL:
 			return true;
-		case ast_ID:
+		case AST_ID:
 			return getType((char*) node->data->value) == BOOL_T;
-		case ast_BOP1:
+		case AST_BOP1:
 			return type_check_bool(node->ast_children[0]);
-		case ast_BOP2:
+		case AST_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
 		case ast_RELOP1: 
@@ -99,7 +99,7 @@ bool type_check_bool(ast_node * node){
 				type_inference_struct tis = type_inference(node);
 				return tis.success;
 			}	
-		case ast_RELOP:
+		case AST_RELOP:
 			return type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
 		default:
