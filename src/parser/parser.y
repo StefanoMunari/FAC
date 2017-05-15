@@ -45,6 +45,8 @@ void yyerror(const char *, ...);
 
 extern uint line_counter;
 
+bool success = true;
+
 %}
 /********************************************
 		TRANSLATION RULES
@@ -293,6 +295,9 @@ int main(int argc, char * argv[]) {
 		case 2: yyerror("Memory exhausted\n"); return EXIT_FAILURE; break;
 		case 0: /* successful */ break;
 	}
+	
+	
+	
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
@@ -318,5 +323,5 @@ void yyerror(const char * err_msg, ...) {
 	fprintf(stderr, "(Around line %d):\t", yylineno);
 	vfprintf(stderr, err_msg, ap);
 	fputc('\n', stderr);
-	exit(EXIT_FAILURE);
+	success = false;
 }
