@@ -31,7 +31,9 @@ typedef struct ast_node {
  * @param list of children
  * @return a new initialized node with the children given in the list
  */
-ast_node * astNode(unsigned int token, int line, const int number_of_children, const int number_of_SEQ_children, ...);
+
+ast_node * astNode(unsigned int token, int line, op_t op, void * value, const int number_of_children, const int number_of_SEQ_children, ...);
+
 /**
  * Free (recursively) the syntax three given in input
  * @param root the root of the syntax tree
