@@ -22,7 +22,7 @@ generate_lexer: generate_parser
 
 lex.yy.c: generate_lexer
 	flex -o $(C_SRC_PATH)/lex.yy.c $(C_SRC_PATH)/lexer.fl && \
-	rm $(C_SRC_PATH)/lexer.fl 
+	rm $(C_SRC_PATH)/lexer.fl
 
 compile: lex.yy.c
 	gcc $(C_FLAG) -o $(BIN)/fac $(C_SOURCES) -lfl && \

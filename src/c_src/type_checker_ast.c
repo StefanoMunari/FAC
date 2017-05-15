@@ -1,4 +1,3 @@
-#include "type_checker.h"
 #include "type_checker_ast.h"
 #include "type_checker_ast_expr.h"
 #include "symbol_table.h"
@@ -21,9 +20,6 @@ bool type_check_ast_node(ast_node * ast) {
 		{ 	/* Perform an assignment */
 			type_t expected_type = getType(node->ast_children[0]->data->value);
 			result &= type_check_ast_expr(node->ast_children[1], expected_type);
-			/* this program point is reached only if type-check is successful */
-			setValue((char*) node->ast_children[0]->data->value,
-				node->ast_children[1]->data->value, expected_type);
 			break;
 		}
 		case AST_PRINT:
@@ -46,7 +42,7 @@ bool type_check_ast_node(ast_node * ast) {
 		case AST_WHILE:
 		{
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
-			result &= type_check(node->SEQ_children[0]);
+			result &= type_check(node->SEQ_children[0], BOOL_T);
 			break;
 		}
 		case AST_SKIP:

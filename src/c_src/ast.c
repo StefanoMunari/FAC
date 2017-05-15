@@ -11,19 +11,13 @@ ast_node * astNode(unsigned int token, int line, const int number_of_ast_childre
 	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
 
 	ast_node * node = calloc(1, sizeof(ast_node));
-<<<<<<< HEAD
 	node->data = (record *) astRecord(token, line, -1, NULL);
-=======
->>>>>>> some raw modifications - todo: fix symbol_table, fix ast.c, fix type_checker (it is incomplete)
+
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
 
-
-
-
 	node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
 	node->SEQ_children = (seq_node**)calloc(number_of_SEQ_children, sizeof(seq_node*));
-
 
 	va_list args_iterator;
 	va_start(args_iterator, number_of_SEQ_children);
@@ -44,11 +38,10 @@ ast_node * astNode(unsigned int token, int line, const int number_of_ast_childre
 	if(node->number_of_ast_children == 0){
 		node->ast_children = NULL;
 	}
-	if(node->number_of_ast_children == 2)
-		node->data = (record *) astRecord(token, -1, node->ast_children[1]);
 	if(node->number_of_SEQ_children == 0){
 		node->SEQ_children = NULL;
 	}
+
 
 	return node;
 }
@@ -106,11 +99,13 @@ int printastNode(ast_node * node) {
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
+
 char * tokenString(ast_category token){
 	switch(token){
 		case AST_BOOL: return "BOOL"; break;
 		case AST_FRACT: return "FRACT"; break;
-		case AST_AOP: return "AOP"; break;
+		case AST_AOP1: return "AOP1"; break;
+		case AST_AOP2: return "AOP2"; break;
 		case AST_DECLARATION: return "TYPE"; break;
 		case AST_BOP1: return "BOP1"; break;
 		case AST_BOP2: return "BOP2"; break;

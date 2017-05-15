@@ -17,10 +17,10 @@ typedef struct value_t
 
 typedef enum
 {
-	/* AOP0 */
+	/* AOP_0 */
 	SUM,
 	DIFF,
-	/* AOP1 */
+	/* AOP_1 */
 	MULT,
 	DIV,
 	/* BOP1 */

@@ -5,10 +5,6 @@
  * @author <stefano.munari.1@studenti.unipd.it>
  */
 %{
-#include <stdio.h>
-#include <stdbool.h>
-#include <assert.h>
-#include <stdlib.h>
 #include "ast.h"
 #include "seq_tree.h"
 
@@ -18,7 +14,12 @@
 #include "facerr.h"
 #include "symbol_table.h"
 #include "type_checker.h"
-
+#include "tac.h"
+#include "tac_printer.h"
+#include <stdio.h>
+#include <stdbool.h>
+#include <assert.h>
+#include <stdlib.h>
 /********************************************
 		GLOBAL SCOPE DECLARATIONS
 *********************************************/
@@ -27,7 +28,12 @@ extern FILE * yyin;
 /** Shared vars */
 symbol_table_entry * symbol_table = NULL;
 /** File-scoped vars **/
+static
 seq_node * head = NULL;
+static
+tac_node * tac_head = NULL;
+static
+void finalize();
 /** BISON declarations **/
 /**
 * Lexical scanner
@@ -220,7 +226,7 @@ expr AOP_0 expr {
 	node->data->op = $2;
 	$$ = node;
 }
-| expr BOP2_3 expr {
+| expr BOP2_3 expr 
 	ast_node * node = astNode(ast_BOP2, @2.first_line, 2, 0, $1, $3);
 	node->data->op = $2;
 	$$ = node;
@@ -266,6 +272,7 @@ TYPE ID {
 
 var_assignment :
 ID ASSIGNMENT expr {
+
 	ast_node * id_node = astNode(ast_ID, @1.first_line, 0, 0);
 	id_node->data->value = strdup($1);
 	$$ = astNode(ast_ASSIGNMENT, @2.first_line, 2, 0, id_node, $3);
@@ -273,6 +280,7 @@ ID ASSIGNMENT expr {
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
+
 	ast_node * id_node = astNode(ast_ID, @3.first_line, 0, 0);
 	id_node->data->value = strdup($3);
 
@@ -306,15 +314,13 @@ int main(int argc, char * argv[]) {
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
-	freeTable();
-
 
 	printf("\n--- The syntax Tree ---\n");
-	//printastNode(head);
 	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
+
 
 	//tac(head);
 	printSeqNode(head);
@@ -322,8 +328,14 @@ int main(int argc, char * argv[]) {
 	tac(head);
 	//printSeqNode(head);
 
+
+	//printSeqNode(head);
+	generate_tac(head, &tac_head);
+	//printf("TAC-HEAD:%d", tac_head->value->op);
+	//print_tac(tac_head);
+
 	/* generate code ??? */
-	freeSeqNode(head);
+	finalize();
 	return EXIT_SUCCESS;
 }
 
@@ -334,4 +346,10 @@ void yyerror(const char * err_msg, ...) {
 	vfprintf(stderr, err_msg, ap);
 	fputc('\n', stderr);
 	success = false;
+}
+
+void finalize(){
+	freeSeqNode(head);
+	//free_tac();
+	freeTable();
 }
