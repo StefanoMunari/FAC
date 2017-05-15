@@ -296,6 +296,7 @@ int main(int argc, char * argv[]) {
 
 	//printSeqNode(head);
 	generate_tac(head, &tac_head);
+	tac_head=tac_head->prev;
 	test_tac(&tac_head);
 
 	/* generate code ??? */
