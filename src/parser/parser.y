@@ -320,7 +320,8 @@ int main(int argc, char * argv[]) {
 void yyerror(const char * err_msg, ...) {
 	va_list ap;
 	va_start(ap, err_msg);
+	fprintf(stderr, "(Around line %d):\t", yylineno);
 	vfprintf(stderr, err_msg, ap);
-	
+	fputc('\n', stderr);
 	exit(EXIT_FAILURE);
 }
