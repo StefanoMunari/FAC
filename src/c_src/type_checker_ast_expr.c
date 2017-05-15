@@ -71,12 +71,11 @@ bool type_check_fract(ast_node * node){
 			return true;
 		case AST_ID:
 			return getType((char*) node->data->value) == FRACT_T;
-		case AST_AOP:
-			if(node->number_of_ast_children == 1)
-				return type_check_fract(node->ast_children[0]);
-			else
-				return type_check_fract(node->ast_children[0]) &&
-						type_check_fract(node->ast_children[1]);
+		case AST_AOP1:
+			return type_check_fract(node->ast_children[0]);
+		case AST_AOP2:
+			return type_check_fract(node->ast_children[0]) &&
+					type_check_fract(node->ast_children[1]);
 		default:
 			return false;
 	}

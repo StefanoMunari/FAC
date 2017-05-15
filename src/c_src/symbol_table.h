@@ -12,8 +12,8 @@ typedef struct symbol_table_entry {
 
 
 void installID(char* id, type_t type);
-void* lookupID(char* id, type_t type);
-void setValue(char * id, void * value, type_t type);
+symbol_table_entry * lookupID(char* id);
+void setValue(char * id, void * value);
 type_t getType(char * id);
 void freeTable();
 
