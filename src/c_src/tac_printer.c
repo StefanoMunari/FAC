@@ -7,33 +7,36 @@
 extern void yyerror(const char *);
 
 static
-void print_tac_entry(tac_entry *);
+void print_tac_entry(tac_entry *, int i);
 static
 char * get_C_operator(tac_op operator);
 static
 char * get_value(tac_value * value);
 
 void print_tac(tac_node * tac_list){
-	tac_node * iterator=tac_list;
+	tac_node * iterator = tac_list;
 	int i=0;
-	while(iterator){
-		printf("iterator%d\n",i);
-		print_tac_entry(iterator->value);
-		iterator=iterator->next;
+	while(iterator != NULL){
+		putchar('\n');
+		print_tac_entry(iterator->value, i);
+		putchar('\n');
 		++i;
+
+		iterator = iterator->next;
 	}
 }
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
 static
-void print_tac_entry(tac_entry * entry){
-	assert(entry);
-	if(entry->op)
-		printf(get_C_operator(entry->op));
-	if(entry->arg0)
+void print_tac_entry(tac_entry * entry, int i){
+	
+	if(entry != NULL)
+		printf("e%d)", i);
+	printf(get_C_operator(entry->op));
+	if(entry->arg0 != NULL)
 		printf(get_value(entry->arg0));
-	if(entry->arg1)
+	if(entry->arg1 != NULL)
 		printf(get_value(entry->arg1));
 }
 
@@ -75,19 +78,20 @@ char * get_C_operator(tac_op operator){
 
 static
 char * get_value(tac_value * value){
-	if(value->address || value->instruction){
-		void * result;
-		if(value->address)
-			result= value->address;
-		if(value->instruction)
-			result= value->instruction;
-		int size_val= (int)strlen("%p");
-		char buffer[size_val];
-		sprintf(buffer, "%p", result);
+	if(get_value == NULL)
+		return "";
+	char * buffer = "";
+	if(value->address != NULL){
+		if(value->address->value != NULL){
+			buffer = "OK";
+			return buffer;
+		}
+	}
+	else if(value->instruction != NULL){
+		buffer = calloc(20, sizeof(char));
+		sprintf(buffer, "%p", value->instruction);
 		return buffer;
 	}
-	int size_val= (int)strlen("%d");
-	char buffer[size_val];
-	//sprintf(buffer, "%d", value->constant);
+	
 	return buffer;
 }
