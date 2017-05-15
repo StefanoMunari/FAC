@@ -5,6 +5,7 @@
 
 typedef struct tac_node {
 	tac_entry * value;
+	tac_node * prev;
 	tac_node * next;
 } tac_node;
 

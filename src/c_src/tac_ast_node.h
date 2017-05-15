@@ -5,7 +5,7 @@
 #include "tac_list.h"
 #include "stack.h"
 
-void tac_ast_node(ast_node * node, tac_node ** predecessor,
+void tac_ast_node(ast_node * node, tac_node ** successor,
 	tac_node * current, stack_t * stack);
 
 #endif /*__TAC_AST_NODE_H__*/
