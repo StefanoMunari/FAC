@@ -139,7 +139,9 @@ void _connect_tac_nodes(tac_node ** predecessor, tac_node ** current){
 		(*predecessor)->next = (*current);
 	else
 		(*predecessor) = (*current);
+	(*current)->next=NULL;
 	printf("==============predecessor %p\n", (*predecessor));
+	printf("==============current %p\n", (*current));
 }
 
 static
