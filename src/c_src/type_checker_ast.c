@@ -13,23 +13,26 @@ bool type_check_ast_node(ast_node * ast) {
 	ast_node * node = ast;
 	bool result = true;
 	switch(node->data->token){
-		case ast_DECLARATION:
+		case AST_DECLARATION:
 			/* Perform a declaration */
 			installID((char*) node->ast_children[0]->data->value, node->data->type);
 			break;
-		case ast_ASSIGNMENT:
+		case AST_ASSIGNMENT:
 		{ 	/* Perform an assignment */
 			type_t expected_type = getType(node->ast_children[0]->data->value);
 			result &= type_check_ast_expr(node->ast_children[1], expected_type);
+			/* this program point is reached only if type-check is successful */
+			setValue((char*) node->ast_children[0]->data->value,
+				node->ast_children[1]->data->value, expected_type);
 			break;
 		}
-		case ast_PRINT:
+		case AST_PRINT:
 		{ /* Check only if the ID is installed in the symbol table
 			 It is equivalent to checking it the type is already defined*/
 			getType(node->ast_children[0]->data->value);
 			break;
 		}
-		case ast_IF:
+		case AST_IF:
 		{
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
 			{
@@ -40,13 +43,13 @@ bool type_check_ast_node(ast_node * ast) {
 			}
 			break;
 		}
-		case ast_WHILE:
+		case AST_WHILE:
 		{
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
 			result &= type_check(node->SEQ_children[0]);
 			break;
 		}
-		case ast_SKIP:
+		case AST_SKIP:
 			result = true;
 			break;
 		default:

@@ -11,7 +11,10 @@ ast_node * astNode(unsigned int token, int line, const int number_of_ast_childre
 	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
 
 	ast_node * node = calloc(1, sizeof(ast_node));
+<<<<<<< HEAD
 	node->data = (record *) astRecord(token, line, -1, NULL);
+=======
+>>>>>>> some raw modifications - todo: fix symbol_table, fix ast.c, fix type_checker (it is incomplete)
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_SEQ_children = number_of_SEQ_children;
 
@@ -41,10 +44,11 @@ ast_node * astNode(unsigned int token, int line, const int number_of_ast_childre
 	if(node->number_of_ast_children == 0){
 		node->ast_children = NULL;
 	}
+	if(node->number_of_ast_children == 2)
+		node->data = (record *) astRecord(token, -1, node->ast_children[1]);
 	if(node->number_of_SEQ_children == 0){
 		node->SEQ_children = NULL;
 	}
-
 
 	return node;
 }
@@ -102,26 +106,22 @@ int printastNode(ast_node * node) {
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
-
 char * tokenString(ast_category token){
 	switch(token){
-		case ast_BOOL: return "BOOL"; break;
-		case ast_FRACT: return "FRACT"; break;
-		case ast_AOP: return "AOP"; break;
-		case ast_DECLARATION: return "TYPE"; break;
-		case ast_BOP1: return "BOP1"; break;
-		case ast_BOP2: return "BOP2"; break;
-		case ast_RELOP1: return "RELOP1 (EQ or NEQ)"; break;
-		case ast_RELOP: return "RELOP"; break;
-		case ast_WHILE: return "WHILE"; break;
-		case ast_IF: return "IF"; break;
-		case ast_ELSE: return "ELSE"; break;
-		case ast_SKIP: return "SKIP"; break;
-		case ast_PRINT: return "PRINT"; break;
-		case ast_ASSIGNMENT: return "ASSIGNMENT"; break;
-		case ast_ID : return "ID"; break;
-		default:
-			break;
+		case AST_BOOL: return "BOOL"; break;
+		case AST_FRACT: return "FRACT"; break;
+		case AST_AOP: return "AOP"; break;
+		case AST_DECLARATION: return "TYPE"; break;
+		case AST_BOP1: return "BOP1"; break;
+		case AST_BOP2: return "BOP2"; break;
+		case AST_RELOP: return "RELOP"; break;
+		case AST_WHILE: return "WHILE"; break;
+		case AST_IF: return "IF"; break;
+		case AST_ELSE: return "ELSE"; break;
+		case AST_SKIP: return "SKIP"; break;
+		case AST_PRINT: return "PRINT"; break;
+		case AST_ASSIGNMENT: return "ASSIGNMENT"; break;
+		case AST_ID : return "ID"; break;
 	}
 	return "";
 }

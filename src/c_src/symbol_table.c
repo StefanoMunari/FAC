@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <limits.h>
 
 extern symbol_table_entry * symbol_table;
 extern void yyerror(char *, ...);
@@ -10,6 +11,9 @@ static void check_type (type_t type0, type_t type1) {
 	if(type0 != type1)
 		yyerror("The requested type differs from the symbol_table's one. Exiting");
 };
+
+//static
+bool is_semantically_valid(void * value, type_t type);
 
 void installID(char* _id, type_t _type) {
 	symbol_table_entry * e;
@@ -32,10 +36,11 @@ void installID(char* _id, type_t _type) {
 void* lookupID(char* _id, type_t type) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
+	printf("LOOKING UP :: %s", _id);
 	if(e == NULL){
 		yyerror("Failed lookup: The variable %s is not yet installed", _id);
 	}
-	check_type(e->type, type);
+	//check_type(e->type, type);
 	if(e -> value == NULL) {
 		yyerror("The variable %s is declared but not initialized. Exiting", _id);
 	}
@@ -52,23 +57,36 @@ type_t getType(char * _id) {
 }
 
 
-void setValue(char * _id, void * value) {
+void setValue(char * _id, void * value, type_t type) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, _id, e);
 	if(e == NULL){
 		yyerror("The variable cannot be assigned because %s is not yet installed", _id);
 	}
-	/*
 	switch(type){
 		case FRACT_T :
-			e->value = malloc(sizeof(fract_t));
-			memcpy(e->value, value, sizeof(fract_t));
+			if(is_semantically_valid(value, type))
+			{
+				e->value = malloc(sizeof(fract_t));
+				memcpy(e->value, value, sizeof(fract_t));
+			}else{
+				e->value = malloc(sizeof(int));
+				int max_int=INT_MAX;
+				memcpy(e->value, &max_int, sizeof(int));
+			}
 			break;
 		case BOOL_T :
-			e->value = malloc(sizeof(bool));
-			memcpy(e->value, value, sizeof(bool));
+			if(is_semantically_valid(value, type))
+			{
+				e->value = malloc(sizeof(fract_t));
+				memcpy(e->value, value, sizeof(bool));
+			}else{
+				e->value = malloc(sizeof(int));
+				int max_int=INT_MAX;
+				memcpy(e->value, &max_int, sizeof(int));
+			}
 			break;
-	}*/
+	}
 }
 
 void freeTable(){
@@ -80,4 +98,22 @@ void freeTable(){
 		HASH_DEL(symbol_table, e);
 		free(e);
 	}
+}
+
+//static
+bool is_semantically_valid(void * value, type_t type){
+	char * expr = (char *) value;
+	int size = (int) strlen(expr);
+	bool is_valid=true;
+	int lower_bound=48;
+	int upper_bound=57;
+	int i=0;
+	if(type == BOOL_T)
+		upper_bound=49;
+	while(is_valid && (i <= size)){
+		if((int)expr[i] < lower_bound || (int)expr[i] > upper_bound)
+			is_valid=false;
+		++i;
+	}
+	return is_valid;
 }
