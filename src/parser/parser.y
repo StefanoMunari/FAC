@@ -15,6 +15,7 @@
 #include "symbol_table.h"
 #include "type_checker.h"
 #include "tac.h"
+#include "test_tac.h"
 #include "tac_printer.h"
 #include <stdio.h>
 #include <stdbool.h>
@@ -295,9 +296,6 @@ int main(int argc, char * argv[]) {
 
 	//printSeqNode(head);
 	generate_tac(head, &tac_head);
-	//printf("TAC-HEAD:%d", tac_head->value->op);
-	//print_tac(tac_head);
-
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
