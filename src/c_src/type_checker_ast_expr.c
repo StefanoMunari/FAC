@@ -4,7 +4,6 @@
 #include "symbol_table.h"
 #include <stdio.h>
 
-extern void yyerror(char *);
 
 /**
  * Checks if node is an expression of type fract

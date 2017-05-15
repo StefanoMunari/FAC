@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 
-extern void yyerror(char *);
+extern void yyerror(char *, ...);
 
 bool type_check_ast_node(ast_node * ast) {
 	ast_node * node = ast;
@@ -51,12 +51,8 @@ bool type_check_ast_node(ast_node * ast) {
 			break;
 		default:
 		{
-			char* err_message="%s token not recognized by type_checker on line %d";
-			int size_token= sizeof(node->data->token);
-			int size_message= (int)strlen(err_message);
-			char err_buffer[size_message+size_token+20];
-			sprintf(err_buffer, err_message, tokenString(node->data->token), node->data->line);
-			yyerror(err_buffer);
+			yyerror("%s token not recognized by type_checker on line %d", 
+					tokenString(node->data->token), node->data->line);
 		}
 	}
 	// DEBUG : %TODO - remove
