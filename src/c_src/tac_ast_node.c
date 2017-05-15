@@ -133,13 +133,17 @@ void _init_tac_node(tac_node ** node){
 	(*node)->value->arg1 = NULL;
 }
 
-
+bool head=true;
 static
 void _connect_tac_nodes(tac_node ** predecessor, tac_node ** current){
 	if((*predecessor))
 		(*predecessor)->next = (*current);
 	else
 		(*predecessor) = (*current);
+	if(head){
+		first= (*predecessor);
+		head=false;
+	}
 	printf("==============predecessor %p\n", (*predecessor));
 }
 

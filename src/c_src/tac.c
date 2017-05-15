@@ -1,6 +1,7 @@
 #include "tac.h"
 #include "tac_ast_node.h"
 #include "stack.h"
+#include "tac_list.h"
 #include <stdio.h>
 
 static
@@ -11,9 +12,8 @@ static
 void init_tac(tac_node *);
 
 
-void generate_tac(seq_node * input, tac_node ** output){
-	tac(input, output, NULL);
-	printf("============output %p\n", output);
+void generate_tac(seq_node * input, tac_node ** result){
+	tac(input, result, NULL);
 }
 
 static
