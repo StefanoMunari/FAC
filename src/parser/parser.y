@@ -41,7 +41,7 @@ int yylex ();
  * Exit the program with failure status code
  * @param error message
  */
-void yyerror(const char *);
+void yyerror(const char *, ...);
 
 extern uint line_counter;
 
@@ -312,7 +312,10 @@ int main(int argc, char * argv[]) {
 	return EXIT_SUCCESS;
 }
 
-void yyerror(const char * err_msg) {
-	fprintf(stderr, "Error around line %d : %s \n", yylineno, err_msg);
+void yyerror(const char * err_msg, ...) {
+	va_list ap;
+	va_start(ap, err_msg);
+	vfprintf(stderr, err_msg, ap);
+	
 	exit(EXIT_FAILURE);
 }
