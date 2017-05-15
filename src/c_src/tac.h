@@ -31,12 +31,7 @@ typedef struct tac_entry{
 	tac_value * arg1;
 } tac_entry;
 
-typedef struct tac_node {
-	tac_entry * value;
-	tac_node * next;
-} tac_node;
-
-void generate_tac(seq_node * input, tac_node ** output);
+void generate_tac(seq_node * input, tac_node ** result);
 
 #endif /*__TAC_H__*/
 
