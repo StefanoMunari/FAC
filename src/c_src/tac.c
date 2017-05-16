@@ -7,7 +7,7 @@
 static
 stack_t stack;
 static
-void tac(seq_node * node, tac_node ** successor, tac_node * current);
+void tac(seq_node * node, tac_node ** current, tac_node * successor);
 static
 void init_tac(tac_node *);
 
@@ -17,18 +17,18 @@ void generate_tac(seq_node * input, tac_node ** result){
 }
 
 static
-void tac(seq_node * node, tac_node ** successor, tac_node * current){
+void tac(seq_node * node, tac_node ** current, tac_node * successor){
 	printf("---TAC---\n");
 	if(!node)
-		init_tac(current);
+		init_tac(successor);
 	if(node->left)
-		tac(node->left, successor, current);
+		tac(node->left, current, successor);
 	if(node->right)
-		tac_ast_node(node->right, successor, current, &stack);
+		tac_ast_node(node->right, current, successor, &stack);
 }
 
 static
-void init_tac(tac_node * current){
-	current=NULL;
+void init_tac(tac_node * successor){
+	successor=NULL;
 	init(&stack);
 }
