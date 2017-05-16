@@ -304,6 +304,8 @@ int main(int argc, char * argv[]) {
 	printf("==============head %p\n", tac_head);
 	test_tac(&tac_head);
 
+	print_tac(tac_head);
+
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
