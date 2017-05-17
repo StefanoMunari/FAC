@@ -314,22 +314,14 @@ int main(int argc, char * argv[]) {
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
-<<<<<<< HEAD
+
 
 
 	//tac(head);
 	printSeqNode(head);
 
 	tac(head);
-=======
-	exit(EXIT_SUCCESS);
->>>>>>> Solved bug in parser.y due to forgotten break
-	//printSeqNode(head);
 
-
-	//printSeqNode(head);
-	generate_tac(head, &tac_head);
-	printf("==============head %p\n", tac_head);
 	test_tac(&tac_head);
 
 	print_tac(tac_head);
