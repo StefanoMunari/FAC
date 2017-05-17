@@ -157,6 +157,7 @@ stmt :
 	printf("Print Var");
 }
 | stmt SKIP SEPARATOR {
+	printf("Ignoring skip operation");
 	$$ = $1;
 }
 | stmt ifrule {
