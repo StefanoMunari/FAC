@@ -229,6 +229,7 @@ expr AOP_0 expr {
 			ast_node * right	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, subright);
 			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3); 
 			$$ = astNode(AST_BOP2, @2.first_line AND, NULL, 2, 0, left, right);
+			break;
 		}
 		default:
 			yyerror("Operation not known. ");
@@ -308,12 +309,16 @@ int main(int argc, char * argv[]) {
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
+<<<<<<< HEAD
 
 
 	//tac(head);
 	printSeqNode(head);
 
 	tac(head);
+=======
+	exit(EXIT_SUCCESS);
+>>>>>>> Solved bug in parser.y due to forgotten break
 	//printSeqNode(head);
 
 
