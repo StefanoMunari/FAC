@@ -134,7 +134,6 @@ void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
 			_tac_print(current, node);
 			return _connect_tac_nodes(&successor, current);
 		}
-		case AST_SKIP:
 		case AST_DECLARATION:{
 			printf("DECL.SKIP\n");
 			return;
