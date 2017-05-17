@@ -33,7 +33,7 @@ void _tac_print(tac_node ** current, ast_node * node);
 void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
 	stack_t * stack){
 	printf("----TAC_AST-NODE-----\n");
-	if(!node || !node->data)
+	if(node == NULL || node->data == NULL)
 		return yyerror("TAC - malformed AST, null node found");
 	switch(node->data->token){
 		/* Internal nodes */
@@ -41,7 +41,7 @@ void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
 		case AST_BOP1:
 		{
 			printf("AOP1.BOP1\n");
-			if((*current)){
+			if(*current != NULL){
 				successor=(*current);
 				(*current)=(*current)->prev;
 			}
@@ -139,6 +139,7 @@ void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
 			return;
 		}
 		default:
+			printf("Token %d %s ", node->data->token, tokenString(node->data->token));
 			yyerror("TAC - token not recognized");
 	}
 }
