@@ -19,11 +19,11 @@ void generate_tac(seq_node * input, tac_node ** result){
 static
 void tac(seq_node * node, tac_node ** current, tac_node * successor){
 	printf("---TAC---\n");
-	if(!node)
+	if(node == NULL)
 		init_tac(successor);
-	if(node->left)
+	if(node->left != NULL)
 		tac(node->left, current, successor);
-	if(node->right)
+	if(node->right != NULL)
 		tac_ast_node(node->right, current, successor, &stack);
 }
 
