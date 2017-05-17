@@ -14,6 +14,8 @@ static
 char * get_value(tac_value * value);
 
 void print_tac(tac_node * tac_list){
+	printf("======= Start Printing the 3AC =======\n"); 
+	
 	tac_node * iterator = tac_list;
 	int i=0;
 	while(iterator != NULL){
@@ -24,20 +26,26 @@ void print_tac(tac_node * tac_list){
 
 		iterator = iterator->next;
 	}
+	
+	printf("=================================\n"); 
 }
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
 static
 void print_tac_entry(tac_entry * entry, int i){
+	if(entry == NULL)
+		return;
+	
 	
 	if(entry != NULL)
-		printf("e%d)", i);
+		printf("e%d):\t", i);
 	printf(get_C_operator(entry->op));
-	if(entry->arg0 != NULL)
-		printf(get_value(entry->arg0));
-	if(entry->arg1 != NULL)
-		printf(get_value(entry->arg1));
+	putchar('\t');
+	printf("%s", get_value(entry->arg0));
+	putchar('\t');
+	printf("%s", get_value(entry->arg1));
+	printf("\n");
 }
 
 static
@@ -76,15 +84,22 @@ char * get_C_operator(tac_op operator){
 	return "";
 }
 
+
+
 static
 char * get_value(tac_value * value){
-	if(get_value == NULL)
+	char * buffer; 
+	
+	if(value == NULL) {
 		return "";
-	char * buffer = "";
-	if(value->address != NULL){
-		if(value->address->value != NULL){
-			buffer = "OK";
-			return buffer;
+	}
+	else if(value->address != NULL){
+		if(value->address->id != NULL){
+				buffer = strdup(value->address->id);
+				return buffer;
+		} else {
+			fprintf(stderr,"Entry in symbol table is not initialized\n");
+			exit(EXIT_FAILURE);
 		}
 	}
 	else if(value->instruction != NULL){
@@ -92,6 +107,14 @@ char * get_value(tac_value * value){
 		sprintf(buffer, "%p", value->instruction);
 		return buffer;
 	}
-	
-	return buffer;
+	else if(value->fract != NULL){
+		printf("value->fract\n");
+		buffer = calloc(30, sizeof(char));
+		sprintf(buffer, "[%d|%d]", value->fract->num, value->fract->den);
+		return buffer;
+	} else {
+		buffer = calloc(20, sizeof(char));
+		sprintf(buffer, "%d", value->boolean?"true":"false");
+		return buffer;
+	}
 }
