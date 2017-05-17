@@ -211,10 +211,32 @@ expr AOP_0 expr {
 	$$ = astNode(ast_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
 }
 | expr BOP2_2 expr {
-	$$ = astNode(ast_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
+	/* Applying desugaring of "->" operator:  
+	 * "A imply B"  can be rewritten as "not A or B" */
+	ast_node * notA = astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $1);
+	$$ = astNode(AST_BOP2, @2.first_line, OR, NULL,  2, 0, notA, $3);
 }
-| expr BOP2_3 expr 
-	$$ = astNode(ast_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
+| expr BOP2_3 expr {
+	switch($2) {
+		case IFF: /* De-Sugaring (!$1 || $3) && ($1 || !$3); */
+		{
+			ast_node * not1 	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $1);
+			ast_node * not3 	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $3);
+			ast_node * left 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, not1, $3);
+			ast_node * right 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, not3);
+			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
+			break; 
+		}
+		case XOR: /* De-Sugaring ($1 || $3) && !($1 && $3); */
+		{
+			ast_node * subright =	astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, $1, $3);
+			ast_node * right	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, subright);
+			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3); 
+			$$ = astNode(AST_BOP2, @2.first_line AND, NULL, 2, 0, left, right);
+		}
+		default:
+			yyerror("Operation not known. ");
+	}
 }
 | expr RELOP_0 expr {
 	$$ = astNode(ast_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
