@@ -32,6 +32,6 @@ typedef struct tac_entry{
 } tac_entry;
 
 void generate_tac(seq_node * input, tac_node ** result);
+void free_tac(tac_node * head);
 
 #endif /*__TAC_H__*/
-
