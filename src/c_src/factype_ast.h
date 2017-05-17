@@ -17,22 +17,21 @@
 * It represents the AST category of tokens
 */
 typedef enum {
-	ast_ID,
-	ast_FRACT,
-	ast_BOOL,
-	ast_AOP,
-	ast_BOP1,
-	ast_BOP2,
-	ast_RELOP,
-	ast_RELOP1,
-	ast_PRINT,
-	ast_WHILE,
-	ast_ASSIGNMENT,
-	ast_DECLARATION,
-	ast_SKIP,
-	ast_IF,
-	ast_ELSE,
-	ast_END_MARKER
+	AST_ID,
+	AST_FRACT,
+	AST_BOOL,
+	AST_AOP1,
+	AST_AOP2,
+	AST_BOP1,
+	AST_BOP2,
+	AST_RELOP,
+	AST_PRINT,
+	AST_WHILE,
+	AST_ASSIGNMENT,
+	AST_DECLARATION,
+	AST_IF,
+	AST_ELSE,
+	AST_END_MARKER
 } ast_category;
 
 #endif /*_FACTYPE_AST_H_*/

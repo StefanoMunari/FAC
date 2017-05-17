@@ -45,9 +45,6 @@ bool type_check_ast_node(ast_node * ast) {
 			result &= type_check(node->SEQ_children[0], BOOL_T);
 			break;
 		}
-		case AST_SKIP:
-			result = true;
-			break;
 		default:
 		{
 			yyerror("%s token not recognized by type_checker on line %d", 
