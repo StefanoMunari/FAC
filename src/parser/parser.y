@@ -342,6 +342,6 @@ void yyerror(const char * err_msg, ...) {
 
 void finalize(){
 	freeSeqNode(head);
-	//free_tac();
+	free_tac(tac_head);
 	freeTable();
 }
