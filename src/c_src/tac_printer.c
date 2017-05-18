@@ -114,7 +114,7 @@ char * get_value(tac_value * value){
 		return buffer;
 	} else {
 		buffer = calloc(20, sizeof(char));
-		sprintf(buffer, "%d", value->boolean?"true":"false");
+		sprintf(buffer, "%s", value->boolean?"true":"false");
 		return buffer;
 	}
 }

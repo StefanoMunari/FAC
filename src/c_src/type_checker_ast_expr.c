@@ -93,7 +93,7 @@ bool type_check_bool(ast_node * node){
 		case AST_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-		case ast_RELOP1: 
+		case AST_RELOP1: 
 			{
 				type_inference_struct tis = type_inference(node);
 				return tis.success;
@@ -114,29 +114,30 @@ static
 type_inference_struct type_inference(ast_node * node){
 	type_inference_struct tis;
 	switch(node->data->token){
-		case ast_BOOL:
+		case AST_BOOL:
 			tis.type = BOOL_T;
 			tis.success = true;
 			break;
-		case ast_FRACT:
+		case AST_FRACT:
 			tis.type = FRACT_T;
 			tis.success = true;
 			break;
-		case ast_ID:
+		case AST_ID:
 			tis.type = getType((char*) node->data->value);
 			tis.success = true;
 			break;
-		case ast_AOP:
+		case AST_AOP1:
+		case AST_AOP2:
 			tis.type = FRACT_T;
 			tis.success = type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
 			break;
-		case ast_BOP1:
-		case ast_BOP2:
+		case AST_BOP1:
+		case AST_BOP2:
 			tis.type = BOOL_T;
 			tis.success = type_check_ast_expr(node, BOOL_T);
 			break;
-		case ast_RELOP1:
+		case AST_RELOP1:
 		{
 			type_inference_struct tis1 = type_inference(node->ast_children[0]);
 			type_inference_struct tis2 = type_inference(node->ast_children[1]);
@@ -149,7 +150,7 @@ type_inference_struct type_inference(ast_node * node){
 			}
 			break;
 		}
-		case ast_RELOP:
+		case AST_RELOP:
 			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
 			tis.type = BOOL_T;
 			break;

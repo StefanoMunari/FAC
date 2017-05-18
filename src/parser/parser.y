@@ -169,43 +169,43 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(ast_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
 }
 ;
 
 
 ifrule:
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(ast_IF, @1.first_line, -1, NULL, 1, 2, $3, $6, $10);
+	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 2, $3, $6, $10);
 }
 |
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(ast_IF, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 1, $3, $6);
 }
 ;
 
 expr :
 expr AOP_0 expr {
-	$$ = astNode(ast_AOP, @2.first_line, $2, NULL , 2, 0,  $1, $3);
+	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
 }
 | expr AOP_1 expr {
-	$$ = astNode(ast_AOP, @2.first_line, $2, NULL , 2, 0,  $1, $3);
+	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
 }
 | AOP_0 expr %prec USIGN {
-	$$ = astNode(ast_AOP1, @1.first_line, $1, NULL,  1, 0, $2);
+	$$ = astNode(AST_AOP1, @1.first_line, $1, NULL,  1, 0, $2);
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {
 	fract_t * f = malloc(sizeof(fract_t));
 	*f = $1;
 	
-	$$ = astNode(ast_FRACT, @1.first_line, -1, f, 0, 0);
+	$$ = astNode(AST_FRACT, @1.first_line, -1, f, 0, 0);
 }
 | expr BOP2_0 expr {
-	$$ = astNode(ast_BOP2, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_BOP2, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr BOP2_1 expr {
-	$$ = astNode(ast_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
+	$$ = astNode(AST_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
 }
 | expr BOP2_2 expr {
 	/* Applying desugaring of "->" operator:  
@@ -229,7 +229,7 @@ expr AOP_0 expr {
 			ast_node * subright =	astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, $1, $3);
 			ast_node * right	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, subright);
 			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3); 
-			$$ = astNode(AST_BOP2, @2.first_line AND, NULL, 2, 0, left, right);
+			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
 			break;
 		}
 		default:
@@ -237,44 +237,44 @@ expr AOP_0 expr {
 	}
 }
 | expr RELOP_0 expr {
-	$$ = astNode(ast_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_1 expr {
-	$$ = astNode(ast_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | BOP1 expr %prec UBOP1{
-	$$ = astNode(ast_BOP1, @1.first_line, $1, NULL, 1, 0, $2);
+	$$ = astNode(AST_BOP1, @1.first_line, $1, NULL, 1, 0, $2);
 }
 | BOOL	{
 	bool * b = malloc(sizeof(bool));
 	*b = $1;
-	$$ = astNode(ast_BOOL, @1.first_line, -1, b, 0, 0);
+	$$ = astNode(AST_BOOL, @1.first_line, -1, b, 0, 0);
 }
 | ID	{
 	char * identifier = strdup($1);
-	$$ = astNode(ast_ID, @1.first_line, -1, identifier, 0, 0);
+	$$ = astNode(AST_ID, @1.first_line, -1, identifier, 0, 0);
 }
 ;
 
 declaration :
 TYPE ID {
-	ast_node * id_node = astNode(ast_ID, @2.first_line, -1, strdup($2), 0, 0);
-	$$ = astNode(ast_DECLARATION, @1.first_line, -1, NULL, 1, 0, id_node);
+	ast_node * id_node = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
+	$$ = astNode(AST_DECLARATION, @1.first_line, -1, NULL, 1, 0, id_node);
 	$$->data->type = $1;
 }
 
 
 var_assignment :
 ID ASSIGNMENT expr {
-	ast_node * id_node = astNode(ast_ID, @1.first_line, -1, strdup($1), 0, 0);
-	$$ = astNode(ast_ASSIGNMENT, @2.first_line, -1, NULL, 2, 0, id_node, $3);
+	ast_node * id_node = astNode(AST_ID, @1.first_line, -1, strdup($1), 0, 0);
+	$$ = astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL, 2, 0, id_node, $3);
 
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	ast_node * id_node = astNode(ast_ID, @3.first_line, -1, strdup($3), 0, 0);
-	$$ = astNode(ast_PRINT, @1.first_line, -1, NULL, 1, 0, id_node);
+	ast_node * id_node = astNode(AST_ID, @3.first_line, -1, strdup($3), 0, 0);
+	$$ = astNode(AST_PRINT, @1.first_line, -1, NULL, 1, 0, id_node);
 }
 
 %%
