@@ -14,7 +14,7 @@ static
 void free_tac_entry(tac_entry * entry);
 
 tac_list * tac(seq_node * node){
-	tac_list * tlist;
+	tac_list * tlist = NULL;
 	printf("---TAC---\n");
 	if(node == NULL){
 		printf("PRIMO BRANCH\n");
@@ -28,6 +28,7 @@ tac_list * tac(seq_node * node){
 		printf("TERZO BRANCH\n");
 		return tac_ast_node(node->right, tlist, &stack);
 	}
+	return NULL;
 }
 
 static
@@ -39,14 +40,19 @@ tac_list * init_tac(){
 	return tlist;
 }
 
-void free_tac(tac_node * head){
-	tac_node * current = head;
+void free_tac(tac_list * list){
+	if(list == NULL)
+		return;
+	tac_node * current = list->first;
 	tac_node * tmp;
 	while(current != NULL){
 		free_tac_entry(current->value);
 		tmp = current->next;
 		current = tmp;
 	}
+	free(list->first);
+	free(list->last);
+	free(list);
 }
 
 static
