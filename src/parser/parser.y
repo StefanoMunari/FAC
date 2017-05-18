@@ -15,6 +15,7 @@
 #include "symbol_table.h"
 #include "type_checker.h"
 #include "tac.h"
+#include "tac_list.h"
 #include "test_tac.h"
 #include "tac_printer.h"
 #include <stdio.h>
@@ -32,7 +33,7 @@ symbol_table_entry * symbol_table = NULL;
 static
 seq_node * head = NULL;
 static
-tac_node * tac_head = NULL;
+tac_list * tac_head = NULL;
 static
 void finalize();
 /** BISON declarations **/
@@ -309,20 +310,17 @@ int main(int argc, char * argv[]) {
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
-
-
-
-	//tac(head);
 	printSeqNode(head);
 
-	tac(head);
 
-	test_tac(&tac_head);
+	//printSeqNode(head);
+	tac_head=tac(head);
 
-	print_tac(tac_head);
-
+	//print_tac(tac_head->first);
+	printf("==============head %p\n", tac_head);
+	//test_tac(&(tac_head->first));
 	/* generate code ??? */
-	finalize();
+	//finalize();
 	return EXIT_SUCCESS;
 }
 

@@ -13,6 +13,7 @@
 #include "symbol_table.h"
 #include "factype_tac.h"
 #include "factype.h"
+#include "tac_list.h"
 #include <stdbool.h>
 
 typedef struct tac_entry tac_entry;
@@ -31,7 +32,7 @@ typedef struct tac_entry{
 	tac_value * arg1;
 } tac_entry;
 
-void generate_tac(seq_node * input, tac_node ** result);
+struct tac_list * tac(seq_node * input);
 void free_tac(tac_node * head);
 
 #endif /*__TAC_H__*/

@@ -6,21 +6,17 @@
 #include <limits.h>
 
 extern void yyerror(char *);
-static
-void _init_tac_node(tac_node ** node);
-static
-void _init_tac_value(tac_node ** node, void * value);
-static
-void _connect_tac_nodes(tac_node ** successor, tac_node ** current);
 
 static
-void _tac_fract(tac_node ** current, ast_node * node);
+tac_node* _tac_node();
 static
-void _tac_bool(tac_node ** current, ast_node * node);
+tac_list* _tac_fract(tac_list *, ast_node *);
 static
-void _tac_id(tac_node ** current, ast_node * node);
+tac_list* _tac_bool(tac_list *, ast_node *);
 static
-void _tac_print(tac_node ** current, ast_node * node);
+tac_list* _tac_id(tac_list *, ast_node *);
+static
+tac_list* _tac_print(tac_list *, ast_node *);
 
 
 /**
@@ -30,116 +26,145 @@ void _tac_print(tac_node ** current, ast_node * node);
 * 		the same declaration order
 *
 */
-void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
-	stack_t * stack){
+tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 	printf("----TAC_AST-NODE-----\n");
-	if(node == NULL || node->data == NULL)
-		return yyerror("TAC - malformed AST, null node found");
+	if(node == NULL || node->data == NULL){
+		yyerror("TAC - malformed AST, null node found");
+		return tlist;
+	}
 	switch(node->data->token){
 		/* Internal nodes */
 		case AST_AOP1:
 		case AST_BOP1:
 		{
 			printf("AOP1.BOP1\n");
-			if(*current != NULL){
-				successor=(*current);
-				(*current)=(*current)->prev;
+			tac_node* tnode=_tac_node();
+			/* set up tnode */
+			tnode->value->op = node->data->op;
+			if(tlist->last == NULL)
+				tlist->last=tnode;
+			else
+				tlist->last->next=tnode;
+			tlist->last->next=tnode;
+			tnode->prev=tlist->last;
+			tlist->last=tlist->last->next;
+			/* compute child node */
+			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
+			/* the child node is a subtree */
+			if(tlist->last != left->last){
+				/* set up 3AC */
+				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0->instruction =  left->last->value;
+				tlist->last->value->arg1=NULL;
+				/* connect the list of triples */
+				tlist->first->prev=left->last;
+				left->last->next=tlist->first;
+				tlist->first=left->first;
 			}
-			_init_tac_node(current);
-			(*current)->next=successor;
-			if(successor)
-				successor->prev=(*current);
-			(*current)->value->op = node->data->op;
-			tac_node * aux = (*current);
-			return tac_ast_node(node->ast_children[0], &aux, successor, stack);
+			printf("----------return AOP1.BOP1---------------------------\n");
+			printf("-------------------------------------\n");
+			return tlist;
 		}
 		case AST_AOP2:
 		case AST_BOP2:
 		case AST_RELOP:
 		{
 			printf("AOP2.BOP2.RELOP\n");
-			if((*current)){
-				successor=(*current);
-				(*current)=(*current)->prev;
+			tac_node* tnode=_tac_node();
+			/* set up tnode */
+			tnode->value->op = node->data->op;
+			if(tlist->last == NULL)
+				tlist->last=tnode;
+			else
+				tlist->last->next=tnode;
+			tlist->last->next=tnode;
+			tnode->prev=tlist->last;
+			tlist->last=tlist->last->next;
+			/* compute child node */
+			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			/* setup 3AC */
+			if(tlist->last != left->last){
+				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0->instruction =  left->last->value;
 			}
-			_init_tac_node(current);
-			(*current)->next=successor;
-			if(successor)
-				successor->prev=(*current);
-			printf("==============successor %p\n", successor);
-			printf("==============(*current-next) %p\n", (*current)->next);
-			printf("==============successor-prev %p\n", successor->prev);
-			printf("==============(*current) %p\n", (*current));
-			(*current)->value->op = node->data->op;
-			tac_node * aux = (*current);
-			/* compute right branch */
-			tac_ast_node(node->ast_children[1], &aux, successor, stack);
-			tac_entry * instruction1 = aux->value;
-			/* compute left branch */
-			tac_ast_node(node->ast_children[0], &aux, successor, stack);
-			tac_entry * instruction0 = aux->value;
-			if(!(*current)->value->arg0){
-				(*current)->value->arg0 = malloc(sizeof(tac_value));
-				(*current)->value->arg0->instruction = instruction0;
+			if(tlist->last != right->last){
+				tlist->last->value->arg1 = malloc(sizeof(tac_value));
+				tlist->last->value->arg1->instruction =  right->last->value;
 			}
-			if(!(*current)->value->arg1){
-				(*current)->value->arg1 = malloc(sizeof(tac_value));
-				(*current)->value->arg1->instruction = instruction1;
+			/* connect the list of triples */
+			if(tlist->last != left->last){
+				tlist->first->prev=left->last;
+				left->last->next=tlist->first;
+				tlist->first=left->first;
 			}
-			return;
+			if(tlist->last != right->last){
+				tlist->first->prev=right->last;
+				right->last->next=tlist->first;
+				tlist->first=right->first;
+			}
+			printf("----------return AOP1.BOP1---------------------------\n");
+			printf("-------------------------------------\n");
+			return tlist;
 		}
 		case AST_ASSIGNMENT:
 		{
 			printf("ASS\n");
-			if((*current)){
-				successor=(*current);
-				(*current)=(*current)->prev;
+			tac_node* tnode=_tac_node();
+			/* set up tnode */
+			tnode->value->op = TAC_ASSIGNMENT;
+			if(tlist->last == NULL)
+				tlist->last=tnode;
+			else{
+				printf("-ASDASd-%p\n", tlist->last);
+				tlist->last->next=tnode;
 			}
-			_init_tac_node(current);
-			(*current)->next=successor;
-			if(successor)
-				successor->prev=(*current);
-			printf("==============successor %p\n", successor);
-			printf("==============(*current) %p\n", (*current));
-			(*current)->value->op = TAC_ASSIGNMENT;
+			tnode->prev=tlist->last;
+			tlist->last=tlist->last->next;
 			/* left side of assignment */
-			(*current)->value->arg0 = malloc(sizeof(tac_value));
-			(*current)->value->arg0->address = lookupID(node->ast_children[0]->data->value);
-			tac_node * aux = (*current);
-			/* right side of assignment */
-			return tac_ast_node(node->ast_children[1], &aux, successor, stack);
+			tnode->value->arg0 = malloc(sizeof(tac_value));
+			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+			/* compute child node */
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			/* setup 3AC */
+			if(tlist->last != right->last){
+				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0->instruction =  right->last->value;
+			}
+			/* connect list of triples */
+			if(tlist->last != right->last){
+				tlist->first->prev=right->last;
+				right->last->next=tlist->first;
+				tlist->first=right->first;
+			}
+			printf("-----------------return ASS--------------------\n");
+			printf("-------------------------------------\n");
+			return tlist;
 		}
 		/* Leaves */
 		case AST_FRACT:{
-			_tac_fract(current, node);
-			printf("==============successor %p\n", successor);
-			printf("==============(*current) %p\n", (*current));
-			return _connect_tac_nodes(&successor, current);
+			return _tac_fract(tlist, node);
 		}
-		case AST_BOOL:{/*constants*/
-			_tac_bool(current, node);
-			return _connect_tac_nodes(&successor, current);
+		case AST_BOOL:{
+			return _tac_bool(tlist, node);
 		}
 		case AST_ID:
 		{
-			_tac_id(current, node);
-			return _connect_tac_nodes(&successor, current);
+			return _tac_id(tlist, node);
 		}
 		case AST_PRINT:
 		{
 			printf("PRINT");
-			if((*current))
-				(*current)=(*current)->prev;
-			_init_tac_node(current);
-			_tac_print(current, node);
-			return _connect_tac_nodes(&successor, current);
+			tlist->last->next=_tac_node();
+			tlist->last->next->prev=tlist->last;
+			tlist->last=tlist->last->next;
+			return _tac_print(tlist, node);
 		}
 		case AST_DECLARATION:{
 			printf("DECL.SKIP\n");
-			return;
+			return tlist;
 		}
 		default:
-			printf("Token %d %s ", node->data->token, tokenString(node->data->token));
 			yyerror("TAC - token not recognized");
 	}
 }
@@ -148,67 +173,64 @@ void tac_ast_node(ast_node * node, tac_node ** current, tac_node * successor,
 			PRIVATE FUNCTIONS
 *********************************************/
 static
-void _init_tac_node(tac_node ** node){
-	(*node) = malloc(sizeof(tac_node));
-	(*node)->value = malloc(sizeof(tac_entry));
-	(*node)->value->arg0 = NULL;
-	(*node)->value->arg1 = NULL;
+tac_node* _tac_node(){
+	tac_node* node;
+	node = malloc(sizeof(tac_node));
+	node->value = malloc(sizeof(tac_entry));
+	node->value->arg0 = NULL;
+	node->value->arg1 = NULL;
+	node->prev=NULL;
+	node->next=NULL;
+	return node;
 }
 
 static
-void _connect_tac_nodes(tac_node ** successor, tac_node ** current){
-	if((*successor)){
-		(*successor)->prev = (*current);
-		(*current)->next = (*successor);
-	}
-	printf("==============successor %p\n", (*successor));
-	printf("==============current %p\n", (*current));
-}
-
-static
-void _tac_fract(tac_node ** current, ast_node * node){
+tac_list * _tac_fract(tac_list * tlist, ast_node * node){
 	printf("FRACT\n");
-	if((*current)->value->arg0){
+	if(tlist->last->value->arg0){
 		printf("FRACT-arg1\n");
-		(*current)->value->arg1 = malloc(sizeof(tac_value));
-		(*current)->value->arg1->fract = (fract_t*) node->data->value;
-		return;
+		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1->fract = (fract_t*) node->data->value;
+		return tlist;
 	}
 	printf("FRACT-arg0\n");
-	(*current)->value->arg0 = malloc(sizeof(tac_value));
-	(*current)->value->arg0->fract = (fract_t*) node->data->value;
+	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0->fract = (fract_t*) node->data->value;
+	return tlist;
 }
 
 static
-void _tac_bool(tac_node ** current, ast_node * node){
+tac_list * _tac_bool(tac_list * tlist, ast_node * node){
 	printf("BOOL\n");
-	if((*current)->value->arg0){
-		(*current)->value->arg1 = malloc(sizeof(tac_value));
-		(*current)->value->arg1->boolean = node->data->value;
-		return;
+	if(tlist->last->value->arg0){
+		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1->boolean = node->data->value;
+		return tlist;
 	}
-	(*current)->value->arg0 = malloc(sizeof(tac_value));
-	(*current)->value->arg0->boolean = node->data->value;
+	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0->boolean = node->data->value;
+	return tlist;
 }
 
 static
-void _tac_id(tac_node ** current, ast_node * node){
+tac_list * _tac_id(tac_list * tlist, ast_node * node){
 	printf("ID\n");
-	if((*current)->value->arg0){
+	if(tlist->last->value->arg0){
 		printf("ID-arg1\n");
-		(*current)->value->arg1 = malloc(sizeof(tac_value));
-		(*current)->value->arg1->address = lookupID(node->data->value);
-		return;
+		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1->address = lookupID(node->data->value);
+		return tlist;
 	}
 	printf("ID-arg0\n");
-	(*current)->value->arg0 = malloc(sizeof(tac_value));
-	(*current)->value->arg0->address = lookupID(node->data->value);
+	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0->address = lookupID(node->data->value);
+	return tlist;
 }
 
 static
-void _tac_print(tac_node ** current, ast_node * node){
-	(*current)->value->op = TAC_PRINT;
-	(*current)->value->arg0 = malloc(sizeof(tac_value));
-	(*current)->value->arg0->address = lookupID(node->ast_children[0]->data->value);
-	printf("-ADDRESS =%p\n",(*current)->value->arg0->address);
+tac_list * _tac_print(tac_list * tlist, ast_node * node){
+	tlist->last->value->op = TAC_PRINT;
+	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+	return tlist;
 }

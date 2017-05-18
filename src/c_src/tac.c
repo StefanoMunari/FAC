@@ -7,38 +7,37 @@
 static
 stack_t stack;
 static
-void tac(seq_node * node, tac_node ** current, tac_node * successor);
-static
-void init_tac(tac_node *);
+tac_list * init_tac();
 static
 void free_tac_value(tac_value * value);
 static
 void free_tac_entry(tac_entry * entry);
 
-
-
-void generate_tac(seq_node * input, tac_node ** result){
-	tac(input, result, NULL);
-}
-
-static
-void tac(seq_node * node, tac_node ** current, tac_node * successor){
+tac_list * tac(seq_node * node){
+	tac_list * tlist;
 	printf("---TAC---\n");
-	if(node == NULL)
-		init_tac(successor);
-	if(node->left != NULL)
-		tac(node->left, current, successor);
-	if(node->right != NULL)
-		tac_ast_node(node->right, current, successor, &stack);
+	if(node == NULL){
+		printf("PRIMO BRANCH\n");
+		return init_tac();
+	}
+	if(node->left != NULL){
+				printf("SECONDO BRANCH\n");
+		tlist=tac(node->left);
+	}
+	if(node->right != NULL){
+						printf("TERZO BRANCH\n");
+		return tac_ast_node(node->right, tlist, &stack);
+	}
 }
 
 static
-void init_tac(tac_node * successor){
-	successor=NULL;
+tac_list * init_tac(){
 	init(&stack);
+	tac_list * tlist= malloc(sizeof(tac_list));
+	tlist->first=NULL;
+	tlist->last=NULL;
+	return tlist;
 }
-
-
 
 void free_tac(tac_node * head){
 	tac_node * current = head;
@@ -48,7 +47,6 @@ void free_tac(tac_node * head){
 		tmp = current->next;
 		current = tmp;
 	}
-	
 }
 
 static
