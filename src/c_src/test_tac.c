@@ -3,6 +3,7 @@
 #include "factype.h"
 #include "tac_list.h"
 #include "tac.h"
+#include <stdio.h>
 
 void test_tac(tac_node ** head){
 	tac_node * iterator=(* head);

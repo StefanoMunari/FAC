@@ -325,7 +325,7 @@ int main(int argc, char * argv[]) {
 	printf("==============head %p\n", tac_head);
 	//test_tac(&(tac_head->first));
 	/* generate code ??? */
-	//finalize();
+	finalize();
 	return EXIT_SUCCESS;
 }
 
@@ -340,6 +340,7 @@ void yyerror(const char * err_msg, ...) {
 
 void finalize(){
 	freeSeqNode(head);
-	free_tac(tac_head);
+	free_tac(tac_head->first);
+	free(tac_head);
 	freeTable();
 }
