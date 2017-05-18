@@ -109,11 +109,15 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		case AST_ASSIGNMENT:
 		{
-			printf("ASS\n");
+			printf("ASS %p \n", tlist);
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = TAC_ASSIGNMENT;
-			if(tlist->last == NULL)
+			if(tlist == NULL){/** TODO: FIX THIS RETURN */
+				
+				return NULL;
+			}
+			else if(tlist->last == NULL)
 				tlist->last=tnode;
 			else{
 				printf("-ASDASd-%p\n", tlist->last);
@@ -166,7 +170,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		default:
 			yyerror("TAC - token not recognized");
-			
+			exit(EXIT_FAILURE);
 	}
 }
 
