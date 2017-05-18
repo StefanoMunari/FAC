@@ -33,6 +33,6 @@ typedef struct tac_entry{
 } tac_entry;
 
 struct tac_list * tac(seq_node * input);
-void free_tac(tac_node * head);
+void free_tac(struct tac_list * head);
 
 #endif /*__TAC_H__*/
