@@ -41,13 +41,14 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			if(tlist->last == NULL)
+			if(!tlist->last)
 				tlist->last=tnode;
-			else
+				/* nothig to connect */
+			else{
 				tlist->last->next=tnode;
-			tlist->last->next=tnode;
-			tnode->prev=tlist->last;
-			tlist->last=tlist->last->next;
+				tnode->prev=tlist->last;
+				tlist->last=tlist->last->next;
+			}
 			/* compute child node */
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
 			/* the child node is a subtree */
@@ -73,13 +74,14 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			if(tlist->last == NULL)
+			if(!tlist->last)
 				tlist->last=tnode;
-			else
+				/* nothig to connect */
+			else{
 				tlist->last->next=tnode;
-			tlist->last->next=tnode;
-			tnode->prev=tlist->last;
-			tlist->last=tlist->last->next;
+				tnode->prev=tlist->last;
+				tlist->last=tlist->last->next;
+			}
 			/* compute child node */
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
@@ -113,18 +115,14 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = TAC_ASSIGNMENT;
-			if(tlist == NULL){/** TODO: FIX THIS RETURN */
-				
-				return NULL;
-			}
-			else if(tlist->last == NULL)
+			if(!tlist->last)
 				tlist->last=tnode;
+				/* nothig to connect */
 			else{
-				printf("-ASDASd-%p\n", tlist->last);
 				tlist->last->next=tnode;
+				tnode->prev=tlist->last;
+				tlist->last=tlist->last->next;
 			}
-			tnode->prev=tlist->last;
-			tlist->last=tlist->last->next;
 			/* left side of assignment */
 			tnode->value->arg0 = malloc(sizeof(tac_value));
 			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
@@ -192,6 +190,7 @@ tac_node* _tac_node(){
 static
 tac_list * _tac_fract(tac_list * tlist, ast_node * node){
 	printf("FRACT\n");
+	printf("FRACT-P%p\n", tlist->last->value->arg0);
 	if(tlist->last->value->arg0){
 		printf("FRACT-arg1\n");
 		tlist->last->value->arg1 = malloc(sizeof(tac_value));

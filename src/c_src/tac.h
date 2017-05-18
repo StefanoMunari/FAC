@@ -32,7 +32,7 @@ typedef struct tac_entry{
 	tac_value * arg1;
 } tac_entry;
 
-struct tac_list * tac(seq_node * input);
+struct tac_list * generate_tac(seq_node * input);
 void free_tac(struct tac_list * head);
 
 #endif /*__TAC_H__*/

@@ -5,8 +5,8 @@
 #include "tac.h"
 #include <stdio.h>
 
-void test_tac(tac_node ** head){
-	tac_node * iterator=(* head);
+void test_tac(tac_list ** tlist){
+	tac_node * iterator=(* tlist)->last;
 /*
 	printf("FIRST-OP = %d", iterator->value->op);
 	printf("FIRST-NUM = %d", ((fract_t *) iterator->value->arg0->fract)->num);
@@ -15,7 +15,7 @@ void test_tac(tac_node ** head){
 	int i=0;
 	while(iterator){
 		printf("\n%d)ITERATOR %p\n", i, iterator);
-		iterator=iterator->next;
+		iterator=iterator->prev;
 		++i;
 	}
 }

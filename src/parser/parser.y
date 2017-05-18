@@ -33,7 +33,7 @@ symbol_table_entry * symbol_table = NULL;
 static
 seq_node * head = NULL;
 static
-tac_list * tac_head = NULL;
+tac_list * tlist = NULL;
 static
 void finalize();
 /** BISON declarations **/
@@ -314,11 +314,8 @@ int main(int argc, char * argv[]) {
 
 
 	//printSeqNode(head);
-	tac_head=tac(head);
-
-	//print_tac(tac_head->first);
-	printf("==============head %p\n", tac_head);
-	//test_tac(&(tac_head->first));
+	tlist=generate_tac(head);
+	test_tac(&tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
@@ -335,6 +332,6 @@ void yyerror(const char * err_msg, ...) {
 
 void finalize(){
 	freeSeqNode(head);
-	free_tac(tac_head);
+	//free_tac(tac_head);
 	freeTable();
 }
