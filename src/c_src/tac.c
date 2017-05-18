@@ -21,13 +21,14 @@ tac_list * tac(seq_node * node){
 		return init_tac();
 	}
 	if(node->left != NULL){
-				printf("SECONDO BRANCH\n");
+		printf("SECONDO BRANCH\n");
 		tlist=tac(node->left);
 	}
 	if(node->right != NULL){
-						printf("TERZO BRANCH\n");
+		printf("TERZO BRANCH\n");
 		return tac_ast_node(node->right, tlist, &stack);
 	}
+	return tlist;
 }
 
 static

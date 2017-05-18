@@ -8,7 +8,8 @@
 char * tokenString(ast_category token);
 
 ast_node * astNode(unsigned int token, int line, op_t op, void * value, 
-	const int number_of_children, const int number_of_SEQ_children, ...){
+	const int number_of_ast_children, const int number_of_SEQ_children, ...) {
+
 
 	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
 	
@@ -82,7 +83,7 @@ int printastNodeRec(ast_node * node, int instruction, int tab){
 		putchar('\t');
 	}
 	printf("Token : %s", tokenString(node->data->token));
-	if(node->data->token == ast_ID){
+	if(node->data->token == AST_ID){
 		printf(" %s", (char*)node->data->value);
 	}
 	putchar('\n');
@@ -118,6 +119,7 @@ char * tokenString(ast_category token){
 		case AST_DECLARATION: return "TYPE"; break;
 		case AST_BOP1: return "BOP1"; break;
 		case AST_BOP2: return "BOP2"; break;
+		case AST_RELOP1: return "RELOP1"; break;
 		case AST_RELOP: return "RELOP"; break;
 		case AST_WHILE: return "WHILE"; break;
 		case AST_IF: return "IF"; break;
@@ -125,7 +127,7 @@ char * tokenString(ast_category token){
 		case AST_PRINT: return "PRINT"; break;
 		case AST_ASSIGNMENT: return "ASSIGNMENT"; break;
 		case AST_ID : return "ID"; break;
+		default: return "";
 	}
-	return "";
 }
 
