@@ -28,7 +28,6 @@ tac_list * tac(seq_node * node){
 		printf("TERZO BRANCH\n");
 		return tac_ast_node(node->right, tlist, &stack);
 	}
-	return tlist;
 }
 
 static
@@ -61,7 +60,7 @@ void free_tac_value(tac_value * value){
 
 static
 void free_tac_entry(tac_entry * entry){
-	free(entry->arg0);
-	free(entry->arg1);
+	free_tac_value(entry->arg0);
+	free_tac_value(entry->arg1);
 	free(entry);
 }

@@ -166,6 +166,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		default:
 			yyerror("TAC - token not recognized");
+			
 	}
 }
 
