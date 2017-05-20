@@ -19,11 +19,12 @@ fract_t tokenize_fract(){
 	return normalizeFract(f);
 }
 
-
+static
 void setYYllocLine() {
 	yylloc.first_line = yylloc.last_line = yylineno;
 }
 
+static
 void setYYllocCol() {
 	yylloc.first_column = yylloc.last_column;
 	yylloc.last_column = yylloc.first_column + strlen(yytext);
