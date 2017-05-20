@@ -13,13 +13,12 @@ char * get_C_operator(tac_op operator);
 static
 char * get_value(tac_value * value);
 
-void print_tac(tac_node * tac_list){
+void print_tac(tac_list * tlist){
 	printf("======= Start Printing the 3AC =======\n"); 
 	
-	tac_node * iterator = tac_list;
+	tac_node * iterator = tlist->first;
 	int i=0;
 	while(iterator != NULL){
-		putchar('\n');
 		print_tac_entry(iterator->value, i);
 		putchar('\n');
 		++i;
@@ -45,7 +44,6 @@ void print_tac_entry(tac_entry * entry, int i){
 	printf("%s", get_value(entry->arg0));
 	putchar('\t');
 	printf("%s", get_value(entry->arg1));
-	printf("\n");
 }
 
 static
@@ -91,7 +89,7 @@ char * get_value(tac_value * value){
 	char * buffer; 
 	
 	if(value == NULL) {
-		return "";
+		return "(NULL)";
 	}
 	else if(value->address != NULL){
 		if(value->address->id != NULL){
@@ -108,7 +106,6 @@ char * get_value(tac_value * value){
 		return buffer;
 	}
 	else if(value->fract != NULL){
-		printf("value->fract\n");
 		buffer = calloc(30, sizeof(char));
 		sprintf(buffer, "[%d|%d]", value->fract->num, value->fract->den);
 		return buffer;
