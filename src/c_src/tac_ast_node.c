@@ -10,6 +10,8 @@ extern void yyerror(char *);
 static
 tac_node* _tac_node();
 static
+tac_list* _tac_connect(tac_list *, tac_node *);
+static
 tac_list* _tac_fract(tac_list *, ast_node *);
 static
 tac_list* _tac_bool(tac_list *, ast_node *);
@@ -17,7 +19,6 @@ static
 tac_list* _tac_id(tac_list *, ast_node *);
 static
 tac_list* _tac_print(tac_list *, ast_node *);
-
 
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
@@ -41,14 +42,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			if(!tlist->last)
-				tlist->last=tnode;
-				/* nothig to connect */
-			else{
-				tlist->last->next=tnode;
-				tnode->prev=tlist->last;
-				tlist->last=tlist->last->next;
-			}
+			tlist=_tac_connect(tlist, tnode);
 			/* compute child node */
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
 			/* the child node is a subtree */
@@ -62,6 +56,8 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				left->last->next=tlist->first;
 				tlist->first=left->first;
 			}
+			printf("tlist->first %p\n", tlist->first);
+			printf("tlist->last %p\n", tlist->last);
 			printf("----------return AOP1.BOP1---------------------------\n");
 			printf("-------------------------------------\n");
 			return tlist;
@@ -74,14 +70,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			if(!tlist->last)
-				tlist->last=tnode;
-				/* nothig to connect */
-			else{
-				tlist->last->next=tnode;
-				tnode->prev=tlist->last;
-				tlist->last=tlist->last->next;
-			}
+			tlist=_tac_connect(tlist, tnode);
 			/* compute child node */
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
@@ -105,24 +94,19 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				right->last->next=tlist->first;
 				tlist->first=right->first;
 			}
+			printf("tlist->first %p\n", tlist->first);
+			printf("tlist->last %p\n", tlist->last);
 			printf("----------return AOP1.BOP1---------------------------\n");
 			printf("-------------------------------------\n");
 			return tlist;
 		}
 		case AST_ASSIGNMENT:
 		{
-			printf("ASS %p \n", tlist);
+			printf("ASS \n");
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = TAC_ASSIGNMENT;
-			if(!tlist->last)
-				tlist->last=tnode;
-				/* nothig to connect */
-			else{
-				tlist->last->next=tnode;
-				tnode->prev=tlist->last;
-				tlist->last=tlist->last->next;
-			}
+			tlist=_tac_connect(tlist, tnode);
 			/* left side of assignment */
 			tnode->value->arg0 = malloc(sizeof(tac_value));
 			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
@@ -139,6 +123,8 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				right->last->next=tlist->first;
 				tlist->first=right->first;
 			}
+			printf("tlist->first %p\n", tlist->first);
+			printf("tlist->last %p\n", tlist->last);
 			printf("-----------------return ASS--------------------\n");
 			printf("-------------------------------------\n");
 			return tlist;
@@ -157,10 +143,8 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		case AST_PRINT:
 		{
 			printf("PRINT");
-			tlist->last->next=_tac_node();
-			tlist->last->next->prev=tlist->last;
-			tlist->last=tlist->last->next;
-			return _tac_print(tlist, node);
+			tac_node * tnode=_tac_node();
+			return _tac_print(_tac_connect(tlist, tnode), node);
 		}
 		case AST_DECLARATION:{
 			printf("DECL.SKIP\n");
@@ -188,18 +172,36 @@ tac_node* _tac_node(){
 }
 
 static
+tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
+	if(!tlist->last)
+		tlist->last=tnode;
+		/* nothig to connect */
+	else{
+		tlist->last->next=tnode;
+		tnode->prev=tlist->last;
+		tlist->last=tlist->last->next;
+	}
+	return tlist;
+}
+
+static
 tac_list * _tac_fract(tac_list * tlist, ast_node * node){
 	printf("FRACT\n");
-	printf("FRACT-P%p\n", tlist->last->value->arg0);
 	if(tlist->last->value->arg0){
 		printf("FRACT-arg1\n");
 		tlist->last->value->arg1 = malloc(sizeof(tac_value));
 		tlist->last->value->arg1->fract = (fract_t*) node->data->value;
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end FRACT\n");
 		return tlist;
 	}
 	printf("FRACT-arg0\n");
 	tlist->last->value->arg0 = malloc(sizeof(tac_value));
 	tlist->last->value->arg0->fract = (fract_t*) node->data->value;
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end FRACT\n");
 	return tlist;
 }
 
@@ -209,10 +211,16 @@ tac_list * _tac_bool(tac_list * tlist, ast_node * node){
 	if(tlist->last->value->arg0){
 		tlist->last->value->arg1 = malloc(sizeof(tac_value));
 		tlist->last->value->arg1->boolean = node->data->value;
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end BOOL\n");
 		return tlist;
 	}
 	tlist->last->value->arg0 = malloc(sizeof(tac_value));
 	tlist->last->value->arg0->boolean = node->data->value;
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end BOOL\n");
 	return tlist;
 }
 
@@ -223,18 +231,28 @@ tac_list * _tac_id(tac_list * tlist, ast_node * node){
 		printf("ID-arg1\n");
 		tlist->last->value->arg1 = malloc(sizeof(tac_value));
 		tlist->last->value->arg1->address = lookupID(node->data->value);
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end ID\n");
 		return tlist;
 	}
 	printf("ID-arg0\n");
 	tlist->last->value->arg0 = malloc(sizeof(tac_value));
 	tlist->last->value->arg0->address = lookupID(node->data->value);
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end ID\n");
 	return tlist;
 }
 
 static
 tac_list * _tac_print(tac_list * tlist, ast_node * node){
+	printf("PRINT\n");
 	tlist->last->value->op = TAC_PRINT;
 	tlist->last->value->arg0 = malloc(sizeof(tac_value));
 	tlist->last->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+	printf("tlist->first %p\n", tlist->first);
+	printf("tlist->last %p\n", tlist->last);
+	printf("--------end PRINT\n");
 	return tlist;
 }
