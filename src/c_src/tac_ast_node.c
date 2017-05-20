@@ -58,7 +58,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			/* the child node is a subtree */
 			if(tlist->last != left->last){
 				/* set up 3AC */
-				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 				tlist->last->value->arg0->instruction =  left->last->value;
 				tlist->last->value->arg1=NULL;
 				/* connect the list of triples */
@@ -79,11 +79,11 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
 			/* setup 3AC */
 			if(tlist->last != left->last){
-				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 				tlist->last->value->arg0->instruction =  left->last->value;
 			}
 			if(tlist->last != right->last){
-				tlist->last->value->arg1 = malloc(sizeof(tac_value));
+				tlist->last->value->arg1 = calloc(1,sizeof(tac_value));
 				tlist->last->value->arg1->instruction =  right->last->value;
 			}
 			/* connect the list of triples */
@@ -102,13 +102,13 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tnode->value->op = TAC_ASSIGNMENT;
 			tlist=_tac_connect(tlist, tnode);
 			/* left side of assignment */
-			tnode->value->arg0 = malloc(sizeof(tac_value));
+			tnode->value->arg0 = calloc(1, sizeof(tac_value));
 			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
 			/* compute child node */
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
 			/* setup 3AC */
 			if(tlist->last != right->last){
-				tlist->last->value->arg0 = malloc(sizeof(tac_value));
+				tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 				tlist->last->value->arg0->instruction =  right->last->value;
 			}
 			/* connect list of triples */
@@ -175,11 +175,11 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 static
 tac_list * _tac_fract(tac_list * tlist, ast_node * node){
 	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 		tlist->last->value->arg1->fract = (fract_t*) node->data->value;
 		return tlist;
 	}
-	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg0->fract = (fract_t*) node->data->value;
 	return tlist;
 }
@@ -187,11 +187,11 @@ tac_list * _tac_fract(tac_list * tlist, ast_node * node){
 static
 tac_list * _tac_bool(tac_list * tlist, ast_node * node){
 	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 		tlist->last->value->arg1->boolean = node->data->value;
 		return tlist;
 	}
-	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg0->boolean = node->data->value;
 	return tlist;
 }
@@ -199,11 +199,11 @@ tac_list * _tac_bool(tac_list * tlist, ast_node * node){
 static
 tac_list * _tac_id(tac_list * tlist, ast_node * node){
 	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = malloc(sizeof(tac_value));
+		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 		tlist->last->value->arg1->address = lookupID(node->data->value);
 		return tlist;
 	}
-	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg0->address = lookupID(node->data->value);
 	return tlist;
 }
@@ -211,7 +211,7 @@ tac_list * _tac_id(tac_list * tlist, ast_node * node){
 static
 tac_list * _tac_print(tac_list * tlist, ast_node * node){
 	tlist->last->value->op = TAC_PRINT;
-	tlist->last->value->arg0 = malloc(sizeof(tac_value));
+	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg0->address = lookupID(node->ast_children[0]->data->value);
 	return tlist;
 }
