@@ -1,6 +1,6 @@
 #include "stack.h"
 
-extern void yyerror(char *);
+extern void yyerror(char *, ...);
 
 void init(stack_t * s)
 {
