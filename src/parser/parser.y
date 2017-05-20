@@ -51,8 +51,6 @@ int yylex ();
  */
 void yyerror(const char *, ...);
 
-extern uint line_counter;
-
 bool success = true;
 
 %}
