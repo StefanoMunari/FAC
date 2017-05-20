@@ -29,14 +29,18 @@
 extern FILE * yyin;
 /** Shared vars */
 symbol_table_entry * symbol_table = NULL;
-/** File-scoped vars **/
+/*********************
+	File-scoped vars
+**********************/
 static
 seq_node * head = NULL;
 static
 tac_list * tlist = NULL;
 static
 void finalize();
-/** BISON declarations **/
+/**********************
+	BISON declarations
+***********************/
 /**
 * Lexical scanner
 *
@@ -144,26 +148,21 @@ stmt :
 }
 | stmt declaration SEPARATOR {
 	$$=newSeqNode($1, $2);
-	printf("DECLARATION\n");
 }
 | stmt var_assignment SEPARATOR {
-	printf("Var assignment\n");
 	$$=newSeqNode($1, $2);
 
 }
 | stmt print_var SEPARATOR {
 	$$=newSeqNode($1, $2);
-	printf("Print Var");
 }
 | stmt SKIP SEPARATOR {
-	printf("Ignoring skip operation");
 	$$ = $1;
 }
 | stmt ifrule {
 	$$ = newSeqNode($1, $2);
 }
 | stmt whilerule {
-	printf("Building the seq_node for WHILE\n");
 	$$ = newSeqNode($1, $2);
 }
 ;
@@ -201,7 +200,7 @@ expr AOP_0 expr {
 | FRACT {
 	fract_t * f = malloc(sizeof(fract_t));
 	*f = $1;
-	
+
 	$$ = astNode(AST_FRACT, @1.first_line, -1, f, 0, 0);
 }
 | expr BOP2_0 expr {
@@ -211,7 +210,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
 }
 | expr BOP2_2 expr {
-	/* Applying desugaring of "->" operator:  
+	/* Applying desugaring of "->" operator:
 	 * "A imply B"  can be rewritten as "not A or B" */
 	ast_node * notA = astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $1);
 	$$ = astNode(AST_BOP2, @2.first_line, OR, NULL,  2, 0, notA, $3);
@@ -225,13 +224,13 @@ expr AOP_0 expr {
 			ast_node * left 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, not1, $3);
 			ast_node * right 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, not3);
 			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
-			break; 
+			break;
 		}
 		case XOR: /* De-Sugaring ($1 || $3) && !($1 && $3); */
 		{
 			ast_node * subright =	astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, $1, $3);
 			ast_node * right	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, subright);
-			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3); 
+			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3);
 			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
 			break;
 		}
@@ -301,14 +300,11 @@ int main(int argc, char * argv[]) {
 		case 2: yyerror("Memory exhausted\n"); return EXIT_FAILURE; break;
 		case 0: /* successful */ break;
 	}
-	
-	
-	
+
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
 
-	printf("\n--- The syntax Tree ---\n");
 	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
@@ -318,7 +314,7 @@ int main(int argc, char * argv[]) {
 
 	//printSeqNode(head);
 	tlist=generate_tac(head);
-	test_tac(tlist);
+	//test_tac(tlist);
 	print_tac(tlist);
 	/* generate code ??? */
 	finalize();
