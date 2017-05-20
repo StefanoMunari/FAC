@@ -21,11 +21,11 @@ void push(stack_t * s, void * data)
     s->data[s->size++] = data;
 }
 
-void pop(stack_t * s)
+void * pop(stack_t * s)
 {
     if (s->size == 0)
         yyerror("Stack::Pop - the stack is empty");
-    s->size--;
+    return s->data[--s->size];
 }
 
 bool isEmpty(stack_t * s){
