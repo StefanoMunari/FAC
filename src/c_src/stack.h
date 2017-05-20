@@ -16,9 +16,27 @@ typedef struct stack_t {
 } stack_t;
 
 void init(stack_t * s);
+/**
+ * Returns the value on top of the stack without removing it from the stack 
+ * @param s the stack
+ * @return the value on top of the stack
+ */
 void * top(stack_t * s);
+/**
+ * Push data on top of the stack
+ * @param s the stack
+ * @param data the data to put on the stack
+ */
 void push(stack_t * s, void * data);
+/**
+ * Pops an element from the stack without returning it
+ * @param s the stack
+ */
 void pop(stack_t * s);
+/**
+ * @param s the stack
+ * @return true if s is empty otherwise false
+ */
 bool isEmpty(stack_t * s);
 
 #endif /*__STACK_H__*/
