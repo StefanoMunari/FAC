@@ -173,9 +173,11 @@ tac_node* _tac_node(){
 
 static
 tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
-	if(!tlist->last)
+	if(!tlist->last && !tlist->first){
+		tlist->first=tnode;
 		tlist->last=tnode;
-		/* nothig to connect */
+		/* first node of the TAC list representation - nothig to connect */
+	}
 	else{
 		tlist->last->next=tnode;
 		tnode->prev=tlist->last;
