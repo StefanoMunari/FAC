@@ -320,7 +320,7 @@ int main(int argc, char * argv[]) {
 
 	//printSeqNode(head);
 	tlist=generate_tac(head);
-	test_tac(&tlist);
+	test_tac(tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
