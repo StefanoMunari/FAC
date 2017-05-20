@@ -11,17 +11,11 @@ tac_list * tac(seq_node *, tac_list *);
 static
 tac_list * init_tac(tac_list *);
 static
-void free_tac_value(tac_value * value);
-static
 void free_tac_entry(tac_entry * entry);
 
 
 tac_list * generate_tac(seq_node * input){
-	tac_list * output=malloc(sizeof(tac_list));
-	output=tac(input, output);
-	printf("output->first %p\n", output->first);
-	printf("output->last %p\n", output->last);
-	return output;
+	return tac(input, malloc(sizeof(tac_list)));
 }
 
 /*
@@ -45,33 +39,33 @@ tac_list * init_tac(tac_list * tlist){
 	return tlist;
 }
 
-void free_tac(tac_list * list){
-	if(!list)
+void free_tac(tac_list * tlist){
+	if(!tlist || !tlist->first || !tlist->last)
 		return;
-	tac_node * current = list->first;
-	tac_node * tmp;
-	while(current){
-		free_tac_entry(current->value);
-		tmp = current->next;
-		current = tmp;
+	tac_node * iterator = tlist->last;
+	while(iterator){
+		free_tac_entry(iterator->value);
+		iterator = iterator->prev;
 	}
-	free(list->first);
-	free(list->last);
-	free(list);
+	free(tlist);
 }
-
-static
-void free_tac_value(tac_value * value){
-	free(value->fract);
-	free(value->address);
-	free(value->instruction);
-	free(value);
-}
-
 
 static
 void free_tac_entry(tac_entry * entry){
-	free_tac_value(entry->arg0);
-	free_tac_value(entry->arg1);
+	if(!entry)
+		return;
+	free(entry->arg0);
+	free(entry->arg1);
 	free(entry);
+	/*
+	* ignore value->fract
+	* it is a responsibility of the AST to free its values
+	*
+	* ignore value->instruction
+	* since we are using a list of triples it will be deallocated by the
+	* external iterator (check free_tac)
+	*
+	* ignore value->address
+	* it is a responsibility of the symbol table to free its values
+	*/
 }
