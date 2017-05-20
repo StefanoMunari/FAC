@@ -19,7 +19,13 @@ tac_list * generate_tac(seq_node * input){
 }
 
 /*
-	PRE= tlist is pointing to a valid record on the heap
+	PRE= tlist is pointing to a valid record (not NULL) on the heap
+	POST= tlist is a valid TAC representation of the AST given as input
+	DEFINITIONS:
+	- valid TAC representation:
+		a post-order linearized representation of the AST where the first
+		TAC block is assigned to tlist->first while the last is assigned to
+		tlist->last
 */
 tac_list * tac(seq_node * node, tac_list * tlist){
 	if(!node->left)
