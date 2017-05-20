@@ -19,6 +19,19 @@ tac_list* _tac_id(tac_list *, ast_node *);
 static
 tac_list* _tac_print(tac_list *, ast_node *);
 
+/** Append the list toAppend to the given list
+ * @param list the list that encodes the first part
+ * @param toAppend a list to append
+ * @return a pointer to the head of the new list. It corresponds to the
+ * head of list
+ */
+tac_list * append(tac_list * list, tac_list * toAppend){
+	toAppend->first->prev = list->last;
+	list->last->next = toAppend->first;
+	toAppend->first = list->first;
+	return list;
+}
+
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
@@ -49,9 +62,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				tlist->last->value->arg0->instruction =  left->last->value;
 				tlist->last->value->arg1=NULL;
 				/* connect the list of triples */
-				tlist->first->prev=left->last;
-				left->last->next=tlist->first;
-				tlist->first=left->first;
+				tlist = append(left, tlist);
 			}
 			return tlist;
 		}
@@ -77,14 +88,10 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			}
 			/* connect the list of triples */
 			if(tlist->last != left->last){
-				tlist->first->prev=left->last;
-				left->last->next=tlist->first;
-				tlist->first=left->first;
+				tlist = append(left, tlist);
 			}
 			if(tlist->last != right->last){
-				tlist->first->prev=right->last;
-				right->last->next=tlist->first;
-				tlist->first=right->first;
+				tlist = append(right, tlist);
 			}
 			return tlist;
 		}
@@ -106,9 +113,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			}
 			/* connect list of triples */
 			if(tlist->last != right->last){
-				tlist->first->prev=right->last;
-				right->last->next=tlist->first;
-				tlist->first=right->first;
+				tlist = append(right, tlist);
 			}
 			return tlist;
 		}
