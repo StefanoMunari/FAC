@@ -1,3 +1,10 @@
+/**
+ * @file 
+ * @brief definition and API of a stack
+ * 
+ * @author <mirko.bez@studenti.unipd.it>
+ * @author <stefano.munari.1@studenti.unipd.it>
+ */
 #ifndef __STACK_H__
 #define __STACK_H__
 #define STACK_MAX 100
