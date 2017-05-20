@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define PRINT_TAB(tab) \
+int i; \
+for(i = 0; i < tab; i++) \
+	putchar('\t'); \
 
 
 seq_node * newSeqNode(seq_node * left, ast_node * right){
@@ -25,7 +29,7 @@ int printSeqNodeRec(seq_node * this, int instruction, int tab){
 		return instruction;
 	
 	instruction = printSeqNodeRec(this->left, instruction, tab);
-	printTab(tab);
+	PRINT_TAB(tab);
 	printf("### Statement %d ###\n", instruction);
 	instruction = printastNodeRec(this->right, instruction+1, tab);
 	
@@ -36,9 +40,4 @@ int printSeqNode(seq_node * this){
 	return printSeqNodeRec(this, 1, 0);
 }
 
-void printTab(int tab){
-	int i;
-	for(i = 0; i < tab; i++){
-		putchar('\t');
-	}
-}
+
