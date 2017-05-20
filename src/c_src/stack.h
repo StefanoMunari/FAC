@@ -29,10 +29,10 @@ void * top(stack_t * s);
  */
 void push(stack_t * s, void * data);
 /**
- * Pops an element from the stack without returning it
+ * Pop an element from the stack and return it
  * @param s the stack
  */
-void pop(stack_t * s);
+void * pop(stack_t * s);
 /**
  * @param s the stack
  * @return true if s is empty otherwise false
