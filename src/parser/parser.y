@@ -56,8 +56,6 @@ seq_node * head = NULL;
  */
 void yyerror(const char *, ...);
 
-extern uint line_counter;
-
 bool success = true;
 
 %}
