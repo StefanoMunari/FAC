@@ -214,19 +214,12 @@ expr AOP_0 expr {
 	switch($2) {
 		case IFF: /* De-Sugaring (!$1 || $3) && ($1 || !$3); */
 		{
-			ast_node * not1 	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $1);
-			ast_node * not3 	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $3);
-			ast_node * left 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, not1, $3);
-			ast_node * right 	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, not3);
-			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
+			$$ = astNode(AST_RELOP1, @2.first_line, EQ, NULL, 2, 0, $1, $3);
 			break;
 		}
-		case XOR: /* De-Sugaring ($1 || $3) && !($1 && $3); */
+		case XOR: /* De-Sugaring as  */
 		{
-			ast_node * subright =	astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, $1, $3);
-			ast_node * right	=	astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, subright);
-			ast_node * left  	=	astNode(AST_BOP2, @2.first_line, OR, NULL, 2, 0, $1, $3);
-			$$ = astNode(AST_BOP2, @2.first_line, AND, NULL, 2, 0, left, right);
+			$$ = astNode(AST_RELOP1, @2.first_line, NEQ, NULL, 2, 0, $1, $3);
 			break;
 		}
 		default:
@@ -237,7 +230,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_1 expr {
-	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_RELOP1, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | BOP1 expr %prec UBOP1{
 	$$ = astNode(AST_BOP1, @1.first_line, $1, NULL, 1, 0, $2);
@@ -299,15 +292,16 @@ int main(int argc, char * argv[]) {
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
+	
+		printSeqNode(head);
 
 	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
+
+
 	printSeqNode(head);
-
-
-	//printSeqNode(head);
 	tlist=generate_tac(head);
 	//test_tac(tlist);
 	tprinter c_printer= { C };
