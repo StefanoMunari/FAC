@@ -297,16 +297,14 @@ int main(int argc, char * argv[]) {
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
-	
-		printSeqNode(head);
 
 	if(!type_check(head)){
 		fprintf(stderr, "Error, type checking failed. Exiting \n");
 		return EXIT_FAILURE;
 	}
 
-
 	printSeqNode(head);
+
 	tlist=generate_tac(head);
 	//test_tac(tlist);
 	tprinter c_printer= { C };
