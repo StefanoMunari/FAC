@@ -43,13 +43,11 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			/* 3AC - expression */
 			if(left->last->value->op != -1){
 				/* subtree with height > 0 */
-				printf("AOP1-Subtree-L%p\n", left->last->value);
 				tnode=_tac_node();
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left->last->value;
 			}
 			else/* a leaf */{
-				printf("AOP1-Leaf-L%p\n", left->last);
 				tnode=left->last;
 				tnode->value->arg0=tnode->value->arg1;
 			}
