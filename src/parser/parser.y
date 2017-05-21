@@ -279,7 +279,6 @@ int main(int argc, char * argv[]) {
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(argv[1], FAC_STANDARD_ERROR);
-	
 	printSeqNode(head);
 
 
@@ -291,9 +290,9 @@ int main(int argc, char * argv[]) {
 
 
 	tlist=generate_tac(head);
-	//test_tac(tlist);
 	tprinter c_printer= { C };
 	tdynamic_dispatch(&c_printer, tlist);
+	test_tac(tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
