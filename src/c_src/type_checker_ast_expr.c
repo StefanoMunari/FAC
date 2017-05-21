@@ -93,11 +93,22 @@ bool type_check_bool(ast_node * node){
 		case AST_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-		case AST_RELOP1: 
-			{
-				type_inference_struct tis = type_inference(node);
-				return tis.success;
-			}	
+		case AST_BOP2_TO_CHANGE:
+		{
+			bool ret = type_check_bool(node->ast_children[0]) &&
+				type_check_bool(node->ast_children[1]);
+			switch(node->data->op){ 
+				/* After type-checking change the operation of the node:
+				 * a IFF b corresponds to check if a equals b
+				 * a XOR b corresponds to check if a is different from b
+				 */
+				case IFF: node->data->token = AST_RELOP1; node->data->op = EQ; break;
+				case XOR: node->data->token = AST_RELOP1; node->data->op = NEQ; break;
+				default: yyerror("Wrong operation at line %d", node->data->line); return false;
+			}
+			return ret;
+		}
+		case AST_RELOP1:
 		case AST_RELOP:
 			return type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
