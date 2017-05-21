@@ -4,6 +4,7 @@
 #include "symbol_table.h"
 #include <stdio.h>
 
+extern char yyerror(char *, ...);
 
 /**
  * Checks if node is an expression of type fract
@@ -18,23 +19,6 @@ static bool type_check_fract(ast_node *);
  */
 static bool type_check_bool(ast_node *);
 
-/** Internal struct to perform type inference */
-typedef struct type_inference_struct {
-	type_t type;
-	bool success;
-} type_inference_struct;
-
-/**
- * Help function for type_check_bool used to implement overloading
- * of EQ and NEQ operator that can be used both for mathematical 
- * and boolean expression. 
- * 
- * Functionality: 
- * 1) it infers the types of lhs and rhs. 
- * 2) if both have the same type then it is well typed, otherwise it
- * is not.
- */
-static type_inference_struct type_inference(ast_node * node);
 
 
 
@@ -93,11 +77,18 @@ bool type_check_bool(ast_node * node){
 		case AST_BOP2:
 			return type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-		case AST_RELOP1: 
-			{
-				type_inference_struct tis = type_inference(node);
-				return tis.success;
-			}	
+		case AST_BOP2_TO_CHANGE:
+		{
+			bool ret = type_check_bool(node->ast_children[0]) &&
+				type_check_bool(node->ast_children[1]);
+			switch(node->data->op){
+				case IFF: node->data->token = AST_RELOP1; node->data->op = EQ; break;
+				case XOR: node->data->token = AST_RELOP1; node->data->op = NEQ; break;
+				default: yyerror("Wrong operation at line %d", node->data->line); return false;
+			}
+			return ret;
+		}
+		case AST_RELOP1:
 		case AST_RELOP:
 			return type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
@@ -107,57 +98,3 @@ bool type_check_bool(ast_node * node){
 }
 
 
-
-
-
-static 
-type_inference_struct type_inference(ast_node * node){
-	type_inference_struct tis;
-	switch(node->data->token){
-		case AST_BOOL:
-			tis.type = BOOL_T;
-			tis.success = true;
-			break;
-		case AST_FRACT:
-			tis.type = FRACT_T;
-			tis.success = true;
-			break;
-		case AST_ID:
-			tis.type = getType((char*) node->data->value);
-			tis.success = true;
-			break;
-		case AST_AOP1:
-		case AST_AOP2:
-			tis.type = FRACT_T;
-			tis.success = type_check_fract(node->ast_children[0]) &&
-				type_check_fract(node->ast_children[1]);
-			break;
-		case AST_BOP1:
-		case AST_BOP2:
-			tis.type = BOOL_T;
-			tis.success = type_check_ast_expr(node, BOOL_T);
-			break;
-		case AST_RELOP1:
-		{
-			type_inference_struct tis1 = type_inference(node->ast_children[0]);
-			type_inference_struct tis2 = type_inference(node->ast_children[1]);
-			if(tis1.type == tis2.type && tis1.success && tis2.success){
-				tis.success = true;
-				tis.type = BOOL_T;
-			}
-			else {
-				tis.type = false;
-			}
-			break;
-		}
-		case AST_RELOP:
-			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
-			tis.type = BOOL_T;
-			break;
-		default: /* other ast_types are not expression */
-			tis.success = false;
-			break;
-			
-	}
-	return tis;
-}
