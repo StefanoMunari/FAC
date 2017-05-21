@@ -3,7 +3,6 @@
 #include "factype_tac.h"
 #include "tac.h"
 #include <limits.h>
-#include <stdio.h>
 
 extern void yyerror(char *);
 
@@ -19,7 +18,7 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
-
+int check=0;
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
@@ -64,27 +63,19 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		case AST_BOP2:
 		case AST_RELOP:
 		{
-			printf("-------------PRE-start This Node %p\n", tlist->last->value);
 			/* compute right subtree -
 			   NOTE: it also connects it to the current list of triples */
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
-			printf("-------------right =%p\n", right->last->value);
-			printf("==========================================================\n");
+			tac_node* right_node=right->last;
 			/* compute left subtree -
 			   NOTE: also connects it to the current list of triples */
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
-			printf("-------------left + right =%p + %p\n", left->last->value, right->last->value);
-			printf("==========================================================\n");
 			/* current node */
-			printf("-------------start This Node\n");
-			printf("-------------right =%p\n", right->last->value);
-			printf("-------------left =%p\n", left->last->value);
 			tac_node* tnode=_tac_node();
 			/* 3AC - left operand */
 			if(left->last->value->op != -1){
 				/* subtree with height > 0 */
 				tnode->value->arg0 = calloc(1, sizeof(tac_value));
-				printf("AOP2-Subtree-L = %p\n", left->last->value);
 				tnode->value->arg0->instruction = left->last->value;
 			}
 			else/* a leaf */
@@ -93,14 +84,12 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			if(right->last->value->op != -1){
 				/* subtree with height > 0 */
 				tnode->value->arg1 = calloc(1, sizeof(tac_value));
-				printf("AOP2-Subtree-R = %p\n", right->last->value);
-				tnode->value->arg1->instruction = right->last->value;
+				tnode->value->arg1->instruction = right_node->value;
 			}
 			else /* a leaf */
 				tnode->value->arg1=right->last->value->arg1;
 			/* complete tnode setup */
 			tnode->value->op = node->data->op;
-			printf("-------------end This Node = %p\n", tnode->value);
 			/* connect tnode to the current list of triples */
 			return _tac_connect(tlist, tnode);
 		}
@@ -204,7 +193,6 @@ tac_list * _tac_id(ast_node * node){
 	tlist->last->value->arg1= calloc(1, sizeof(tac_value));
 	tlist->last->value->arg1->address=
 		(symbol_table_entry *) lookupID(node->data->value);
-	printf("tac-id = %p\n", tlist->last->value);
 	return tlist;
 }
 
