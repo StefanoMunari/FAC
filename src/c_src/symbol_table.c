@@ -24,6 +24,7 @@ void installID(char* id, type_t type) {
 
 
 symbol_table_entry * lookupID(char* id) {
+	printf("symbol table %s\n", id);
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
