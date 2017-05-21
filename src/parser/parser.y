@@ -17,7 +17,7 @@
 #include "tac.h"
 #include "tac_list.h"
 #include "test_tac.h"
-#include "tac_printer.h"
+#include "tac_printer_c.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
@@ -315,7 +315,8 @@ int main(int argc, char * argv[]) {
 	//printSeqNode(head);
 	tlist=generate_tac(head);
 	//test_tac(tlist);
-	print_tac(tlist);
+	tprinter c_printer= { C };
+	tdynamic_dispatch(&c_printer, tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
