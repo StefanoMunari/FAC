@@ -81,7 +81,11 @@ bool type_check_bool(ast_node * node){
 		{
 			bool ret = type_check_bool(node->ast_children[0]) &&
 				type_check_bool(node->ast_children[1]);
-			switch(node->data->op){
+			switch(node->data->op){ 
+				/* After type-checking change the operation of the node:
+				 * a IFF b corresponds to check if a equals b
+				 * a XOR b corresponds to check if a is different from b
+				 */
 				case IFF: node->data->token = AST_RELOP1; node->data->op = EQ; break;
 				case XOR: node->data->token = AST_RELOP1; node->data->op = NEQ; break;
 				default: yyerror("Wrong operation at line %d", node->data->line); return false;
