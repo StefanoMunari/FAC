@@ -119,7 +119,6 @@ char * tokenString(ast_category token){
 		case AST_DECLARATION: return "TYPE"; break;
 		case AST_BOP1: return "BOP1"; break;
 		case AST_BOP2: return "BOP2"; break;
-		case AST_RELOP1: return "RELOP1"; break;
 		case AST_RELOP: return "RELOP"; break;
 		case AST_WHILE: return "WHILE"; break;
 		case AST_IF: return "IF"; break;

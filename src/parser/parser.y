@@ -217,7 +217,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_1 expr {
-	$$ = astNode(AST_RELOP1, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | BOP1 expr %prec UBOP1{
 	$$ = astNode(AST_BOP1, @1.first_line, $1, NULL, 1, 0, $2);
