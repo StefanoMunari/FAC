@@ -104,30 +104,31 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		case AST_ASSIGNMENT:
 		{
-			tac_node* tnode=_tac_node();
-			/* set up tnode */
-			tnode->value->op = TAC_ASSIGNMENT;
-			/* left side of assignment */
-			tnode->value->arg0 = calloc(1, sizeof(tac_value));
-			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
-			tac_list * aux_tlist=calloc(1, sizeof(tac_list));
-			aux_tlist->last=tnode;
 			/* compute child node */
-			tac_list* right=tac_ast_node(node->ast_children[1], aux_tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_node* tnode;
 			/* setup 3AC */
-			if(aux_tlist->last != right->last){
-							printf("D\n");
-				aux_tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-				aux_tlist->last->value->arg0->instruction =  right->last->value;
+			if(right->last->value->op){
+				printf("ASS-subtree\n");
+				tnode=_tac_node();
+				/* set up tnode */
+				tnode->value->op = TAC_ASSIGNMENT;
+				/* left side of assignment */
+				tnode->value->arg0 = calloc(1, sizeof(tac_value));
+				tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+				tnode->value->arg1 = calloc(1, sizeof(tac_value));
+				tnode->value->arg1->instruction =  right->last->value;
+			}
+			else{
+				printf("ASS-leaf\n");
+				tnode=right->last;
+				/* left side of assignment */
+				tnode->value->arg0 = calloc(1, sizeof(tac_value));
+				tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+				/* right side already filled by leaf node */
 			}
 			/* connect list of triples */
-			if(aux_tlist->last != right->last){
-											printf("E\n");
-				tlist=_tac_connect(right, tlist->last);
-			}
-											printf("F\n");
-			tlist=_tac_connect(tlist, aux_tlist->first);
-			free(aux_tlist);
+			tlist=_tac_connect(tlist, tnode);
 			return tlist;
 		}
 		/* Leaves */
@@ -187,13 +188,9 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 
 static
 tac_list * _tac_fract(tac_list * tlist, ast_node * node){
-	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
-		tlist->last->value->arg1->fract = (fract_t*) node->data->value;
-		return tlist;
-	}
-	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-	tlist->last->value->arg0->fract = (fract_t*) node->data->value;
+	tlist->last=_tac_node();
+	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
+	tlist->last->value->arg1->fract = (fract_t*) node->data->value;
 	return tlist;
 }
 
