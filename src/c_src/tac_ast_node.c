@@ -12,11 +12,11 @@ tac_node* _tac_node();
 static
 tac_list* _tac_connect(tac_list *, tac_node *);
 static
-tac_list* _tac_fract(tac_list *, ast_node *);
+tac_list* _tac_fract(ast_node *);
 static
-tac_list* _tac_bool(tac_list *, ast_node *);
+tac_list* _tac_bool(ast_node *);
 static
-tac_list* _tac_id(tac_list *, ast_node *);
+tac_list* _tac_id(ast_node *);
 static
 tac_list* _tac_print(tac_list *, ast_node *);
 
@@ -76,17 +76,24 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
 			tac_node* tnode=NULL;
 			/* setup 3AC */
-			if(right->last->value->op != -1 || left->last->value->op != -1)
+			if(right->last->value->op != -1 || left->last->value->op != -1){
 				tnode=_tac_node();
-			if(left->last->value->op != -1){
-				printf("AOP2-L-subtree\n");
-				tnode->value->arg0 = calloc(1, sizeof(tac_value));
-				tnode->value->arg0->instruction = left->last->value;
+				if(left->last->value->op != -1){
+					printf("AOP2-L-subtree\n");
+					tnode->value->arg0 = calloc(1, sizeof(tac_value));
+					tnode->value->arg0->instruction = left->last->value;
+				}
+				if(right->last->value->op != -1){
+					printf("AOP2-R-subtree\n");
+					tnode->value->arg1 = calloc(1, sizeof(tac_value));
+					tnode->value->arg1->instruction = right->last->value;
+				}
 			}
-			if(right->last->value->op != -1){
-				printf("AOP2-R-subtree\n");
-				tnode->value->arg1 = calloc(1, sizeof(tac_value));
-				tnode->value->arg1->instruction = right->last->value;
+			else{
+				printf("AOP2-leaf\n");
+				tnode=_tac_node();
+				tnode->value->arg0=left->last->value->arg1;
+				tnode->value->arg1=right->last->value->arg1;
 			}
 			/* set up tnode */
 			tnode->value->op = node->data->op;
@@ -120,14 +127,14 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		/* Leaves */
 		case AST_FRACT:{
-			return _tac_fract(tlist, node);
+			return _tac_fract(node);
 		}
 		case AST_BOOL:{
-			return _tac_bool(tlist, node);
+			return _tac_bool(node);
 		}
 		case AST_ID:
 		{
-			return _tac_id(tlist, node);
+			return _tac_id(node);
 		}
 		case AST_PRINT:
 		{
@@ -175,34 +182,33 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 }
 
 static
-tac_list * _tac_fract(tac_list * tlist, ast_node * node){
+tac_list * _tac_fract(ast_node * node){
+	tac_list * tlist=malloc(sizeof(tac_list));
 	tlist->last=_tac_node();
+	/* convention - set always arg1 */
 	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg1->fract = (fract_t*) node->data->value;
 	return tlist;
 }
 
 static
-tac_list * _tac_bool(tac_list * tlist, ast_node * node){
-	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
-		tlist->last->value->arg1->boolean = node->data->value;
-		return tlist;
-	}
-	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-	tlist->last->value->arg0->boolean = node->data->value;
+tac_list * _tac_bool(ast_node * node){
+	tac_list * tlist=malloc(sizeof(tac_list));
+	tlist->last=_tac_node();
+	/* convention - set always arg1 */
+	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
+	tlist->last->value->arg1->boolean = node->data->value;
 	return tlist;
 }
 
 static
-tac_list * _tac_id(tac_list * tlist, ast_node * node){
-	if(tlist->last->value->arg0){
-		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
-		tlist->last->value->arg1->address = (symbol_table_entry *) lookupID(node->data->value);
-		return tlist;
-	}
-	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-	tlist->last->value->arg0->address = (symbol_table_entry *)  lookupID(node->data->value);
+tac_list * _tac_id(ast_node * node){
+	tac_list * tlist=malloc(sizeof(tac_list));
+	tlist->last=_tac_node();
+	printf("tac-id\n");
+	/* convention - set always arg1 */
+	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
+	tlist->last->value->arg1->address = (symbol_table_entry *) lookupID(node->data->value);
 	return tlist;
 }
 
