@@ -71,62 +71,49 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		case AST_BOP2:
 		case AST_RELOP:
 		{
-			tac_node* tnode=_tac_node();
+			/* compute child node */
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
+			tac_node* tnode=NULL;
+			/* setup 3AC */
+			if(right->last->value->op != -1 || left->last->value->op != -1)
+				tnode=_tac_node();
+			if(left->last->value->op != -1){
+				printf("AOP2-L-subtree\n");
+				tnode->value->arg0 = calloc(1, sizeof(tac_value));
+				tnode->value->arg0->instruction = left->last->value;
+			}
+			if(right->last->value->op != -1){
+				printf("AOP2-R-subtree\n");
+				tnode->value->arg1 = calloc(1, sizeof(tac_value));
+				tnode->value->arg1->instruction = right->last->value;
+			}
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			tac_list * aux_tlist=calloc(1, sizeof(tac_list));
-			aux_tlist->last=tnode;
-			/* compute child node */
-			tac_list* left=tac_ast_node(node->ast_children[0], aux_tlist, stack);
-			tac_list* right=tac_ast_node(node->ast_children[1], aux_tlist, stack);
-			/* setup 3AC */
-			if(aux_tlist->last != left->last){
-				aux_tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-				aux_tlist->last->value->arg0->instruction =  left->last->value;
-			}
-			if(aux_tlist->last != right->last){
-				aux_tlist->last->value->arg1 = calloc(1,sizeof(tac_value));
-				aux_tlist->last->value->arg1->instruction =  right->last->value;
-			}
-			/* connect the list of triples */
-			if(aux_tlist->last != right->last){
-				printf("A\n");
-				tlist=_tac_connect(tlist, right->last);
-			}
-			if(aux_tlist->last != left->last){
-				printf("B\n");
-				tlist=_tac_connect(tlist, left->last);
-			}
-			printf("C\n");
-			tlist=_tac_connect(tlist, aux_tlist->last);
-			free(aux_tlist);
+			tlist=_tac_connect(tlist, tnode);
 			return tlist;
 		}
 		case AST_ASSIGNMENT:
 		{
 			/* compute child node */
 			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
-			tac_node* tnode;
+			tac_node* tnode=NULL;
 			/* setup 3AC */
-			if(right->last->value->op){
+			if(right->last->value->op != -1){
 				printf("ASS-subtree\n");
 				tnode=_tac_node();
-				/* set up tnode */
-				tnode->value->op = TAC_ASSIGNMENT;
-				/* left side of assignment */
-				tnode->value->arg0 = calloc(1, sizeof(tac_value));
-				tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
 				tnode->value->arg1 = calloc(1, sizeof(tac_value));
 				tnode->value->arg1->instruction =  right->last->value;
 			}
 			else{
 				printf("ASS-leaf\n");
 				tnode=right->last;
-				/* left side of assignment */
-				tnode->value->arg0 = calloc(1, sizeof(tac_value));
-				tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
-				/* right side already filled by leaf node */
 			}
+			/* set up tnode */
+			tnode->value->op = TAC_ASSIGNMENT;
+			/* left side of assignment */
+			tnode->value->arg0 = calloc(1, sizeof(tac_value));
+			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
 			/* connect list of triples */
 			tlist=_tac_connect(tlist, tnode);
 			return tlist;
@@ -164,6 +151,7 @@ tac_node* _tac_node(){
 	tac_node* node;
 	node = malloc(sizeof(tac_node));
 	node->value = malloc(sizeof(tac_entry));
+	node->value->op = -1;
 	node->value->arg0 = NULL;
 	node->value->arg1 = NULL;
 	node->prev=NULL;
@@ -176,7 +164,7 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	if(!tlist->last && !tlist->first){
 		tlist->first=tnode;
 		tlist->last=tnode;
-		/* first node of the TAC list representation - nothig to connect */
+		/* first node of the TAC list representation - nothing to connect */
 	}
 	else{
 		tlist->last->next=tnode;
