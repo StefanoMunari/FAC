@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief file defining the tac_node and tac_list data structures used to 
+ * @brief file defining the tac_node and tac_list data structures used to
  * represent respectively a single three address code instruction and a whole
- * list of instructions. 
- * 
+ * list of instructions.
+ *
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
  */
