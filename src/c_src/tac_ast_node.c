@@ -3,6 +3,7 @@
 #include "factype_tac.h"
 #include "tac.h"
 #include <limits.h>
+#include <stdio.h>
 
 extern void yyerror(char *);
 
@@ -73,26 +74,32 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = node->data->op;
-			tlist=_tac_connect(tlist, tnode);
+			tac_list * aux_tlist=calloc(1, sizeof(tac_list));
+			aux_tlist->last=tnode;
 			/* compute child node */
-			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
-			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_list* left=tac_ast_node(node->ast_children[0], aux_tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], aux_tlist, stack);
 			/* setup 3AC */
-			if(tlist->last != left->last){
-				tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-				tlist->last->value->arg0->instruction =  left->last->value;
+			if(aux_tlist->last != left->last){
+				aux_tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
+				aux_tlist->last->value->arg0->instruction =  left->last->value;
 			}
-			if(tlist->last != right->last){
-				tlist->last->value->arg1 = calloc(1,sizeof(tac_value));
-				tlist->last->value->arg1->instruction =  right->last->value;
+			if(aux_tlist->last != right->last){
+				aux_tlist->last->value->arg1 = calloc(1,sizeof(tac_value));
+				aux_tlist->last->value->arg1->instruction =  right->last->value;
 			}
 			/* connect the list of triples */
-			if(tlist->last != left->last){
-				tlist = append(left, tlist);
+			if(aux_tlist->last != right->last){
+				printf("A\n");
+				tlist=_tac_connect(tlist, right->last);
 			}
-			if(tlist->last != right->last){
-				tlist = append(right, tlist);
+			if(aux_tlist->last != left->last){
+				printf("B\n");
+				tlist=_tac_connect(tlist, left->last);
 			}
+			printf("C\n");
+			tlist=_tac_connect(tlist, aux_tlist->last);
+			free(aux_tlist);
 			return tlist;
 		}
 		case AST_ASSIGNMENT:
@@ -100,21 +107,27 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* set up tnode */
 			tnode->value->op = TAC_ASSIGNMENT;
-			tlist=_tac_connect(tlist, tnode);
 			/* left side of assignment */
 			tnode->value->arg0 = calloc(1, sizeof(tac_value));
 			tnode->value->arg0->address = lookupID(node->ast_children[0]->data->value);
+			tac_list * aux_tlist=calloc(1, sizeof(tac_list));
+			aux_tlist->last=tnode;
 			/* compute child node */
-			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], aux_tlist, stack);
 			/* setup 3AC */
-			if(tlist->last != right->last){
-				tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-				tlist->last->value->arg0->instruction =  right->last->value;
+			if(aux_tlist->last != right->last){
+							printf("D\n");
+				aux_tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
+				aux_tlist->last->value->arg0->instruction =  right->last->value;
 			}
 			/* connect list of triples */
-			if(tlist->last != right->last){
-				tlist = append(right, tlist);
+			if(aux_tlist->last != right->last){
+											printf("E\n");
+				tlist=_tac_connect(right, tlist->last);
 			}
+											printf("F\n");
+			tlist=_tac_connect(tlist, aux_tlist->first);
+			free(aux_tlist);
 			return tlist;
 		}
 		/* Leaves */
@@ -200,11 +213,11 @@ static
 tac_list * _tac_id(tac_list * tlist, ast_node * node){
 	if(tlist->last->value->arg0){
 		tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
-		tlist->last->value->arg1->address = lookupID(node->data->value);
+		tlist->last->value->arg1->address = (symbol_table_entry *) lookupID(node->data->value);
 		return tlist;
 	}
 	tlist->last->value->arg0 = calloc(1, sizeof(tac_value));
-	tlist->last->value->arg0->address = lookupID(node->data->value);
+	tlist->last->value->arg0->address = (symbol_table_entry *)  lookupID(node->data->value);
 	return tlist;
 }
 
