@@ -65,6 +65,8 @@ char * get_C_operator(tac_op operator){
 		case TAC_NEQ: return "!="; break;
 		case TAC_PRINT: return "printf"; break;
 		case TAC_ASSIGNMENT: return "="; break;
+		case TAC_GOTO: return "GOTO"; break;
+		case TAC_LABEL: return "LABEL"; break;
 		/* the others are all unrecognized operators */
 		case TAC_IMPLY: yyerror("TAC_Printer - IMPLY is not a valid operator"); break;
 		case TAC_IFF: yyerror("TAC_Printer - IFF is not a valid operator"); break;
