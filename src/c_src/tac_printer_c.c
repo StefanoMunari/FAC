@@ -91,7 +91,7 @@ char * get_value(tac_value * value){
 	char * buffer;
 
 	if(value == NULL) {
-		return "(NULL)";
+		return strdup("(NULL)");
 	}
 	else if(value->address != NULL){
 		if(value->address->id != NULL){
