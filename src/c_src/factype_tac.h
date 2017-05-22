@@ -39,7 +39,9 @@ typedef enum {
 	TAC_WHILE,
 	TAC_ASSIGNMENT,
 	TAC_IF,
-	TAC_ELSE
+	TAC_ELSE,
+	TAC_GOTO,
+	TAC_LABEL
 } tac_op;
 
 #endif /*_FACTYPE_TAC_H_*/
