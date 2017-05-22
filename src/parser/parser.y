@@ -321,6 +321,8 @@ void yyerror(const char * err_msg, ...) {
 	vfprintf(stderr, err_msg, ap);
 	fputc('\n', stderr);
 	success = false;
+	exit(EXIT_FAILURE);
+	
 }
 
 void finalize(){
