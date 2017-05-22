@@ -23,6 +23,10 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
+static
+tac_node * _tac_unconditioned_goto(tac_node * destination);
+static
+tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination);
 int check=0;
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
@@ -125,13 +129,8 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			if(node->number_of_ast_children == 1){
 				/* Calculate list containing old code and bexpr code */
 				tac_ast_node(node->ast_children[0], tlist, stack);
-				
-				
-				
 				/* calculate tlist of the stmt */
-				
 				tac_list * stmt = generate_tac(node->SEQ_children[0]);
-
 				assert(stmt != NULL);
 				assert(stmt->last != NULL);
 				assert(stmt->first != NULL);
@@ -142,23 +141,15 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				
 				
 				/* Initialize a conditioned goto stmt. If true goto stmt */
-				tac_node * gotoSTMT = _tac_node();
-				gotoSTMT->value->op = TAC_GOTO;
-				gotoSTMT->value->arg0 = calloc(1, sizeof(tac_value));
-				gotoSTMT->value->arg0->instruction = tlist->last->value;
-				gotoSTMT->value->arg1 = calloc(1, sizeof(tac_value));
-				gotoSTMT->value->arg1->instruction = startBranchLabel->value;
+				tac_node * gotoSTMT = _tac_conditioned_goto(tlist->last, startBranchLabel);
 				
 				/* Initialize a not conditioned goto stmt, that corresponds to
 				 * if false goto end of branch
 				 */
-				tac_node * gotoEndLabel = _tac_node();
-				gotoEndLabel->value->op = TAC_GOTO;
-				gotoEndLabel->value->arg0 = calloc(1, sizeof(tac_value));
-				gotoEndLabel->value->arg0->instruction = endBranchLabel->value;
+				tac_node * gotoEndLabel = _tac_unconditioned_goto(endBranchLabel);
+				
 				
 				/* Append the created lists and nodes */
-				
 				_tac_connect(tlist, gotoSTMT);
 				_tac_connect(tlist, gotoEndLabel);
 				_tac_connect(tlist, startBranchLabel);
@@ -166,7 +157,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				_tac_connect(tlist, endBranchLabel);
 				
 				return tlist;
-			}	
+			} 
 			
 			return tlist;
 		}
@@ -208,6 +199,26 @@ tac_node * _tac_label(){
 	tac_node * label = _tac_node();
 	label->value->op = TAC_LABEL;
 	return label;
+}
+
+static
+tac_node * _tac_unconditioned_goto(tac_node * destination){
+	tac_node * gotoNode = _tac_node();
+	gotoNode->value->op = TAC_GOTO;
+	gotoNode->value->arg0 = malloc(sizeof(tac_value));
+	gotoNode->value->arg0->instruction = destination->value;
+	return gotoNode;
+}
+
+static
+tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination){
+	tac_node * gotoNode = _tac_node();
+	gotoNode->value->op = TAC_GOTO;
+	gotoNode->value->arg0 = malloc(sizeof(tac_value));
+	gotoNode->value->arg0->instruction = condition->value;
+	gotoNode->value->arg1 = malloc(sizeof(tac_value));
+	gotoNode->value->arg1->instruction = destination->value;
+	return gotoNode;
 }
 
 static
