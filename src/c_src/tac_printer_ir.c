@@ -54,7 +54,8 @@ char * get_operator(tac_op operator){
 		case TAC_NEQ: return "!="; break;
 		case TAC_PRINT: return "printf"; break;
 		case TAC_ASSIGNMENT: return "="; break;
-		case TAC_LABEL: return "goto"; break;
+		case TAC_GOTO: return "goto"; break;
+		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
 		case TAC_FRACT: yyerror("TAC_Printer - FRACT is not a valid operator"); break;
 		case TAC_BOOL: yyerror("TAC_Printer - BOOL is not a valid operator"); break;

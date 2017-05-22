@@ -7,12 +7,16 @@
 #include <stdio.h>
 extern void yyerror(char *, ...);
 
-static
-tac_node * _tac_label();
+
 static
 tac_node * _tac_node();
 static
 tac_list * _tac_connect(tac_list *, tac_node *);
+static 
+tac_node * _tac_label();
+
+static
+tac_node * _tac_goto(tac_node * onTrue, tac_node * onFalse);
 /*
 static
 tac_list * _tac_append(tac_list * tlist, tac_list * Append);
@@ -131,24 +135,23 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		{
 			/* Calculate list containing tlist extended with bexpr code */
 			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
-			/* calculate tlist of the stmt following bexpr */
-			tac_list * end_list=generate_tac(node->SEQ_children[0]);
-			if(!end_list->last)
-				end_list=tac_ast_node(node->SEQ_children[0]->right, end_list, stack);
-			/* Create the two labels */
-			tac_node * bexpr_label=_tac_label();
+			/* calculate tac_list of the stmt following bexpr */
+			tac_list * stmt=generate_tac(node->SEQ_children[0]);
+			if(!stmt->last)
+				stmt=tac_ast_node(node->SEQ_children[0]->right, stmt, stack);
+			/* Create the bexpr goto node. On true jump to the start of the stmt
+			 * On false skip the stmt */
+			tac_node * bexpr_goto=_tac_goto(stmt->first, stmt->last);
+			/* Create a label*/
 			tac_node * end_label=_tac_label();
+			
 			/* attach the end label to the end of the end list */
-			_tac_connect(end_list, end_label);
-			/* branch true - reference the end list */
-			bexpr_label->value->arg0 = calloc(1, sizeof(tac_value));
-			bexpr_label->value->arg0->instruction=end_list->first->value;
-			/* branch false - skip the end list (reference the end label) */
-			bexpr_label->value->arg1 = calloc(1, sizeof(tac_value));
-			bexpr_label->value->arg1->instruction=end_list->last->value;
-			/* connect label + end_list to the current list of triples -
+			stmt = _tac_connect(stmt, end_label);
+			/* append the bexpr_goto */
+			tlist = _tac_connect(tlist, bexpr_goto);
+			/*  connect stmt to the current list of triples -
 				bexpr already connected */
-			return _tac_connect(_tac_connect(tlist, bexpr_label), end_list->first);
+			return _tac_connect(tlist, stmt->first);
 		}
 		/* Leaves */
 		case AST_FRACT:
@@ -183,11 +186,24 @@ tac_node* _tac_node(){
 	return node;
 }
 
-static
+static 
 tac_node * _tac_label(){
 	tac_node * label = _tac_node();
 	label->value->op = TAC_LABEL;
 	return label;
+}
+
+static
+tac_node * _tac_goto(tac_node * onTrue, tac_node * onFalse){
+	tac_node * gotoNode = _tac_node();
+	gotoNode->value->op = TAC_GOTO;
+	gotoNode->value->arg0 = malloc(sizeof(tac_value));
+	gotoNode->value->arg0->instruction = onTrue->value;
+	
+	gotoNode->value->arg1 = malloc(sizeof(tac_value));
+	gotoNode->value->arg1->instruction = onFalse->value;
+	
+	return gotoNode;
 }
 /*
 static
