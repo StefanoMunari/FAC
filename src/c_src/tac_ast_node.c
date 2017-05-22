@@ -157,7 +157,46 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				_tac_connect(tlist, endBranchLabel);
 				
 				return tlist;
-			} 
+			} else {
+				/* Calculate list containing old code and bexpr code */
+				tac_ast_node(node->ast_children[0], tlist, stack);
+
+				/* calculate tlist of the stmt */
+				tac_list * stmt1 = generate_tac(node->SEQ_children[0]);
+				tac_list * stmt2 = generate_tac(node->SEQ_children[1]);
+				
+				/* Create the two labels */
+				tac_node * startBranchLabel = _tac_label();
+				tac_node * elseBranchLabel = _tac_label();
+				tac_node * endBranchLabel = _tac_label();
+				
+				
+				/* Initialize a conditioned goto stmt. If true goto stmt */
+				tac_node * gotoSTMT1 = _tac_conditioned_goto(tlist->last, startBranchLabel);
+				
+				
+				/* Initialize a not conditioned goto stmt, that corresponds to
+				 * if false goto end of branch
+				 */
+				tac_node * gotoElseLabel = _tac_unconditioned_goto(elseBranchLabel);
+				
+				tac_node * gotoEndLabel = _tac_unconditioned_goto(endBranchLabel);
+				
+				
+				/* Append the created lists and nodes */
+				
+				_tac_connect(tlist, gotoSTMT1);
+				_tac_connect(tlist, gotoElseLabel);
+				_tac_connect(tlist, startBranchLabel);
+				_tac_append(tlist, stmt1);
+				_tac_connect(tlist, gotoEndLabel);
+				_tac_connect(tlist, elseBranchLabel);
+				_tac_append(tlist, stmt2);
+				_tac_connect(tlist, endBranchLabel);
+				
+				return tlist;
+			
+			}
 			
 			return tlist;
 		}
