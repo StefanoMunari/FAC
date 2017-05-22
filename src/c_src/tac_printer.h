@@ -12,6 +12,6 @@ typedef struct tprinter {
 
 void tdynamic_dispatch(struct tprinter* this, tac_list* parameter);
 
-extern _tprinter_vtable C[], JAVA[];
-
+extern void yyerror(const char *, ...);
+extern _tprinter_vtable IR[], C[], JAVA[];
 #endif /*__TAC_PRINTER_H__*/
