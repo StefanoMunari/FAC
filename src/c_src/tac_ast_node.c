@@ -131,7 +131,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				/* calculate tlist of the stmt */
 				
 				tac_list * stmt = generate_tac(node->SEQ_children[0]);
-				printSeqNode(node->SEQ_children[0]);
+
 				assert(stmt != NULL);
 				assert(stmt->last != NULL);
 				assert(stmt->first != NULL);
@@ -158,8 +158,10 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				gotoEndLabel->value->arg0->instruction = endBranchLabel->value;
 				
 				/* Append the created lists and nodes */
+				
 				_tac_connect(tlist, gotoSTMT);
 				_tac_connect(tlist, gotoEndLabel);
+				_tac_connect(tlist, startBranchLabel);
 				_tac_append(tlist, stmt);
 				_tac_connect(tlist, endBranchLabel);
 				
