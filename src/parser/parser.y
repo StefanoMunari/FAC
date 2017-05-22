@@ -17,7 +17,7 @@
 #include "tac.h"
 #include "tac_list.h"
 #include "test_tac.h"
-#include "tac_printer_c.h"
+#include "tac_printer.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
@@ -275,8 +275,10 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 %%
 /* Entrypoint of the program */
 int main(int argc, char * argv[]) {
+	tprinter printer= { IR };
+
 	if(argc < 2){
-		fprintf(stderr, "Usage: %s <file-to-interpret>", argv[0]);
+		fprintf(stderr, "Usage: %s <file-to-interpret> <printer>\n Arguments: \n\t <printer> \t {std, c, java}\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 
@@ -303,11 +305,9 @@ int main(int argc, char * argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	printSeqNode(head);
 
 	tlist=generate_tac(head);
-	tprinter c_printer= { C };
-	tdynamic_dispatch(&c_printer, tlist);
+	tdynamic_dispatch(&printer, tlist);
 	test_tac(tlist);
 	/* generate code ??? */
 	finalize();
