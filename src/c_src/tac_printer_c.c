@@ -36,9 +36,16 @@ void print_tac_entry(tac_entry * entry, int i){
 		printf("%p:\t", entry);
 	printf(get_C_operator(entry->op));
 	putchar('\t');
-	printf("%s", get_value(entry->arg0));
+	
+	char * argString = get_value(entry->arg0);
+	printf("%s", argString);
+	free(argString);
+	
 	putchar('\t');
-	printf("%s", get_value(entry->arg1));
+	
+	argString  = get_value(entry->arg1);
+	printf("%s", argString);
+	free(argString);
 }
 
 static
