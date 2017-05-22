@@ -13,8 +13,10 @@ static
 tac_node * _tac_node();
 static
 tac_list * _tac_connect(tac_list *, tac_node *);
+/*
 static
 tac_list * _tac_append(tac_list * tlist, tac_list * Append);
+*/
 static
 tac_list * _tac_fract(ast_node *);
 static
@@ -23,11 +25,12 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
+/*
 static
 tac_node * _tac_unconditioned_goto(tac_node * destination);
 static
-tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination);
-int check=0;
+tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination);*/
+
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
@@ -126,79 +129,26 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		case AST_IF:
 		{
-			if(node->number_of_ast_children == 1){
-				/* Calculate list containing old code and bexpr code */
-				tac_ast_node(node->ast_children[0], tlist, stack);
-				/* calculate tlist of the stmt */
-				tac_list * stmt = generate_tac(node->SEQ_children[0]);
-				assert(stmt != NULL);
-				assert(stmt->last != NULL);
-				assert(stmt->first != NULL);
-				
-				/* Create the two labels */
-				tac_node * startBranchLabel = _tac_label();
-				tac_node * endBranchLabel = _tac_label();
-				
-				
-				/* Initialize a conditioned goto stmt. If true goto stmt */
-				tac_node * gotoSTMT = _tac_conditioned_goto(tlist->last, startBranchLabel);
-				
-				/* Initialize a not conditioned goto stmt, that corresponds to
-				 * if false goto end of branch
-				 */
-				tac_node * gotoEndLabel = _tac_unconditioned_goto(endBranchLabel);
-				
-				
-				/* Append the created lists and nodes */
-				_tac_connect(tlist, gotoSTMT);
-				_tac_connect(tlist, gotoEndLabel);
-				_tac_connect(tlist, startBranchLabel);
-				_tac_append(tlist, stmt);
-				_tac_connect(tlist, endBranchLabel);
-				
-				return tlist;
-			} else {
-				/* Calculate list containing old code and bexpr code */
-				tac_ast_node(node->ast_children[0], tlist, stack);
-
-				/* calculate tlist of the stmt */
-				tac_list * stmt1 = generate_tac(node->SEQ_children[0]);
-				tac_list * stmt2 = generate_tac(node->SEQ_children[1]);
-				
-				/* Create the two labels */
-				tac_node * startBranchLabel = _tac_label();
-				tac_node * elseBranchLabel = _tac_label();
-				tac_node * endBranchLabel = _tac_label();
-				
-				
-				/* Initialize a conditioned goto stmt. If true goto stmt */
-				tac_node * gotoSTMT1 = _tac_conditioned_goto(tlist->last, startBranchLabel);
-				
-				
-				/* Initialize a not conditioned goto stmt, that corresponds to
-				 * if false goto end of branch
-				 */
-				tac_node * gotoElseLabel = _tac_unconditioned_goto(elseBranchLabel);
-				
-				tac_node * gotoEndLabel = _tac_unconditioned_goto(endBranchLabel);
-				
-				
-				/* Append the created lists and nodes */
-				
-				_tac_connect(tlist, gotoSTMT1);
-				_tac_connect(tlist, gotoElseLabel);
-				_tac_connect(tlist, startBranchLabel);
-				_tac_append(tlist, stmt1);
-				_tac_connect(tlist, gotoEndLabel);
-				_tac_connect(tlist, elseBranchLabel);
-				_tac_append(tlist, stmt2);
-				_tac_connect(tlist, endBranchLabel);
-				
-				return tlist;
-			
-			}
-			
-			return tlist;
+			/* Calculate list containing tlist extended with bexpr code */
+			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
+			/* calculate tlist of the stmt following bexpr */
+			tac_list * end_list=generate_tac(node->SEQ_children[0]);
+			if(!end_list->last)
+				end_list=tac_ast_node(node->SEQ_children[0]->right, end_list, stack);
+			/* Create the two labels */
+			tac_node * bexpr_label=_tac_label();
+			tac_node * end_label=_tac_label();
+			/* attach the end label to the end of the end list */
+			_tac_connect(end_list, end_label);
+			/* branch true - reference the end list */
+			bexpr_label->value->arg0 = calloc(1, sizeof(tac_value));
+			bexpr_label->value->arg0->instruction=end_list->first->value;
+			/* branch false - skip the end list (reference the end label) */
+			bexpr_label->value->arg1 = calloc(1, sizeof(tac_value));
+			bexpr_label->value->arg1->instruction=end_list->last->value;
+			/* connect label + end_list to the current list of triples -
+				bexpr already connected */
+			return _tac_connect(_tac_connect(tlist, bexpr_label), end_list->first);
 		}
 		/* Leaves */
 		case AST_FRACT:
@@ -239,7 +189,7 @@ tac_node * _tac_label(){
 	label->value->op = TAC_LABEL;
 	return label;
 }
-
+/*
 static
 tac_node * _tac_unconditioned_goto(tac_node * destination){
 	tac_node * gotoNode = _tac_node();
@@ -259,10 +209,10 @@ tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination){
 	gotoNode->value->arg1->instruction = destination->value;
 	return gotoNode;
 }
-
+*/
 static
 tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
-	
+
 	if(!tlist->last && !tlist->first){
 		/* first node of the TAC list - nothing to connect */
 		tlist->first=tnode;
@@ -277,15 +227,16 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	}
 	return tlist;
 }
-
+/*
 static
 tac_list * _tac_append(tac_list * tlist, tac_list * Append){
-	
+
 	tlist->last->next = Append->first;
 	Append->first->prev = tlist->last;
 	tlist->last = Append->first;
 	return tlist;
 }
+*/
 
 
 

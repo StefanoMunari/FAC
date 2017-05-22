@@ -308,7 +308,7 @@ int main(int argc, char * argv[]) {
 
 	tlist=generate_tac(head);
 	tdynamic_dispatch(&printer, tlist);
-	test_tac(tlist);
+	//test_tac(tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
@@ -322,7 +322,6 @@ void yyerror(const char * err_msg, ...) {
 	fputc('\n', stderr);
 	success = false;
 	exit(EXIT_FAILURE);
-	
 }
 
 void finalize(){
