@@ -2,14 +2,19 @@
 #include "factype_ast.h"
 #include "factype_tac.h"
 #include "tac.h"
+#include <assert.h>
 #include <limits.h>
+#include <stdio.h>
+extern void yyerror(char *, ...);
 
-extern void yyerror(char *);
-
+static
+tac_node * _tac_label();
 static
 tac_node * _tac_node();
 static
 tac_list * _tac_connect(tac_list *, tac_node *);
+static
+tac_list * _tac_append(tac_list * tlist, tac_list * Append);
 static
 tac_list * _tac_fract(ast_node *);
 static
@@ -115,6 +120,54 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			/* connect tnode to the current list of triples */
 			return _tac_connect(tlist, tnode);
 		}
+		case AST_IF:
+		{
+			if(node->number_of_ast_children == 1){
+				/* Calculate list containing old code and bexpr code */
+				tac_ast_node(node->ast_children[0], tlist, stack);
+				
+				
+				
+				/* calculate tlist of the stmt */
+				
+				tac_list * stmt = generate_tac(node->SEQ_children[0]);
+				printSeqNode(node->SEQ_children[0]);
+				assert(stmt != NULL);
+				assert(stmt->last != NULL);
+				assert(stmt->first != NULL);
+				
+				/* Create the two labels */
+				tac_node * startBranchLabel = _tac_label();
+				tac_node * endBranchLabel = _tac_label();
+				
+				
+				/* Initialize a conditioned goto stmt. If true goto stmt */
+				tac_node * gotoSTMT = _tac_node();
+				gotoSTMT->value->op = TAC_GOTO;
+				gotoSTMT->value->arg0 = calloc(1, sizeof(tac_value));
+				gotoSTMT->value->arg0->instruction = tlist->last->value;
+				gotoSTMT->value->arg1 = calloc(1, sizeof(tac_value));
+				gotoSTMT->value->arg1->instruction = startBranchLabel->value;
+				
+				/* Initialize a not conditioned goto stmt, that corresponds to
+				 * if false goto end of branch
+				 */
+				tac_node * gotoEndLabel = _tac_node();
+				gotoEndLabel->value->op = TAC_GOTO;
+				gotoEndLabel->value->arg0 = calloc(1, sizeof(tac_value));
+				gotoEndLabel->value->arg0->instruction = endBranchLabel->value;
+				
+				/* Append the created lists and nodes */
+				_tac_connect(tlist, gotoSTMT);
+				_tac_connect(tlist, gotoEndLabel);
+				_tac_append(tlist, stmt);
+				_tac_connect(tlist, endBranchLabel);
+				
+				return tlist;
+			}	
+			
+			return tlist;
+		}
 		/* Leaves */
 		case AST_FRACT:
 			return _tac_fract(node);
@@ -149,19 +202,40 @@ tac_node* _tac_node(){
 }
 
 static
+tac_node * _tac_label(){
+	tac_node * label = _tac_node();
+	label->value->op = TAC_LABEL;
+	return label;
+}
+
+static
 tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
+	
 	if(!tlist->last && !tlist->first){
 		/* first node of the TAC list - nothing to connect */
 		tlist->first=tnode;
 		tlist->last=tnode;
 	}
 	else{
+		if(tnode == NULL)
+			return tlist;
 		tlist->last->next=tnode;
 		tnode->prev=tlist->last;
 		tlist->last=tlist->last->next;
 	}
 	return tlist;
 }
+
+static
+tac_list * _tac_append(tac_list * tlist, tac_list * Append){
+	
+	tlist->last->next = Append->first;
+	Append->first->prev = tlist->last;
+	tlist->last = Append->first;
+	return tlist;
+}
+
+
 
 static
 tac_list * _tac_fract(ast_node * node){
