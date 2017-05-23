@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <limits.h>
 #include <stdio.h>
-extern void yyerror(char *, ...);
+extern void yyerror(const char *, ...);
 
 static
 tac_node * _tac_node();
@@ -126,6 +126,34 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			/* connect tnode to the current list of triples */
 			return _tac_connect(tlist, tnode);
 		}
+		case AST_WHILE:
+		{
+			/* Create a label for the bexpr and connect it to the actual tlist */
+			tac_node * start_bexpr = _tac_label();
+			tlist = _tac_connect(tlist, start_bexpr);
+			
+			/* Create 3AC for the bexpr and append to the actual tlist */
+			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
+			
+			/* adjust the bexpr - if it is a leaf */
+			if(!tlist->last->value->arg0){
+				tlist->last->value->op=TAC_COND;
+				tlist->last->value->arg0=tlist->last->value->arg1;
+				tlist->last->value->arg1=NULL;
+			}
+			
+			/* generate stmt tac_node */
+			tac_list * stmt = generate_tac(node->seq_children[0]);
+			
+			/* generate goto node that points to the start_bexpr label */
+			tac_node * goto_node = _tac_goto();
+			goto_node->value->arg0 = calloc(1, sizeof(tac_value));
+			goto_node->value->arg0->instruction=start_bexpr->value;
+			
+			tlist = _tac_append(tlist, stmt);
+			tlist = _tac_connect(tlist, goto_node);
+			return tlist;
+		}
 		case AST_IF:
 		{
 			/* Calculate list containing tlist extended with bexpr code */
@@ -154,6 +182,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			goto_node->value->arg1->instruction=end_node->value;
 			/* connect label + stmt to the current list of triples -
 				true is already connected */
+			
 			return
 				_tac_append(
 					_tac_connect(
