@@ -13,13 +13,11 @@ tac_node * _tac_node();
 static
 tac_list * _tac_connect(tac_list *, tac_node *);
 static
+tac_list * _tac_append(tac_list *, tac_list *);
+static
 tac_node * _tac_label();
 static
-tac_node * _tac_goto(tac_node * onTrue, tac_node * onFalse);
-/*
-static
-tac_list * _tac_append(tac_list * tlist, tac_list * Append);
-*/
+tac_node * _tac_goto();
 static
 tac_list * _tac_fract(ast_node *);
 static
@@ -28,11 +26,6 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
-/*
-static
-tac_node * _tac_unconditioned_goto(tac_node * destination);
-static
-tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination);*/
 
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
@@ -135,30 +128,35 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		{
 			/* Calculate list containing tlist extended with bexpr code */
 			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
-			/* adjust a leaf bexpr */
+			/* adjust the bexpr - if it is a leaf */
 			if(!tlist->last->value->arg0){
 				tlist->last->value->arg0=tlist->last->value->arg1;
 				tlist->last->value->arg1=NULL;
 			}
 			/* calculate tlist of the stmt following bexpr */
-			tac_list * end_list=generate_tac(node->SEQ_children[0]);
-			if(!end_list->last || !end_list->last->value)
-				end_list=tac_ast_node(node->SEQ_children[0]->right, end_list, stack);
+			tac_list * stmt=generate_tac(node->SEQ_children[0]);
+			/* adjust stmt - case of leaf node */
+			if(!stmt->last || !stmt->last->value)
+				stmt=tac_ast_node(node->SEQ_children[0]->right, stmt, stack);
+			/* Create the goto entry */
+			tac_node * goto_node=_tac_goto();
 			/* Create the two labels */
-			tac_node * bexpr_label=_tac_label();
-			tac_node * end_label=_tac_label();
-			//printf("end label : %p\n",end_label);
-			/* attach the end label to the end of the end list */
-			_tac_connect(end_list, end_label);
-			/* branch true - reference the end list */
-			bexpr_label->value->arg0 = calloc(1, sizeof(tac_value));
-			bexpr_label->value->arg0->instruction=end_list->first->value;
+			tac_node * true_node=_tac_label();
+			tac_node * end_node=_tac_label();
+			/* set up goto node using labels */
+			goto_node->value->arg0 = calloc(1, sizeof(tac_value));
+			goto_node->value->arg0->instruction=true_node->value;
 			/* branch false - skip the end list (reference the end label) */
-			bexpr_label->value->arg1 = calloc(1, sizeof(tac_value));
-			bexpr_label->value->arg1->instruction=end_list->last->value;
-			/* connect label + end_list to the current list of triples -
-				bexpr is already connected */
-			return _tac_connect(_tac_connect(tlist, bexpr_label), end_list->first);
+			goto_node->value->arg1 = calloc(1, sizeof(tac_value));
+			goto_node->value->arg1->instruction=end_node->value;
+			/* connect label + stmt to the current list of triples -
+				true is already connected */
+			return
+				_tac_append(
+					_tac_connect(
+						_tac_connect(tlist, goto_node),
+						true_node),
+					_tac_connect(stmt, end_node));
 		}
 		/* Leaves */
 		case AST_FRACT:
@@ -192,65 +190,29 @@ tac_node* _tac_node(){
 	node->next=NULL;
 	return node;
 }
-/*
-static
-tac_node * _check_label(tac_list * tlist){
-	if(tlist && tlist->last && tlist->last->value
-		&& tlist->last->value->op == TAC_LABEL){
-		tac_node * tnode=tlist->last;
-		tlist->last=tlist->last->prev;
-		tlist->last->next=NULL;
-		tnode->value->op=-1;
-		tnode->prev=NULL;
-		tnode->next=NULL;
-		printf("tlist->last != tnode : %p != %p\n", tlist->last, tnode);
-		printf("tlist->last->next == NULL : %p\n", tlist->last->next);
-		printf("tlist->last->prev != NULL : %p\n", tlist->last->prev);
-		return tnode;
-	}
-	return NULL;
-}*/
 
 static
 tac_node * _tac_label(){
 	tac_node * label = _tac_node();
 	label->value->op = TAC_LABEL;
+	label->value->arg0=NULL;
+	label->value->arg1=NULL;
+	label->prev=NULL;
+	label->next=NULL;
 	return label;
 }
 
 static
-tac_node * _tac_goto(tac_node * onTrue, tac_node * onFalse){
-	tac_node * gotoNode = _tac_node();
-	gotoNode->value->op = TAC_GOTO;
-	gotoNode->value->arg0 = malloc(sizeof(tac_value));
-	gotoNode->value->arg0->instruction = onTrue->value;
-
-	gotoNode->value->arg1 = malloc(sizeof(tac_value));
-	gotoNode->value->arg1->instruction = onFalse->value;
-
-	return gotoNode;
-}
-/*
-static
-tac_node * _tac_unconditioned_goto(tac_node * destination){
-	tac_node * gotoNode = _tac_node();
-	gotoNode->value->op = TAC_GOTO;
-	gotoNode->value->arg0 = malloc(sizeof(tac_value));
-	gotoNode->value->arg0->instruction = destination->value;
-	return gotoNode;
+tac_node * _tac_goto(){
+	tac_node * goto_node=_tac_node();
+	goto_node->value->op=TAC_GOTO;
+	goto_node->value->arg0=NULL;
+	goto_node->value->arg1=NULL;
+	goto_node->prev=NULL;
+	goto_node->next=NULL;
+	return goto_node;
 }
 
-static
-tac_node * _tac_conditioned_goto(tac_node * condition,  tac_node * destination){
-	tac_node * gotoNode = _tac_node();
-	gotoNode->value->op = TAC_GOTO;
-	gotoNode->value->arg0 = malloc(sizeof(tac_value));
-	gotoNode->value->arg0->instruction = condition->value;
-	gotoNode->value->arg1 = malloc(sizeof(tac_value));
-	gotoNode->value->arg1->instruction = destination->value;
-	return gotoNode;
-}
-*/
 static
 tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	if(!tlist->last && !tlist->first){
@@ -267,18 +229,24 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	}
 	return tlist;
 }
-/*
-static
-tac_list * _tac_append(tac_list * tlist, tac_list * Append){
 
-	tlist->last->next = Append->first;
-	Append->first->prev = tlist->last;
-	tlist->last = Append->first;
+/* PRE= tlist is not null, to_append is not null,
+	to_append->first is not null, to_append->last is not null */
+static
+tac_list * _tac_append(tac_list * tlist, tac_list * to_append){
+	if(!tlist->last && !tlist->first){
+		/* first node of the TAC list - nothing to connect */
+		tlist->first=to_append->first;
+		tlist->last=to_append->last;
+	}
+	else{
+		tlist->last->next=to_append->first;
+		to_append->first->prev=tlist->last;
+		tlist->last=to_append->last;
+		to_append->first=tlist->first;
+	}
 	return tlist;
 }
-*/
-
-
 
 static
 tac_list * _tac_fract(ast_node * node){
