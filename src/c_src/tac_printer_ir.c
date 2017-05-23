@@ -2,6 +2,7 @@
 #include "factype_tac.h"
 #include <stdio.h>
 
+extern void yyerror(const char *, ...);
 static
 void print_tac_entry(tac_entry *, int i);
 static
@@ -52,6 +53,7 @@ char * get_operator(tac_op operator){
 		case TAC_LEQ: return "<="; break;
 		case TAC_GEQ: return ">="; break;
 		case TAC_NEQ: return "!="; break;
+		case TAC_EQ: return "=="; break;
 		case TAC_PRINT: return "printf"; break;
 		case TAC_ASSIGNMENT: return "="; break;
 		case TAC_GOTO: return "goto"; break;
@@ -68,7 +70,7 @@ char * get_operator(tac_op operator){
 		case TAC_WHILE: yyerror("TAC_Printer - WHILE is not a valid operator"); break;
 		case TAC_IF: yyerror("TAC_Printer - IF is not a valid operator"); break;
 		case TAC_ELSE: yyerror("TAC_Printer - ELSE is not a valid operator"); break;
-		default: yyerror("TAC_Printer - operator not recognized"); break;
+		default: yyerror("TAC_Printer - operator not recognized", __FILE__, __LINE__); break;
 	}
 	return "";
 }
