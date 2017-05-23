@@ -25,6 +25,7 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
+int check=0;
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
@@ -100,6 +101,8 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		}
 		case AST_ASSIGNMENT:
 		{
+			printf("ASS : %d\n", check);
+			++check;
 			tac_node* tnode=NULL;
 			/* compute right subtree -
 			   NOTE: it also connects it to the current list of triples */
@@ -119,6 +122,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tnode->value->arg0 = calloc(1, sizeof(tac_value));
 			tnode->value->arg0->address =
 				lookupID(node->ast_children[0]->data->value);
+			printf("END - ASS : %d\n", check);
 			/* connect tnode to the current list of triples */
 			return _tac_connect(tlist, tnode);
 		}
@@ -133,10 +137,10 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				tlist->last->value->arg1=NULL;
 			}
 			/* calculate tlist of the stmt following bexpr */
-			tac_list * stmt=generate_tac(node->SEQ_children[0]);
+			tac_list * stmt=generate_tac(node->seq_children[0]);
 			/* adjust stmt - case of leaf node */
 			if(!stmt->last || !stmt->last->value)
-				stmt=tac_ast_node(node->SEQ_children[0]->right, stmt, stack);
+				stmt=tac_ast_node(node->seq_children[0]->right, stmt, stack);
 			/* Create the goto entry */
 			tac_node * goto_node=_tac_goto();
 			/* Create the two labels */
@@ -222,6 +226,7 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	else{
 		if(tnode == NULL)
 			return tlist;
+		printf("CONNECT : %p -> %p\n", tlist->last->value, tnode->value);
 		tlist->last->next=tnode;
 		tnode->prev=tlist->last;
 		tlist->last=tlist->last->next;
