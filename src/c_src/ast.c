@@ -8,23 +8,23 @@
 char * tokenString(ast_category token);
 
 ast_node * astNode(unsigned int token, int line, op_t op, void * value, 
-	const int number_of_ast_children, const int number_of_SEQ_children, ...) {
+	const int number_of_ast_children, const int number_of_seq_children, ...) {
 
 
-	assert(number_of_ast_children >= 0 && number_of_SEQ_children >= 0);
+	assert(number_of_ast_children >= 0 && number_of_seq_children >= 0);
 	
 	ast_node * node = calloc(1, sizeof(ast_node));
 
 	
 
 	node->number_of_ast_children = number_of_ast_children;
-	node->number_of_SEQ_children = number_of_SEQ_children;
+	node->number_of_seq_children = number_of_seq_children;
 
 	node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
-	node->SEQ_children = (seq_node**)calloc(number_of_SEQ_children, sizeof(seq_node*));
+	node->seq_children = (seq_node**)calloc(number_of_seq_children, sizeof(seq_node*));
 
 	va_list args_iterator;
-	va_start(args_iterator, number_of_SEQ_children);
+	va_start(args_iterator, number_of_seq_children);
 	{
 		int i;
 		for(i = 0; i < number_of_ast_children; ++i) {
@@ -32,8 +32,8 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 			node->ast_children[i] = va_arg(args_iterator, ast_node*);
 
 		}
-		for(i = 0; i < number_of_SEQ_children; ++i){
-			node->SEQ_children[i] = va_arg(args_iterator, seq_node*);
+		for(i = 0; i < number_of_seq_children; ++i){
+			node->seq_children[i] = va_arg(args_iterator, seq_node*);
 		}
 	}
 	va_end(args_iterator);
@@ -42,8 +42,8 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 	if(node->number_of_ast_children == 0){
 		node->ast_children = NULL;
 	}
-	if(node->number_of_SEQ_children == 0){
-		node->SEQ_children = NULL;
+	if(node->number_of_seq_children == 0){
+		node->seq_children = NULL;
 	}
 	
 	
@@ -66,8 +66,8 @@ void freeastNode(ast_node * node){
 			freeastNode(node->ast_children[i]);
 		}
 
-		for(i = 0; i < node->number_of_SEQ_children; ++i) {
-			freeSeqNode(node->SEQ_children[i]);
+		for(i = 0; i < node->number_of_seq_children; ++i) {
+			freeSeqNode(node->seq_children[i]);
 		}
 	}
 	/* Free resources */
@@ -91,8 +91,8 @@ int printastNodeRec(ast_node * node, int instruction, int tab){
 	for(i = 0; i < node->number_of_ast_children; i++){
 		instruction = printastNodeRec(node->ast_children[i], instruction, tab+1);
 	}
-	for(i = 0; i < node->number_of_SEQ_children; ++i){
-		instruction = printSeqNodeRec(node->SEQ_children[i], instruction, tab+1);
+	for(i = 0; i < node->number_of_seq_children; ++i){
+		instruction = printSeqNodeRec(node->seq_children[i], instruction, tab+1);
 	}
 	return instruction;
 

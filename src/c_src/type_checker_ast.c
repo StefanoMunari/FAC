@@ -34,8 +34,8 @@ bool type_check_ast_node(ast_node * ast) {
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
 			{
 				int i = 0;
-				for(i = 0; i < node->number_of_SEQ_children; ++i){
-					result &= type_check(node->SEQ_children[i]);
+				for(i = 0; i < node->number_of_seq_children; ++i){
+					result &= type_check(node->seq_children[i]);
 				}
 			}
 			break;
@@ -43,7 +43,7 @@ bool type_check_ast_node(ast_node * ast) {
 		case AST_WHILE:
 		{
 			result &= type_check_ast_expr(node->ast_children[0], BOOL_T);
-			result &= type_check(node->SEQ_children[0]);
+			result &= type_check(node->seq_children[0]);
 			break;
 		}
 		default:

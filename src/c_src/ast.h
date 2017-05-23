@@ -19,11 +19,11 @@ typedef struct ast_node {
 	/** number of children of type ast_node			*/
 	unsigned int number_of_ast_children;
 	/** number of children of type seq_node			*/
-	unsigned int number_of_SEQ_children;
+	unsigned int number_of_seq_children;
 	/** pointers to the children of type ast_node	*/
 	struct ast_node ** ast_children;
 	/** pointers to the children of type seq_node	*/
-	struct seq_node ** SEQ_children;
+	struct seq_node ** seq_children;
 } ast_node;
 
 /** Create a new ast node
@@ -33,7 +33,7 @@ typedef struct ast_node {
  */
 
 ast_node * astNode(unsigned int token, int line, op_t op, void * value, 
-const int number_of_ast_children, const int number_of_SEQ_children, ...);
+const int number_of_ast_children, const int number_of_seq_children, ...);
 
 /**
  * Free (recursively) the syntax three given in input
