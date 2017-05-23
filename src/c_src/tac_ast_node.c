@@ -7,7 +7,6 @@
 #include <stdio.h>
 extern void yyerror(char *, ...);
 
-
 static
 tac_node * _tac_node();
 static
@@ -26,7 +25,6 @@ static
 tac_list * _tac_id(ast_node *);
 static
 tac_node * _tac_print(ast_node *);
-
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
@@ -130,6 +128,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
 			/* adjust the bexpr - if it is a leaf */
 			if(!tlist->last->value->arg0){
+				tlist->last->value->op=TAC_COND;
 				tlist->last->value->arg0=tlist->last->value->arg1;
 				tlist->last->value->arg1=NULL;
 			}
@@ -230,21 +229,20 @@ tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
 	return tlist;
 }
 
-/* PRE= tlist is not null, to_append is not null,
-	to_append->first is not null, to_append->last is not null */
 static
 tac_list * _tac_append(tac_list * tlist, tac_list * to_append){
+	if(!to_append->first && !to_append->last)
+		return tlist;
 	if(!tlist->last && !tlist->first){
 		/* first node of the TAC list - nothing to connect */
 		tlist->first=to_append->first;
 		tlist->last=to_append->last;
+		return tlist;
 	}
-	else{
-		tlist->last->next=to_append->first;
-		to_append->first->prev=tlist->last;
-		tlist->last=to_append->last;
-		to_append->first=tlist->first;
-	}
+	tlist->last->next=to_append->first;
+	to_append->first->prev=tlist->last;
+	tlist->last=to_append->last;
+	to_append->first=tlist->first;
 	return tlist;
 }
 
@@ -252,6 +250,7 @@ static
 tac_list * _tac_fract(ast_node * node){
 	tac_list * tlist=malloc(sizeof(tac_list));
 	tlist->last=_tac_node();
+	tlist->first=tlist->last;
 	/* convention - set always arg1 */
 	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg1->fract = (fract_t*) node->data->value;
@@ -262,6 +261,7 @@ static
 tac_list * _tac_bool(ast_node * node){
 	tac_list * tlist=malloc(sizeof(tac_list));
 	tlist->last=_tac_node();
+	tlist->first=tlist->last;
 	/* convention - set always arg1 */
 	tlist->last->value->arg1 = calloc(1, sizeof(tac_value));
 	tlist->last->value->arg1->boolean = node->data->value;
@@ -272,6 +272,7 @@ static
 tac_list * _tac_id(ast_node * node){
 	tac_list * tlist=malloc(sizeof(tac_list));
 	tlist->last=_tac_node();
+	tlist->first=tlist->last;
 	/* convention - set always arg1 */
 	tlist->last->value->arg1= calloc(1, sizeof(tac_value));
 	tlist->last->value->arg1->address=
