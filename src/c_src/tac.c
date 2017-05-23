@@ -13,6 +13,7 @@ tac_list * init_tac(tac_list *);
 static
 void free_tac_entry(tac_entry * entry);
 
+
 tac_list * generate_tac(seq_node * input){
 	return tac(input, malloc(sizeof(tac_list)));
 }
