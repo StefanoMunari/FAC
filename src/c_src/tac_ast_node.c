@@ -137,10 +137,10 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				tlist->last->value->arg1=NULL;
 			}
 			/* calculate tlist of the stmt following bexpr */
-			tac_list * stmt=generate_tac(node->seq_children[0]);
-			/* adjust stmt - case of leaf node */
-			if(!stmt->last || !stmt->last->value)
-				stmt=tac_ast_node(node->seq_children[0]->right, stmt, stack);
+			seq_node * aux=calloc(1, sizeof(seq_node));
+			aux->left=node->seq_children[0];
+			tac_list * stmt=generate_tac(aux);
+			free(aux);
 			/* Create the goto entry */
 			tac_node * goto_node=_tac_goto();
 			/* Create the two labels */
