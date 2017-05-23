@@ -41,7 +41,8 @@ typedef enum {
 	TAC_IF,
 	TAC_ELSE,
 	TAC_LABEL,
-	TAC_GOTO
+	TAC_GOTO,
+	TAC_COND
 } tac_op;
 
 #endif /*_FACTYPE_TAC_H_*/
