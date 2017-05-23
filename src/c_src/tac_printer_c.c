@@ -2,6 +2,7 @@
 #include "tac_printer.h"
 #include <stdio.h>
 static int tcounter = 0;
+
 static
 void print_tac_entry(tac_node *);
 
@@ -20,7 +21,7 @@ void print_tac_c(tac_list * tlist){
 	printf("=== C: Print the 3AC ===\n");
 	printf("#include<stdio.h>\n");
 	printf("int MCD(int u, int v) {\n");
-	printf("\treturn (v != 0)?MCD(v, u%c v):u\n}\n", 37);
+	printf("\treturn (v != 0)?MCD(v, u%c v):u;\n}\n", 37);
 
 	printf("int main(void){\n");
 
@@ -33,6 +34,7 @@ void print_tac_c(tac_list * tlist){
 		++i;
 		iterator = iterator->next;
 	}
+	printf("return 0");
 	printf("\n}\n");
 	printf("=== C: End the 3AC ===\n");
 }
@@ -180,6 +182,23 @@ void print_tac_entry(tac_node * node){
 			printf("h0 = %s * %s;\n", numA, denB);
 			printf("h1 = %s * %s;\n", denA, numB);
 			printf("t%p = h0 %s h1;\n", entry, get_operator(entry->op));
+			break;
+		}
+		case TAC_LABEL:
+		{
+			printf("L%p:\n", entry);
+			break;
+		}
+		case TAC_COND:
+		{
+			char * boolean_value = getBooleanValue(entry->arg0);
+			printf("t%p = %s\n", entry, boolean_value);
+			free(boolean_value);
+			break;
+		}
+		case TAC_GOTO:
+		{
+			printf("GOTO -- TODO - Implement\n");
 			break;
 		}
 		default:printf("Not yet implemented\n");
