@@ -165,15 +165,15 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 				tlist->last->value->arg1=NULL;
 			}
 			/* calculate tlist of the stmt following bexpr */
-			seq_node * aux=calloc(1, sizeof(seq_node));
-			aux->left=node->seq_children[0];
-			tac_list * stmt=generate_tac(aux);
-			free(aux);
-			/* Create the goto entry */
-			tac_node * goto_node=_tac_goto();
+			tac_list * stmt=generate_tac(node->seq_children[0]);
+			
 			/* Create the two labels */
 			tac_node * true_node=_tac_label();
 			tac_node * end_node=_tac_label();
+			
+			/* Create the goto entry */
+			tac_node * goto_node=_tac_goto();
+			
 			/* set up goto node using labels */
 			goto_node->value->arg0 = calloc(1, sizeof(tac_value));
 			goto_node->value->arg0->instruction=true_node->value;
