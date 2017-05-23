@@ -21,7 +21,7 @@ void print_tac_c(tac_list * tlist){
 	printf("=== C: Print the 3AC ===\n");
 	printf("#include<stdio.h>\n");
 	printf("int MCD(int u, int v) {\n");
-	printf("\treturn (v != 0)?MCD(v, u%c v):u;\n}\n", 37);
+	printf("\treturn (v != 0)?MCD(v, u %c v):u;\n}\n", 37);
 
 	printf("int main(void){\n");
 
