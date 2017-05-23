@@ -28,12 +28,14 @@ tac_list * generate_tac(seq_node * input){
 		tlist->last
 */
 tac_list * tac(seq_node * node, tac_list * tlist){
-	if(!node->left)
-		return init_tac(tlist);
+	if(!node->left) 
+		init_tac(tlist);
 	else
 		tlist=tac(node->left, tlist);
+	
 	if(node->right)
-		return tac_ast_node(node->right, tlist, &stack);
+		tlist = tac_ast_node(node->right, tlist, &stack);
+
 	return tlist;
 }
 
