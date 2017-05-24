@@ -15,8 +15,12 @@ static
 tac_list * _tac_append(tac_list *, tac_list *);
 static
 tac_node * _tac_label();
+
 static
-tac_node * _tac_goto();
+tac_node * _tac_goto_unconditioned(tac_node * destination);
+static
+tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination);
+
 static
 tac_list * _tac_fract(ast_node *);
 static
@@ -131,64 +135,94 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			/* Create a label for the bexpr and connect it to the actual tlist */
 			tac_node * start_bexpr = _tac_label();
 			tlist = _tac_connect(tlist, start_bexpr);
-			
 			/* Create 3AC for the bexpr and append to the actual tlist */
-			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
+			tlist = tac_ast_node(node->ast_children[0], tlist, stack);
 			
-			/* adjust the bexpr - if it is a leaf */
-			if(!tlist->last->value->arg0){
-				tlist->last->value->op=TAC_COND;
-				tlist->last->value->arg0=tlist->last->value->arg1;
-				tlist->last->value->arg1=NULL;
-			}
+			/* add the code to compute the negation of the condition and add it to the list */
+			tac_node * last_instruction = tlist->last;
+			tac_node * negateCondition = _tac_node();
+			negateCondition->value->op = TAC_NOT;
+			negateCondition->value->arg0 = malloc(sizeof(tac_value));
+			negateCondition->value->arg0->instruction = last_instruction->value;
+			tlist = _tac_connect(tlist, negateCondition);
+			
+			
+			/* Create a label that points to the end of the body */
+			tac_node * end_while_label = _tac_label();
+			
+			/* Create a conditioned goto that onTrue of the negate condition goes to end_while_label */
+			tac_node * goto_skip_while_body = _tac_goto_conditioned(negateCondition->value, end_while_label);
+			tlist = _tac_connect(tlist, goto_skip_while_body);
+
+			
 			
 			/* generate stmt tac_node */
 			tac_list * stmt = generate_tac(node->seq_children[0]);
 			
 			/* generate goto node that points to the start_bexpr label */
-			tac_node * goto_node = _tac_goto();
-			goto_node->value->arg0 = calloc(1, sizeof(tac_value));
-			goto_node->value->arg0->instruction=start_bexpr->value;
+			tac_node * goto_node = _tac_goto_unconditioned(start_bexpr);
 			
 			tlist = _tac_append(tlist, stmt);
 			tlist = _tac_connect(tlist, goto_node);
+			tlist = _tac_connect(tlist, end_while_label);
 			return tlist;
 		}
 		case AST_IF:
 		{
-			/* Calculate list containing tlist extended with bexpr code */
-			tlist=tac_ast_node(node->ast_children[0], tlist, stack);
-			/* adjust the bexpr - if it is a leaf */
+			
+			//Calculate list containing tlist extended with bexpr code 
+			tlist = tac_ast_node(node->ast_children[0], tlist, stack);
+			//adjust the bexpr - if it is a leaf 
 			if(!tlist->last->value->arg0){
 				tlist->last->value->op=TAC_COND;
 				tlist->last->value->arg0=tlist->last->value->arg1;
 				tlist->last->value->arg1=NULL;
 			}
-			/* calculate tlist of the stmt following bexpr */
-			tac_list * stmt=generate_tac(node->seq_children[0]);
+			/* add the code to compute the negation of the condition and add it to the list */
+			tac_node * last_instruction = tlist->last;
+			tac_node * negateCondition = _tac_node();
+			negateCondition->value->op = TAC_NOT;
+			negateCondition->value->arg0 = malloc(sizeof(tac_value));
+			negateCondition->value->arg0->instruction = last_instruction->value;
+			tlist = _tac_connect(tlist, negateCondition);
 			
-			/* Create the two labels */
-			tac_node * true_node=_tac_label();
-			tac_node * end_node=_tac_label();
+			//calculate tlist of the stmt following bexpr 
+			tac_list * stmt = generate_tac(node->seq_children[0]);
 			
-			/* Create the goto entry */
-			tac_node * goto_node=_tac_goto();
 			
-			/* set up goto node using labels */
-			goto_node->value->arg0 = calloc(1, sizeof(tac_value));
-			goto_node->value->arg0->instruction=true_node->value;
-			/* branch false - skip the end list (reference the end label) */
-			goto_node->value->arg1 = calloc(1, sizeof(tac_value));
-			goto_node->value->arg1->instruction=end_node->value;
-			/* connect label + stmt to the current list of triples -
-				true is already connected */
+			tac_node * end_if_body = _tac_label();
 			
-			return
-				_tac_append(
-					_tac_connect(
-						_tac_connect(tlist, goto_node),
-						true_node),
-					_tac_connect(stmt, end_node));
+			/* Create a conditioned goto that onTrue of the negate condition goes to end_while_label */
+			tac_node * goto_skip_if_body = _tac_goto_conditioned(negateCondition->value, end_if_body);
+			
+			
+			if(node->number_of_seq_children == 1){
+				tlist = _tac_connect(tlist, goto_skip_if_body);
+				tlist = _tac_append(tlist, stmt);
+				tlist = _tac_connect(tlist, end_if_body);
+				return tlist;
+			} else if(node->number_of_seq_children == 2) {
+				printf("HERE\n");
+				tac_node * end_else_body = _tac_label();
+				tlist = _tac_connect(tlist, goto_skip_if_body);
+				tlist = _tac_append(tlist, stmt);
+				/* Create a conditioned goto that onTrue of the negate condition goes to end_while_label */
+				tac_node * goto_to_end = _tac_goto_unconditioned(end_else_body);
+				tlist = _tac_connect(tlist, goto_to_end);
+				tlist = _tac_connect(tlist, end_if_body);
+				//calculate tlist of the stmt following bexpr 
+				tac_list * body_else = generate_tac(node->seq_children[1]);
+				tlist = _tac_append(tlist, body_else);
+				tlist = _tac_connect(tlist, end_else_body);
+				return tlist;
+				
+			} else {
+				char * s = malloc(sizeof(20));
+				strcpy(s, __FILE__);
+				
+				yyerror("%s: IF with more than two children?", s);
+			}
+			
 		}
 		/* Leaves */
 		case AST_FRACT:
@@ -223,6 +257,8 @@ tac_node* _tac_node(){
 	return node;
 }
 
+
+
 static
 tac_node * _tac_label(){
 	tac_node * label = _tac_node();
@@ -235,13 +271,21 @@ tac_node * _tac_label(){
 }
 
 static
-tac_node * _tac_goto(){
+tac_node * _tac_goto_unconditioned(tac_node * destination){
 	tac_node * goto_node=_tac_node();
 	goto_node->value->op=TAC_GOTO;
-	goto_node->value->arg0=NULL;
-	goto_node->value->arg1=NULL;
-	goto_node->prev=NULL;
-	goto_node->next=NULL;
+	goto_node->value->arg0=malloc(sizeof(tac_value));
+	goto_node->value->arg0->instruction=destination->value;
+	return goto_node;
+}
+static
+tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination){
+	tac_node * goto_node=_tac_node();
+	goto_node->value->op=TAC_GOTO;
+	goto_node->value->arg0=malloc(sizeof(tac_value));
+	goto_node->value->arg0->instruction=condition;
+	goto_node->value->arg1=malloc(sizeof(tac_value));
+	goto_node->value->arg1->instruction=destination->value;
 	return goto_node;
 }
 
