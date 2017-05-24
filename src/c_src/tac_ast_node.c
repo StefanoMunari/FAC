@@ -137,6 +137,12 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tlist = _tac_connect(tlist, start_bexpr);
 			/* Create 3AC for the bexpr and append to the actual tlist */
 			tlist = tac_ast_node(node->ast_children[0], tlist, stack);
+			//adjust the bexpr - if it is a leaf 
+			if(!tlist->last->value->arg0){
+				tlist->last->value->op=TAC_COND;
+				tlist->last->value->arg0=tlist->last->value->arg1;
+				tlist->last->value->arg1=NULL;
+			}
 			
 			/* add the code to compute the negation of the condition and add it to the list */
 			tac_node * last_instruction = tlist->last;
