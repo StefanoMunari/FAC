@@ -122,7 +122,6 @@ char * tokenString(ast_category token){
 		case AST_RELOP: return "RELOP"; break;
 		case AST_WHILE: return "WHILE"; break;
 		case AST_IF: return "IF"; break;
-		case AST_ELSE: return "ELSE"; break;
 		case AST_PRINT: return "PRINT"; break;
 		case AST_ASSIGNMENT: return "ASSIGNMENT"; break;
 		case AST_ID : return "ID"; break;

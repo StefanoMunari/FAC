@@ -1,3 +1,10 @@
+/**
+ * @brief file defining the operations on the type fract. @see factype.h
+ * @file
+ * @author mirko.bez@studenti.unipd.it
+ * @author stefano.munari.1@studenti.unipd.it
+ */
+
 #ifndef __FAC__MATH__H__
 #define __FAC__MATH__H__
 #include "factype.h"
@@ -22,15 +29,15 @@ fract_t reciprocal(fract_t fract1);
 
 /**
  * Returns the multiplication of fract1 and fract2
- * @param fract1
- * @param fract2
+ * @param fract1 first factor of the multiplication
+ * @param fract2 second factor of the multiplication
  * @return fract1*fract2
  */
 fract_t mult(fract_t fract1, fract_t fract2);
 /**
  * Returns the sum of fract1 and fract2
- * @param fract1
- * @param fract2
+ * @param fract1 first addend of the sum
+ * @param fract2 second addend of the sum
  * @return fract1+fract
  */
 fract_t sum(fract_t fract1, fract_t fract2);
