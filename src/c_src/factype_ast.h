@@ -17,20 +17,35 @@
 * It represents the AST category of tokens
 */
 typedef enum {
-	AST_ID,
+	/** represents a variable identifier */
+	AST_ID, 
+	/** represents a fract literal */
 	AST_FRACT,
+	/** represents a bool literal */
 	AST_BOOL,
+	/** represents a fract operation with arity 1 */
 	AST_AOP1,
+	/** represents a fract operation with arity 2*/
 	AST_AOP2,
+	/** represents a boolean operation with arity 1*/
 	AST_BOP1,
+	/** represents a boolean operation with arity 2*/
 	AST_BOP2,
+	/** represents a relational operator (<=, >=, <, >, ==, !=) */
 	AST_RELOP,
+	/** represents the function print */
 	AST_PRINT,
+	/** represents the while */
 	AST_WHILE,
+	/** represents an assignment */
 	AST_ASSIGNMENT,
+	/** represents a declaration */
 	AST_DECLARATION,
+	/** represents both the if with one and the if with two children */
 	AST_IF,
-	AST_ELSE,
+	/** artificial label used to make "type checking" on the enum:
+	 * @link  https://stackoverflow.com/questions/9161863/how-to-check-if-an-enum-variable-is-valid
+	 */
 	AST_END_MARKER
 } ast_category;
 
