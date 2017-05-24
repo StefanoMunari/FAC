@@ -47,8 +47,19 @@ void freeastNode(ast_node * root);
  */
 int printastNode(ast_node * root);
 
+/**
+ * Print a syntax tree on the screen
+ * @param node the root of the ast tree to print
+ * @param instruction the incoming instruction id
+ * @param tab the indentation, i.e. the number of '\t' to prepend to the real print
+ * @return an integer that corresponds to the next instruction id
+ */
 int printastNodeRec(ast_node * node, int instruction, int tab);
 
+/**
+ * @param token the token from which we want the representation
+ * @return the string representation of the token 
+ */
 char * tokenString(ast_category token);
 
 #endif /* __AST__H__ */
