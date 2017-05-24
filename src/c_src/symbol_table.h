@@ -9,10 +9,14 @@
 
 /** Struct contained in the symbol table */
 typedef struct symbol_table_entry {
-	char * id; 						/* key */
-	type_t type; 					/* type */
-	void * value; 					/* Concrete value */
-	UT_hash_handle hh; 				/* makes this structure hashable */
+	/** the key */
+	char * id;
+	/** type */
+	type_t type; 
+	/** the concrete value */
+	void * value;
+	/** needed by uthash.h to make this structure hashable */
+	UT_hash_handle hh;
 } symbol_table_entry;
 
 /**
