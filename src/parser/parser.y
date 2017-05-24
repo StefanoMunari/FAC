@@ -18,6 +18,7 @@
 #include "tac_list.h"
 #include "test_tac.h"
 #include "tac_printer.h"
+#include "tac_printer_c.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
@@ -163,7 +164,10 @@ stmt :
 	$$ = newSeqNode($1, $2);
 }
 | stmt whilerule {
-	$$ = newSeqNode($1, $2);
+	if($2 == NULL)
+		$$ = $1;
+	else
+		$$ = newSeqNode($1, $2);
 }
 ;
 
@@ -171,7 +175,13 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	if($3->data->token == AST_BOOL && *(bool*)$3->data->value == false){
+		fprintf(stderr,"Warning: condition of while is always false. Dead Code.\n");
+		$$ = NULL;
+	} else {
+		$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	}
+	
 }
 ;
 
@@ -308,6 +318,7 @@ int main(int argc, char * argv[]) {
 
 	tlist=generate_tac(head);
 	tdynamic_dispatch(&printer, tlist);
+	print_tac_c(tlist);
 	//test_tac(tlist);
 	/* generate code ??? */
 	finalize();
