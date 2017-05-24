@@ -34,8 +34,8 @@ void print_tac_c(tac_list * tlist){
 		++i;
 		iterator = iterator->next;
 	}
-	printf("return 0");
-	printf("\n}\n");
+	printf("return 0;\n");
+	printf("}\n");
 	printf("=== C: End the 3AC ===\n");
 }
 
@@ -198,7 +198,11 @@ void print_tac_entry(tac_node * node){
 		}
 		case TAC_GOTO:
 		{
-			printf("GOTO -- TODO - Implement\n");
+			if(entry->arg1 != NULL){ //Codnitioned goto
+				printf("if (t%p) goto L%p;\n", entry->arg0->instruction, entry->arg1->instruction);
+			} else {
+				printf("goto L%p;\n", entry->arg0->instruction);
+			}
 			break;
 		}
 		default:printf("Not yet implemented\n");
