@@ -16,7 +16,6 @@
 #include "type_checker.h"
 #include "tac.h"
 #include "tac_list.h"
-#include "test_tac.h"
 #include "tac_printer.h"
 #include "tac_printer_c.h"
 #include <stdio.h>
@@ -292,7 +291,6 @@ int main(int argc, char * argv[]) {
 	tlist=generate_tac(head);
 	tdynamic_dispatch(&printer, tlist);
 	print_tac_c(tlist);
-	//test_tac(tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;
