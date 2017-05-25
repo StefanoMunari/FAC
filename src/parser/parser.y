@@ -102,7 +102,6 @@ bool success = true;
 %token WHILE			/* token for the while symbol */
 %token IF				/* token for "if" symbol */
 %token ELSE 			/* token for "else" symbol */
-%token SKIP 			/* token for "skip" symbol */
 %token PRINT 			/* token for "print" symbol */
 %token ASSIGNMENT 		/* token for "=" symbol */
 %token <id> ID 			/* token for variable identifier symbol */
@@ -150,14 +149,14 @@ stmt :
 | stmt print_var SEPARATOR {
 	$$=newSeqNode($1, $2);
 }
-| stmt SKIP SEPARATOR {
-	$$ = $1;
-}
 | stmt ifrule {
 	$$ = newSeqNode($1, $2);
 }
 | stmt whilerule {
-	$$ = newSeqNode($1, $2);
+	if($2 == NULL)
+		$$ = $1;
+	else
+		$$ = newSeqNode($1, $2);
 }
 ;
 
@@ -165,7 +164,13 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	if($3->data->token == AST_BOOL && *(bool*)$3->data->value == false){
+		fprintf(stderr,"Warning: condition of while is always false. Dead Code.\n");
+		$$ = NULL;
+	} else {
+		$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	}
+	
 }
 ;
 
