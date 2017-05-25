@@ -74,7 +74,6 @@ bool success = true;
 	fract_t fract;
 	type_t type;
 	op_t op;
-	value_t value;
 	seq_node * seq_tree;
 	ast_node * syntax_tree;
 }
