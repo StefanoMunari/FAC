@@ -3,8 +3,7 @@
 #include "ast.h"
 #include "tac.h"
 #include "tac_list.h"
-#include "stack.h"
 
-tac_list* tac_ast_node(ast_node *, tac_list *, stack_t *);
+tac_list* tac_ast_node(ast_node *, tac_list *);
 
 #endif /*__TAC_AST_NODE_H__*/

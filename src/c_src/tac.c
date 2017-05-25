@@ -1,11 +1,9 @@
 #include "tac.h"
 #include "tac_ast_node.h"
-#include "stack.h"
 #include "tac_list.h"
 #include <stdio.h>
 
-static
-stack_t stack;
+
 static
 tac_list * tac(seq_node *, tac_list *);
 static
@@ -34,14 +32,13 @@ tac_list * tac(seq_node * node, tac_list * tlist){
 		tlist=tac(node->left, tlist);
 	
 	if(node->right)
-		tlist = tac_ast_node(node->right, tlist, &stack);
+		tlist = tac_ast_node(node->right, tlist);
 
 	return tlist;
 }
 
 static
 tac_list * init_tac(tac_list * tlist){
-	init(&stack);
 	tlist->first=NULL;
 	tlist->last=NULL;
 	return tlist;
