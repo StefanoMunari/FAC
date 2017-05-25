@@ -163,10 +163,7 @@ stmt :
 	$$ = newSeqNode($1, $2);
 }
 | stmt whilerule {
-	if($2 == NULL)
-		$$ = $1;
-	else
-		$$ = newSeqNode($1, $2);
+	$$ = newSeqNode($1, $2);
 }
 ;
 
@@ -174,13 +171,7 @@ stmt :
 
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	if($3->data->token == AST_BOOL && *(bool*)$3->data->value == false){
-		fprintf(stderr,"Warning: condition of while is always false. Dead Code.\n");
-		$$ = NULL;
-	} else {
-		$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
-	}
-	
+	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
 }
 ;
 
@@ -287,7 +278,7 @@ int main(int argc, char * argv[]) {
 	tprinter printer= { IR };
 
 	if(argc < 2){
-		fprintf(stderr, "Usage: %s <file-to-interpret> <printer>\n Arguments: \n\t <printer> \t {std, c, java}\n", argv[0]);
+		fprintf(stderr, "Usage: %s <file-to-compile> <printer>\n Arguments: \n\t <printer> \t {std, c, java}\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 
