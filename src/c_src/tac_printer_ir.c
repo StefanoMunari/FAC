@@ -70,7 +70,7 @@ char * get_operator(tac_op operator){
 		case TAC_WHILE: yyerror("TAC_Printer - WHILE is not a valid operator"); break;
 		case TAC_IF: yyerror("TAC_Printer - IF is not a valid operator"); break;
 		case TAC_ELSE: yyerror("TAC_Printer - ELSE is not a valid operator"); break;
-		default: yyerror("TAC_Printer - operator not recognized", __FILE__, __LINE__); break;
+		default: yyerror("TAC_Printer - operator %d not recognized", operator); break;
 	}
 	return "";
 }

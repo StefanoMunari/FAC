@@ -23,7 +23,7 @@ typedef struct fract_t
 } fract_t;
 
 /**
- * Enumeration that represents the possible tokens in the lexical phase.
+ * Internal representation of the operation that can appear in the source code.
  */
 typedef enum op_t
 {
