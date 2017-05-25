@@ -32,8 +32,9 @@ typedef enum {
 	/** represents a boolean operation with arity 2*/
 	AST_BOP2,
 	/** represents either XOR or IFF that after the type checking
-	 * are substituted by the desugared version XOR corresponds to != and
-	 * IFF corresponds to == */
+	 * are substituted by their respective desugared versions:
+	 * - XOR corresponds to NEQ on boolean variables
+	 * - IFF corresponds to EQ on boolean variables */
 	AST_BOP2_TO_CHANGE,
 	/** represents a relational operator (<=, >=, <, >, ==, !=) */
 	AST_RELOP,
