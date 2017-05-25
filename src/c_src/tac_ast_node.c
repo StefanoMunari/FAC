@@ -37,7 +37,7 @@ int check=0;
 * 		the same declaration order
 * @note do not free the goto NULL NULL node, reuse it to keep consistency
 */
-tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
+tac_list * tac_ast_node(ast_node * node, tac_list * tlist){
 	if(node == NULL || node->data == NULL){
 		yyerror("TAC - malformed AST, null node found");
 		return tlist;
@@ -50,7 +50,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* compute left subtree -
 			   NOTE: it also connects it to the current list of triples */
-			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
+			tac_list* left=tac_ast_node(node->ast_children[0], tlist);
 			/* 3AC - expression */
 			if(left->last->value->op != -1){
 				/* subtree with height > 0 */
@@ -77,11 +77,11 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=_tac_node();
 			/* compute right subtree -
 			   NOTE: it also connects it to the current list of triples */
-			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist);
 			tac_node* right_node=right->last;
 			/* compute left subtree -
 			   NOTE: also connects it to the current list of triples */
-			tac_list* left=tac_ast_node(node->ast_children[0], tlist, stack);
+			tac_list* left=tac_ast_node(node->ast_children[0], tlist);
 			/* 3AC - left operand */
 			if(left->last->value->op != -1){
 				/* subtree with height > 0 */
@@ -110,7 +110,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node* tnode=NULL;
 			/* compute right subtree -
 			   NOTE: it also connects it to the current list of triples */
-			tac_list* right=tac_ast_node(node->ast_children[1], tlist, stack);
+			tac_list* right=tac_ast_node(node->ast_children[1], tlist);
 			/* 3AC - right side of the assignment */
 			if(right->last->value->op != -1){
 				/* subtree with height > 0 */
@@ -136,7 +136,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 			tac_node * start_bexpr = _tac_label();
 			tlist = _tac_connect(tlist, start_bexpr);
 			/* Create 3AC for the bexpr and append to the actual tlist */
-			tlist = tac_ast_node(node->ast_children[0], tlist, stack);
+			tlist = tac_ast_node(node->ast_children[0], tlist);
 			//adjust the bexpr - if it is a leaf 
 			if(!tlist->last->value->arg0){
 				tlist->last->value->op=TAC_COND;
@@ -177,7 +177,7 @@ tac_list * tac_ast_node(ast_node * node, tac_list * tlist, stack_t * stack){
 		{
 			
 			//Calculate list containing tlist extended with bexpr code 
-			tlist = tac_ast_node(node->ast_children[0], tlist, stack);
+			tlist = tac_ast_node(node->ast_children[0], tlist);
 			//adjust the bexpr - if it is a leaf 
 			if(!tlist->last->value->arg0){
 				tlist->last->value->op=TAC_COND;
