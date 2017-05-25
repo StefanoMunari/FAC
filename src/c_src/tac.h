@@ -18,8 +18,6 @@
 #include "tac_list.h"
 #include <stdbool.h>
 
-typedef struct tac_entry tac_entry;
-typedef struct tac_node tac_node;
 
 /**
  * A value of a TAC entry, it is one of the following:
@@ -31,7 +29,7 @@ typedef struct tac_value{
 	bool boolean;
 	fract_t * fract;
 	symbol_table_entry * address;
-	tac_entry * instruction;
+	struct tac_entry * instruction;
 } tac_value;
 
 /**
