@@ -30,7 +30,20 @@ typedef struct record {
 	void * value;
 } record;
 
-record * astRecord(ast_category, int line, op_t, void *);
+/**
+ * Constructor for the ast record struct
+ * @param token the category of the ast @see factype_ast.h
+ * @param op an operation @see factype.h
+ * @param line the line number of the token in the source code
+ * @param value @see ast.h @see parser.y for its usage
+ * @return a new ast record with the given values
+ */
+record * astRecord(ast_category token, int line, op_t op, void * value);
+
+/**
+ * free the given record instance
+ * @param this the record instance to free
+ */
 void freeastRecord(record *);
 
 #endif /* __AST_RECORD__H__ */
