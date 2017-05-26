@@ -17,8 +17,11 @@
  * the next instruction
  */
 typedef struct tac_node {
+	/** the actual content of the node */
 	struct tac_entry * value;
+	/** pointer to the previous element of the list */
 	struct tac_node * prev;
+	/** pointer to the next element of the list */
 	struct tac_node * next;
 } tac_node;
 
@@ -27,7 +30,9 @@ typedef struct tac_node {
  * the first and to the last element.
  */
 typedef struct tac_list{
+	/** pointer to the first node of the list */
 	struct tac_node * first;
+	/** pointer to the last node of the list */
 	struct tac_node * last;
 } tac_list;
 
