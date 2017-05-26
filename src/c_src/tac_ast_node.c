@@ -162,66 +162,63 @@ tac_list * tac_ast_node(ast_node * node){
 			
 			return tlist;
 		}
-		/*case AST_IF:
+		case AST_IF:
 		{
-			
-			//Calculate list containing tlist extended with bexpr code 
-			tlist = tac_ast_node(node->ast_children[0], tlist);
-			//adjust the bexpr - if it is a leaf 
-			if(!tlist->last->value->arg0){
-				tlist->last->value->op=TAC_COND;
-				tlist->last->value->arg0=tlist->last->value->arg1;
-				tlist->last->value->arg1=NULL;
+			/* Treating bexpr - in a similar way as while */
+			{
+				tac_value * bexpr = _tac_leaf(node->ast_children[0]);
+				
+				if(bexpr != NULL){ //It is a leaf
+					tac_node * node = _tac_node();
+					node->value->op = TAC_NOT;
+					node->value->arg0 = bexpr;
+					tlist = _tac_connect(tlist, node);
+				} else {
+					tac_list * bexpr = tac_ast_node(node->ast_children[0]);
+					tac_node * negateCondition = _tac_node();
+					negateCondition->value->op = TAC_NOT;
+					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
+					negateCondition->value->arg0->instruction = bexpr->last->value;
+					tlist = _tac_append(tlist, bexpr);
+					tlist = _tac_connect(tlist, negateCondition);
+				}
 			}
-			// add the code to compute the negation of the condition and add it to the list
-			tac_node * last_instruction = tlist->last;
-			tac_node * negateCondition = _tac_node();
-			negateCondition->value->op = TAC_NOT;
-			negateCondition->value->arg0 = malloc(sizeof(tac_value));
-			negateCondition->value->arg0->instruction = last_instruction->value;
-			tlist = _tac_connect(tlist, negateCondition);
 			
-			//calculate tlist of the stmt following bexpr 
-			tac_list * stmt = generate_tac(node->seq_children[0]);
-			
-			
-			tac_node * end_if_body = _tac_label();
-			
-			 Create a conditioned goto that onTrue of the negate condition goes to end_while_label 
-			tac_node * goto_skip_if_body = _tac_goto_conditioned(negateCondition->value, end_if_body);
-			
-			
-			if(node->number_of_seq_children == 1){
-				tlist = _tac_connect(tlist, goto_skip_if_body);
-				tlist = _tac_append(tlist, stmt);
-				tlist = _tac_connect(tlist, end_if_body);
-				return tlist;
-			} else if(node->number_of_seq_children == 2) {
-				printf("HERE\n");
-				tac_node * end_else_body = _tac_label();
-				tlist = _tac_connect(tlist, goto_skip_if_body);
-				tlist = _tac_append(tlist, stmt);
+			if(node->number_of_seq_children == 1){ //IF 
+				tac_node * end_if_body = _tac_label();
 				// Create a conditioned goto that onTrue of the negate condition goes to end_while_label 
-				tac_node * goto_to_end = _tac_goto_unconditioned(end_else_body);
-				tlist = _tac_connect(tlist, goto_to_end);
-				tlist = _tac_connect(tlist, end_if_body);
+				tac_node * goto_skip_if_body = _tac_goto_conditioned(tlist->last->value, end_if_body);
 				//calculate tlist of the stmt following bexpr 
-				tac_list * body_else = generate_tac(node->seq_children[1]);
-				tlist = _tac_append(tlist, body_else);
+				tac_list * stmt = generate_tac(node->seq_children[0]);
+				tlist = _tac_connect(tlist, goto_skip_if_body);
+				tlist = _tac_append(tlist, stmt);
+				tlist = _tac_connect(tlist, end_if_body);
+			} else if(node->number_of_seq_children == 2){ //IF THEN ELSE
+				tac_node * start_else_body = _tac_label();
+				tac_node * end_else_body = _tac_label();
+				tac_node * goto_start_else_body = _tac_goto_conditioned(tlist->last->value, start_else_body);
+				tac_list * if_body = generate_tac(node->seq_children[0]);
+				tac_node * goto_end_else_body = _tac_goto_unconditioned(end_else_body);
+				tac_list * else_body = generate_tac(node->seq_children[1]);
+				
+				tlist = _tac_connect(tlist, goto_start_else_body);
+				tlist = _tac_append(tlist, if_body);
+				tlist = _tac_connect(tlist, goto_end_else_body);
+				tlist = _tac_connect(tlist, start_else_body);
+				tlist = _tac_append(tlist, else_body);
 				tlist = _tac_connect(tlist, end_else_body);
-				return tlist;
-				
 			} else {
-				char * s = malloc(sizeof(20));
+				char * s = malloc(sizeof(char) * strlen(__FILE__) + 1);
 				strcpy(s, __FILE__);
-				
-				yyerror("%s: IF with more than two children?", s);
+				yyerror("%s: IF with more than two children, not yet supported", s);
 			}
-			
-		}*/
+			return tlist;
+			break;
+		}
 		/* Leaves */
 		case AST_PRINT: /* one child subtree */
 		{
+			printf("TAC_PRINT???\n");
 			return _tac_connect(tlist, _tac_print(node));
 		}
 		case AST_DECLARATION:
