@@ -40,18 +40,17 @@ tac_list * tac_ast_node(ast_node * node){
 		yyerror("TAC - malformed AST, null node found");
 		exit(EXIT_FAILURE);
 	}
+	/* Create an empty tlist */
+	tac_list* tlist = calloc(1, sizeof(tac_list));
 	switch(node->data->token){
 		/* Internal nodes */
 		case AST_AOP1:
 		case AST_BOP1:
 		{
-			tac_list* tlist = calloc(1, sizeof(tac_list));
 			
 			tac_node* tnode=_tac_node();
 			tnode->value->op = node->data->op;
-			
 			tac_value * left = _tac_leaf(node->ast_children[0]);
-			
 			if(left != NULL){ /* It is a leaf */
 				tnode->value->arg0 = left;
 			} else {
@@ -59,10 +58,7 @@ tac_list * tac_ast_node(ast_node * node){
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left_list->last->value;
 				tlist = _tac_append(tlist, left_list);
-				
 			}
-			
-			
 			/* connect tnode to the current list of triples */
 			return _tac_connect(tlist, tnode);
 		}
@@ -70,7 +66,6 @@ tac_list * tac_ast_node(ast_node * node){
 		case AST_BOP2:
 		case AST_RELOP:
 		{
-			tac_list * tlist = calloc(1, sizeof(tac_list));
 			/* current node */
 			tac_node* tnode=_tac_node();
 			tnode->value->op = node->data->op;
@@ -103,11 +98,7 @@ tac_list * tac_ast_node(ast_node * node){
 			return _tac_connect(tlist, tnode);
 		}
 		case AST_ASSIGNMENT:
-		{
-			printf("Here we go\n");
-			/* create a new tac node with op = TAC_ASSIGNMENT and arg0 = id */
-			tac_list * tlist = calloc(1, sizeof(tac_list));
-			
+		{			
 			tac_node* tnode=_tac_node();
 			tnode->value->op = TAC_ASSIGNMENT;
 			tnode->value->arg0 = calloc(1, sizeof(tac_value));
@@ -131,7 +122,6 @@ tac_list * tac_ast_node(ast_node * node){
 		
 		case AST_WHILE:
 		{
-			tac_list * tlist = calloc(1, sizeof(tac_list));
 			
 			// Create a label for the bexpr and connect it to the actual tlist
 			tac_node * start_bexpr = _tac_label();
@@ -241,11 +231,10 @@ tac_list * tac_ast_node(ast_node * node){
 		/* Leaves */
 		case AST_PRINT: /* one child subtree */
 		{
-			tac_list * tlist = calloc(1, sizeof(tlist));
 			return _tac_connect(tlist, _tac_print(node));
 		}
 		case AST_DECLARATION:
-			return calloc(1, sizeof(tac_list));
+			return tlist;
 		default:
 			yyerror("TAC - token not recognized");
 			exit(EXIT_FAILURE);
