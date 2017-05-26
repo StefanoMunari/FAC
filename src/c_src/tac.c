@@ -5,7 +5,7 @@
 
 
 static
-tac_list * tac(seq_node *, tac_list *);
+tac_list * tac(seq_node *);
 static
 tac_list * init_tac(tac_list *);
 static
@@ -13,7 +13,7 @@ void free_tac_entry(tac_entry * entry);
 
 
 tac_list * generate_tac(seq_node * input){
-	return tac(input, malloc(sizeof(tac_list)));
+	return tac(input);
 }
 
 /*
@@ -25,15 +25,18 @@ tac_list * generate_tac(seq_node * input){
 		TAC block is assigned to tlist->first while the last is assigned to
 		tlist->last
 */
-tac_list * tac(seq_node * node, tac_list * tlist){
+tac_list * tac(seq_node * node){
+	tac_list * tlist = calloc(1, sizeof(tac_list));
 	if(!node->left) 
 		init_tac(tlist);
-	else
-		tlist=tac(node->left, tlist);
-	
-	if(node->right)
-		tlist = tac_ast_node(node->right, tlist);
-
+	else {
+		tac_list * help = tac(node->left);
+		tlist = _tac_append(tlist, help);
+	}
+	if(node->right){
+		tac_list * help = tac_ast_node(node->right);
+		tlist = _tac_append(tlist, help);
+	}
 	return tlist;
 }
 
