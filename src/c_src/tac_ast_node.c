@@ -218,7 +218,6 @@ tac_list * tac_ast_node(ast_node * node){
 		/* Leaves */
 		case AST_PRINT: /* one child subtree */
 		{
-			printf("TAC_PRINT???\n");
 			return _tac_connect(tlist, _tac_print(node));
 		}
 		case AST_DECLARATION:
