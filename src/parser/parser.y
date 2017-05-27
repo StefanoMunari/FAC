@@ -140,10 +140,6 @@ stmt { head=$1; }
 
 stmt :
 /* empty */ { $$ = NULL; }
-| stmt expr SEPARATOR {
-	$$=$1;
-	fprintf(stderr, "Warning: statement expr with no effect\n");
-}
 | stmt declaration SEPARATOR {
 	$$=newSeqNode($1, $2);
 }
