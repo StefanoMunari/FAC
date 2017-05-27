@@ -1,8 +1,8 @@
 /* local */
-#include "lexer.h"
+#include "lexer/lexer.h"
 /* libraries */
 #include <stdbool.h>
 #include <string.h>
-#include "seq_tree.h"
+#include "ast/seq_tree.h"
 /* BISON generated - always as last included */
 #include "parser.tab.h"

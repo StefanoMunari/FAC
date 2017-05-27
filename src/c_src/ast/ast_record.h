@@ -7,8 +7,8 @@
  */
 #ifndef __AST_RECORD__H__
 #define __AST_RECORD__H__
-#include "factype.h"
-#include "factype_ast.h"
+#include "../types/factype.h"
+#include "../types/factype_ast.h"
 /**
  * @brief record of the ast
  */

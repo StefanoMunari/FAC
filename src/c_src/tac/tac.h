@@ -11,11 +11,11 @@
  */
 #ifndef __TAC_H__
 #define __TAC_H__
-#include "seq_tree.h"
-#include "symbol_table.h"
-#include "factype_tac.h"
-#include "factype.h"
 #include "tac_list.h"
+#include "../ast/seq_tree.h"
+#include "../symbol_table/symbol_table.h"
+#include "../types/factype.h"
+#include "../types/factype_tac.h"
 #include <stdbool.h>
 
 

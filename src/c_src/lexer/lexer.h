@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief file describing help functions of the lexer, called by the flex 
+ * @brief file describing help functions of the lexer, called by the flex
  * generated program
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
@@ -12,11 +12,11 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
-#include "facerr.h"
-#include "factype.h"
-#include "ast.h"
-#include "seq_tree.h"
-#include "parser.tab.h"
+#include "../err/facerr.h"
+#include "../types/factype.h"
+#include "../ast/ast.h"
+#include "../ast/seq_tree.h"
+#include "../parser.tab.h"
 
 
 

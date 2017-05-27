@@ -1,18 +1,18 @@
 /**
- * @file 
+ * @file
  * @brief contains the interface of the symbol table
  */
 #ifndef __SYMBOL_TABLE_H__
 #define __SYMBOL_TABLE_H__
-#include "factype.h"
-#include "../lib/uthash.h"
+#include "../types/factype.h"
+#include "../../lib/uthash.h"
 
 /** Struct contained in the symbol table */
 typedef struct symbol_table_entry {
 	/** the key */
 	char * id;
 	/** type */
-	type_t type; 
+	type_t type;
 	/** the concrete value */
 	void * value;
 	/** needed by uthash.h to make this structure hashable */

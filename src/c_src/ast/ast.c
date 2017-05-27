@@ -1,21 +1,17 @@
 #include "ast.h"
-#include "factype_ast.h"
 #include "seq_tree.h"
+#include "../types/factype_ast.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
 char * tokenString(ast_category token);
 
-ast_node * astNode(unsigned int token, int line, op_t op, void * value, 
+ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 	const int number_of_ast_children, const int number_of_seq_children, ...) {
 
-
 	assert(number_of_ast_children >= 0 && number_of_seq_children >= 0);
-	
 	ast_node * node = calloc(1, sizeof(ast_node));
-
-	
 
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_seq_children = number_of_seq_children;
@@ -37,19 +33,11 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 		}
 	}
 	va_end(args_iterator);
-
-
-	if(node->number_of_ast_children == 0){
+	if(node->number_of_ast_children == 0)
 		node->ast_children = NULL;
-	}
-	if(node->number_of_seq_children == 0){
+	if(node->number_of_seq_children == 0)
 		node->seq_children = NULL;
-	}
-	
-	
 	node->data = (record *) astRecord(token, line, op, value);
-
-
 	return node;
 }
 

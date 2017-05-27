@@ -1,6 +1,6 @@
 #ifndef __TAC_PRINTER_H__
 #define __TAC_PRINTER_H__
-#include "tac_list.h"
+#include "../tac_list.h"
 
 typedef struct _tprinter_vtable {
     void (*print_tac)(tac_list *);

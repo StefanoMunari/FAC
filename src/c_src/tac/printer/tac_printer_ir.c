@@ -1,5 +1,5 @@
 #include "tac_printer_ir.h"
-#include "factype_tac.h"
+#include "../../types/factype_tac.h"
 #include <stdio.h>
 
 extern void yyerror(const char *, ...);

@@ -1,7 +1,7 @@
 /**
  * @brief definition of the fract type, internal representation of the operations,
  * and the internal representation of the type of the variables
- * 
+ *
  * @file
  * @author mirko.bez@studenti.unipd.it
  * @author stefano.munari.1@studenti.unipd.it

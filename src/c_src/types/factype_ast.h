@@ -18,7 +18,7 @@
 */
 typedef enum {
 	/** represents a variable identifier */
-	AST_ID, 
+	AST_ID,
 	/** represents a fract literal */
 	AST_FRACT,
 	/** represents a bool literal */

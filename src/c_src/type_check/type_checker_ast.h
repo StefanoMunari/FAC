@@ -6,7 +6,7 @@
  */
 #ifndef __TYPE__CHECKER__ast__H__
 #define __TYPE__CHECKER__ast__H__
-#include "ast.h"
+#include "../ast/ast.h"
 /** Type checking on an ast subtree,
  * @param ast_node * - the root node of the ast subtree
  * @return bool true if the type checking is successful, false otherwise
