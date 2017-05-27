@@ -12,10 +12,10 @@ C_FLAG = -O3 -g -Wall -Werror
 all: compile
 
 generate_parser:
-	@echo "==Bison==\n"
+	@echo "==Bison=="
 	bison -dv $(PARSER_PATH)/$(PARSER_FILE).y
 	mv $(PARSER_FILE).tab.* $(C_SRC_PATH)
-	@echo "========\n"
+	@echo "========"
 
 generate_lexer: generate_parser
 	@cp $(LEXER_PATH)/lexer.py $(PWD) && \
@@ -24,21 +24,21 @@ generate_lexer: generate_parser
 	cp $(LEXER_PATH)/lexer.fl $(C_SRC_PATH)
 
 lex.yy.c: generate_lexer
-	@echo "==Flex==\n"
+	@echo "==Flex=="
 	flex -o $(C_SRC_PATH)/lex.yy.c $(C_SRC_PATH)/lexer.fl && \
 	rm $(C_SRC_PATH)/lexer.fl
-	@echo "========\n"
+	@echo "========"
 
 compile: lex.yy.c
-	@echo "==Compiling==\n"
+	@echo "==Compiling=="
 	gcc $(C_FLAG) -o $(BIN_PATH)/$(BIN) $(C_SOURCES) -lfl && \
 	rm $(C_SRC_PATH)/lex.yy.c
-	@echo "========\n"
+	@echo "========"
 
 run: compile
-	@echo "==Running==\n"
+	@echo "==Running=="
 	$(BIN_PATH)/$(BIN) $(ARGS)
-	@echo "========\n"
+	@echo "========"
 
 clean:
 	rm -rf *.yy.c *.o *.out *.output bin/fac $(LEXER_PATH)/lex.yy.c */*.tab.*
