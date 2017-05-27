@@ -76,18 +76,25 @@ void print_tac_entry(tac_node * node){
 
 			char * numB = getValue(entry->arg1, "num");
 			char * denB = getValue(entry->arg1, "den");
-			printf("/* SUM */\n");
-			printf("h0 = %s * %s;\n", numA, denB);
-			printf("h1 = %s * %s;\n", numB, denA);
-			printf("h2 = h0 %s h1;\n", entry->op==TAC_SUM?"+":"-");
-			printf("h3 = %s * %s;\n", denA, denB);
-			printf("h4 = MCD(h2, h3);\n");
-			printf("t%pnum = h2 / h5;\n", entry);
-			printf("t%pden = h3 / h5;\n", entry);
+			if(numB == NULL && denB == NULL){ //+ and minus are signs
+				printf("t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
+				printf("t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denB);
+			} else {
+				printf("/* SUM */\n");
+				printf("h0 = %s * %s;\n", numA, denB);
+				printf("h1 = %s * %s;\n", numB, denA);
+				printf("h2 = h0 %s h1;\n", entry->op==TAC_SUM?"+":"-");
+				printf("h3 = %s * %s;\n", denA, denB);
+				printf("h4 = MCD(h2, h3);\n");
+				printf("t%pnum = h2 / h5;\n", entry);
+				printf("t%pden = h3 / h5;\n", entry);
+				free(denA);
+				free(denB);
+			}
+			
 			free(numA);
 			free(numB);
-			free(denA);
-			free(denB);
+			
 			break;
 		}
 		case TAC_MULT:
@@ -268,6 +275,10 @@ char * getBooleanValue(tac_value * tvalue){
 
 static
 char * getValue(tac_value * tvalue, char * num_or_den) {
+	if(tvalue == NULL){
+		return NULL;
+	}
+	
 	if(tvalue->address != NULL){
 		char * buffer = malloc(sizeof(char) * (strlen(tvalue->address->id) + strlen(num_or_den) + 1));
 		sprintf(buffer, "%s%s", tvalue->address->id, num_or_den);
