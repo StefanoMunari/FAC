@@ -9,7 +9,5 @@ while(condition){
 	f = f - [1|1];
 	if (f == [1|1]){
 		condition = false;
-	}else{
-		skip;
 	}
 }
