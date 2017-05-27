@@ -1,6 +1,6 @@
 #ifndef __TAC_AST_NODE_H__
 #define __TAC_AST_NODE_H__
-#include "ast.h"
+#include "../ast/ast.h"
 #include "tac.h"
 #include "tac_list.h"
 

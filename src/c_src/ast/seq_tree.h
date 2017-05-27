@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief file defining the syntax tree data structure and its API
- * 
+ *
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
  */

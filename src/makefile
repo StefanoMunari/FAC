@@ -1,12 +1,11 @@
 PARSER_PATH = $(PWD)/parser
 LEXER_PATH = $(PWD)/lexer
-PARSER_FILE = parser
 C_SRC_PATH = $(PWD)/c_src
-C_SOURCES = $(wildcard $(PWD)/c_src/*.c)
+PARSER_FILE = parser
+C_SOURCES = $(shell find $(C_SRC_PATH) -name *.c)
 BIN = bin
 
 C_FLAG = -O3 -g -Wall -Werror
-
 
 all: compile
 

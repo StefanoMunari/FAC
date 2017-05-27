@@ -7,7 +7,7 @@
 
 #ifndef __FAC__MATH__H__
 #define __FAC__MATH__H__
-#include "factype.h"
+#include "../types/factype.h"
 /**
  * take as input a fract and returns the normalized fract
  * @param f the fract to normalize

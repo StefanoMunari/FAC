@@ -6,8 +6,8 @@
  */
 #ifndef __TYPE__CHECKER__ast__EXPR__H__
 #define __TYPE__CHECKER__ast__EXPR__H__
-#include "ast.h"
-#include "factype.h"
+#include "../ast/ast.h"
+#include "../types/factype.h"
 /** Type checking on an expression, which is an ast subtree
  * pre-order traversing of the subtree
  * @param ast_node * - the root node of the ast subtree (expression)

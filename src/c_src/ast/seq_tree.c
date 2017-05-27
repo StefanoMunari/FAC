@@ -27,12 +27,12 @@ void freeSeqNode(seq_node * this){
 int printSeqNodeRec(seq_node * this, int instruction, int tab){
 	if(this == NULL)
 		return instruction;
-	
+
 	instruction = printSeqNodeRec(this->left, instruction, tab);
 	PRINT_TAB(tab);
 	printf("### Statement %d ###\n", instruction);
 	instruction = printastNodeRec(this->right, instruction+1, tab);
-	
+
 	return instruction;
 }
 

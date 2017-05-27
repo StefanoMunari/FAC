@@ -1,9 +1,9 @@
 #include "type_checker.h"
 #include "type_checker_ast.h"
 #include "type_checker_ast_expr.h"
-#include "symbol_table.h"
-#include "factype.h"
-#include "factype_ast.h"
+#include "../symbol_table/symbol_table.h"
+#include "../types/factype.h"
+#include "../types/factype_ast.h"
 #include <string.h>
 #include <stdio.h>
 

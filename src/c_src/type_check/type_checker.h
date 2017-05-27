@@ -7,7 +7,7 @@
  */
 #ifndef __TYPE__CHECKER__H__
 #define __TYPE__CHECKER__H__
-#include "seq_tree.h"
+#include "../ast/seq_tree.h"
 /** Performs type checking by pre-order traversing the ast,
  * which is stored in RAM as a seq_tree
  * @param seq_node the root of the ast

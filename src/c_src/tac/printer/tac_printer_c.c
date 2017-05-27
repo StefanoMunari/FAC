@@ -1,4 +1,3 @@
-
 #include "tac_printer.h"
 #include <stdio.h>
 static int tcounter = 0;
@@ -12,7 +11,7 @@ char * get_operator(tac_op operator);
 static
 char * getValue(tac_value * tvalue, char * num_or_den);
 
-static 
+static
 char * getBooleanValue(tac_value * tvalue);
 
 char buffer[256];
@@ -25,7 +24,7 @@ void print_tac_c(tac_list * tlist){
 
 	printf("int main(void){\n");
 
-	
+
 	int i=0;
 	tcounter = 0;
 	tac_node * iterator = tlist->first;
@@ -45,10 +44,10 @@ void print_tac_entry(tac_node * node){
 	tac_entry * entry = node->value;
 	if(entry == NULL)
 		return;
-	
+
 	//int tcounter = 0;
 	switch(entry->op){
-		case TAC_ASSIGNMENT: 
+		case TAC_ASSIGNMENT:
 		{
 			char * id = entry->arg0->address->id;
 			switch(getType(id)){
@@ -69,12 +68,12 @@ void print_tac_entry(tac_node * node){
 			}
 			break;
 		}
-		case TAC_SUM: 
+		case TAC_SUM:
 		case TAC_DIFF:
 		{
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
-			
+
 			char * numB = getValue(entry->arg1, "num");
 			char * denB = getValue(entry->arg1, "den");
 			printf("/* SUM */\n");
@@ -91,12 +90,12 @@ void print_tac_entry(tac_node * node){
 			free(denB);
 			break;
 		}
-		case TAC_MULT: 
+		case TAC_MULT:
 		case TAC_DIV:
 		{
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
-			
+
 			char * numB = getValue(entry->arg1, "num");
 			char * denB = getValue(entry->arg1, "den");
 			if(entry->op == TAC_DIV){ //Take the inverse for division
@@ -104,7 +103,7 @@ void print_tac_entry(tac_node * node){
 				numB = denB;
 				denB = tmp;
 			}
-			
+
 			printf("/* START %s */\n", entry->op == TAC_MULT?"MULT":"DIV");
 			printf("h0 = %s * %s;\n", numA, numB);
 			printf("h1 = %s * %s;\n", denA, denB);
@@ -117,7 +116,7 @@ void print_tac_entry(tac_node * node){
 			free(denA);
 			free(denB);
 			break;
-		
+
 		}
 		case TAC_PRINT:
 		{
@@ -128,7 +127,7 @@ void print_tac_entry(tac_node * node){
 			}
 			break;
 		}
-		case TAC_NOT: 
+		case TAC_NOT:
 		{
 			char * boolean_value = getBooleanValue(entry->arg0);
 			printf("t%p = !%s;\n", entry, boolean_value);
@@ -206,10 +205,10 @@ void print_tac_entry(tac_node * node){
 			break;
 		}
 		default:printf("Not yet implemented\n");
-	} 
+	}
 
-	
-	
+
+
 }
 
 static
@@ -248,7 +247,7 @@ char * get_operator(tac_op operator){
 	return "";
 }
 
-static 
+static
 char * getBooleanValue(tac_value * tvalue){
 	if(tvalue->address != NULL){
 		char * buffer = malloc(sizeof(char) * (strlen(tvalue->address->id) + 1));
@@ -310,7 +309,7 @@ void print_operator(tac_op operator){
 		case TAC_ASSIGNMENT: printf("="); break;
 		case TAC_GOTO: printf("goto"); break;
 		case TAC_LABEL: printf("label"); break;
-		// the others are all unrecognized operators 
+		// the others are all unrecognized operators
 		case TAC_FRACT: yyerror("TAC_Printer - FRACT is not a valid operator"); break;
 		case TAC_BOOL: yyerror("TAC_Printer - BOOL is not a valid operator"); break;
 		case TAC_AOP1: yyerror("TAC_Printer - AOP1 is not a valid operator"); break;

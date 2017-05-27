@@ -5,19 +5,24 @@
  * @author <stefano.munari.1@studenti.unipd.it>
  */
 %{
-#include "ast.h"
-#include "seq_tree.h"
+#include "types/factype.h"
+#include "types/factype_ast.h"
 
-#include "factype.h"
-#include "factype_ast.h"
-#include "facmath.h"
-#include "facerr.h"
-#include "symbol_table.h"
-#include "type_checker.h"
-#include "tac.h"
-#include "tac_list.h"
-#include "tac_printer.h"
-#include "tac_printer_c.h"
+#include "symbol_table/symbol_table.h"
+
+#include "ast/ast.h"
+#include "ast/seq_tree.h"
+
+#include "type_check/type_checker.h"
+
+#include "tac/tac.h"
+#include "tac/tac_list.h"
+#include "tac/printer/tac_printer.h"
+#include "tac/printer/tac_printer_c.h"
+
+#include "utils/facmath.h"
+#include "err/facerr.h"
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
