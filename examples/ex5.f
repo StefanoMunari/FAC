@@ -1,18 +1,17 @@
 /* example: while + nested if*/
-bool condition;
-bool aux;
-aux = true;
-condition = true;
+bool condition = true;
+bool aux = true;
+
 
 while(condition){
 	if(aux){
 		aux = false;
 	}else{
-		skip;
+		aux = true;
 	}
 	if(!aux){
 		condition = false;
 	}else{
-		skip;
+		condition = true;
 	}
 }
