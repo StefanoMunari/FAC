@@ -12,36 +12,46 @@
 * @see tac.h
 */
 typedef enum {
+	/** sum */
 	TAC_SUM,
+	/** difference */
 	TAC_DIFF,
+	/** multiplication */
 	TAC_MULT,
+	/** division */
 	TAC_DIV,
+	/** logical negation */
 	TAC_NOT,
+	/** logical conjunction */
 	TAC_AND,
+	/** logical disjunction */
 	TAC_OR,
+	/** logical implication */
 	TAC_IMPLY,
+	/** logical biconditional */
 	TAC_IFF,
+	/** logical xor */
 	TAC_XOR,
+	/** less than */
 	TAC_LT,
+	/** less or equal to */
 	TAC_LEQ,
+	/** greater or equal to */
 	TAC_GEQ,
+	/** greater than */
 	TAC_GT,
+	/** equals */
 	TAC_EQ,
+	/** not equals */
 	TAC_NEQ,
+	/** sign plus */
 	TAC_PLUS,
+	/** sign minus */
 	TAC_MINUS,
-	TAC_FRACT,
-	TAC_BOOL,
-	TAC_AOP1,
-	TAC_AOP2,
-	TAC_BOP1,
-	TAC_BOP2,
-	TAC_RELOP,
+	
+	
 	TAC_PRINT,
-	TAC_WHILE,
 	TAC_ASSIGNMENT,
-	TAC_IF,
-	TAC_ELSE,
 	TAC_LABEL,
 	TAC_GOTO,
 	/** artificial label used to make "type checking" on the enum:
