@@ -204,7 +204,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
 }
 | AOP_0 expr %prec USIGN {
-	$$ = astNode(AST_AOP1, @1.first_line, $1, NULL,  1, 0, $2);
+	$$ = astNode(AST_AOP1, @1.first_line, $1==SUM?PLUS:MINUS, NULL,  1, 0, $2);
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
 | FRACT {

@@ -41,7 +41,9 @@ void print_tac_entry(tac_entry * entry, int i){
 static
 char * get_operator(tac_op operator){
 	switch(operator){
+		case TAC_PLUS: return "PLUS"; break;
 		case TAC_SUM: return "+"; break;
+		case TAC_MINUS: return "MINUS"; break;
 		case TAC_DIFF: return "-"; break;
 		case TAC_MULT: return "*"; break;
 		case TAC_DIV: return "/"; break;
@@ -60,7 +62,6 @@ char * get_operator(tac_op operator){
 		case TAC_ASSIGNMENT: return "="; break;
 		case TAC_GOTO: return "goto"; break;
 		case TAC_LABEL: return "label"; break;
-		case TAC_COND: return "cond"; break;
 		/* the others are all unrecognized operators */
 		case TAC_FRACT: yyerror("TAC_Printer - FRACT is not a valid operator"); break;
 		case TAC_BOOL: yyerror("TAC_Printer - BOOL is not a valid operator"); break;

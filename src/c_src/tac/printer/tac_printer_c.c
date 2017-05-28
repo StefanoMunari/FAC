@@ -68,30 +68,34 @@ void print_tac_entry(tac_node * node){
 			}
 			break;
 		}
-		case TAC_SUM:
-		case TAC_DIFF:
+		case TAC_PLUS:
+		case TAC_MINUS:
 		{
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
-
+			printf("t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
+			printf("t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denA);
+		}
+		case TAC_SUM:
+		case TAC_DIFF:
+		{
+			
+			char * numA = getValue(entry->arg0, "num");
+			char * denA = getValue(entry->arg0, "den");
 			char * numB = getValue(entry->arg1, "num");
 			char * denB = getValue(entry->arg1, "den");
-			if(numB == NULL && denB == NULL){ //+ and minus are signs
-				printf("t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
-				printf("t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denB);
-			} else {
-				printf("/* SUM */\n");
-				printf("h0 = %s * %s;\n", numA, denB);
-				printf("h1 = %s * %s;\n", numB, denA);
-				printf("h2 = h0 %s h1;\n", entry->op==TAC_SUM?"+":"-");
-				printf("h3 = %s * %s;\n", denA, denB);
-				printf("h4 = MCD(h2, h3);\n");
-				printf("t%pnum = h2 / h5;\n", entry);
-				printf("t%pden = h3 / h5;\n", entry);
-				free(denA);
-				free(denB);
-			}
 			
+			printf("/* SUM */\n");
+			printf("h0 = %s * %s;\n", numA, denB);
+			printf("h1 = %s * %s;\n", numB, denA);
+			printf("h2 = h0 %s h1;\n", entry->op==TAC_SUM?"+":"-");
+			printf("h3 = %s * %s;\n", denA, denB);
+			printf("h4 = MCD(h2, h3);\n");
+			printf("t%pnum = h2 / h5;\n", entry);
+			printf("t%pden = h3 / h5;\n", entry);
+			
+			free(denA);
+			free(denB);
 			free(numA);
 			free(numB);
 			
@@ -189,13 +193,6 @@ void print_tac_entry(tac_node * node){
 			printf("L%p:\n", entry);
 			break;
 		}
-		case TAC_COND:
-		{
-			char * boolean_value = getBooleanValue(entry->arg0);
-			printf("t%p = %s\n", entry, boolean_value);
-			free(boolean_value);
-			break;
-		}
 		case TAC_GOTO:
 		{
 			if(entry->arg1 != NULL){ //Codnitioned goto
@@ -215,7 +212,9 @@ void print_tac_entry(tac_node * node){
 static
 char * get_operator(tac_op operator){
 	switch(operator){
+		case TAC_PLUS:
 		case TAC_SUM: return "+"; break;
+		case TAC_MINUS:
 		case TAC_DIFF: return "-"; break;
 		case TAC_MULT: return "*"; break;
 		case TAC_DIV: return "/"; break;
