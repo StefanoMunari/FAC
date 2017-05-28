@@ -1,6 +1,5 @@
 /* example: while*/
-bool condition;
-condition = true;
+bool condition = true;
 
 while(condition){
 	condition = false;
