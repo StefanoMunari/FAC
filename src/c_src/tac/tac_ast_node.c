@@ -26,7 +26,6 @@ tac_node * _tac_goto_unconditioned(tac_node * destination);
 static
 tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination);
 
-int check=0;
 /**
 * @brief builds the 3AC list of triples from the last to the first node by
 *	traversing the AST bottom-up
