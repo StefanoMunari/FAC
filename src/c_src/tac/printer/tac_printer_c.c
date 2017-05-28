@@ -75,6 +75,7 @@ void print_tac_entry(tac_node * node){
 			char * denA = getValue(entry->arg0, "den");
 			printf("t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
 			printf("t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denA);
+			break;
 		}
 		case TAC_SUM:
 		case TAC_DIFF:
