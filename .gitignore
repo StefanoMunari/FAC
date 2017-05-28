@@ -43,4 +43,5 @@ lexer.fl
 fac
 *.output
 
-doc/
+# Ignore all doxygen generated files
+doc/*
