@@ -1,8 +1,8 @@
 /* example: dummy bool */
 
-bool b;
+bool b = true;
 
-b=true;
+
 b=false;
 
 print(b);

@@ -1,5 +1,5 @@
 /* example: nested if */
-fract f;
+fract f = [0|1];
 if([1|3]<[2|3]){
     f = [1|3];
 	if(true){

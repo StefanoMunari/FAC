@@ -1,7 +1,5 @@
 /* simple example */
-fract a;
-fract b;
-fract c;
-a=[1|1];
-b=[1|2];
-c=[1|1];
+
+fract a=[1|1];
+fract b=[1|2];
+fract c=[1|1];

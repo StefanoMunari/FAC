@@ -1,3 +1,2 @@
 /* simple example */
-fract a;
-a=[1|1]+[1|2];
+fract a = [1|1]+[1|2];

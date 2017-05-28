@@ -1,8 +1,8 @@
 /* example: bool (not and or) */
 
-bool b;
+bool b=true && false;
 
-b=true && false;
+
 b=b || !b && !b;
 
 print(b);

@@ -1,7 +1,7 @@
 /* example: simple if-else */
-fract f;
+fract f = [1|1];
 
-f = [1|1];
+
 
 if (true){
 	f = f + [1|2];

@@ -1,7 +1,7 @@
 /* example: dummy arithm expr */
 
-fract f;
+fract f = [1|1];
 
-f=[1|1];
+
 
 f=f+f;
