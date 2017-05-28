@@ -149,31 +149,25 @@ void print_tac_entry(tac_node * node){
 			printf("t%p = %s %s %s;\n", entry, bool1,  get_operator(entry->op), bool2);
 			break;
 		}
+		case TAC_XOR:
+		case TAC_IFF:
+		{
+			char * bool1 = getBooleanValue(entry->arg0);
+			char * bool2 = getBooleanValue(entry->arg1);
+			printf("t%p = %s %s %s; \n", entry, bool1, get_operator(entry->op), bool2);
+			break;
+		}
 		case TAC_EQ:
 		case TAC_NEQ:
 		{
-			char * id = entry->arg0->address->id;
-
-			switch(getType(id)){
-				case BOOL_T:
-				{
-					char * bool1 = getBooleanValue(entry->arg0);
-					char * bool2 = getBooleanValue(entry->arg1);
-					printf("t%p = %s %s %s", entry, bool1, get_operator(entry->op), bool2);
-					break;
-				}
-				case FRACT_T:
-				{
-					char * numA = getValue(entry->arg0, "num");
-					char * denA = getValue(entry->arg0, "den");
-					char * numB = getValue(entry->arg1, "num");
-					char * denB = getValue(entry->arg1, "den");
-					printf("h0 = %s %s %s;\n", numA, get_operator(entry->op), numB);
-					printf("h1 = %s %s %s;\n", denA, get_operator(entry->op), denB);
-					printf("t%p = h0 && h1;\n", entry);
-					break;
-				}
-			}
+			
+			char * numA = getValue(entry->arg0, "num");
+			char * denA = getValue(entry->arg0, "den");
+			char * numB = getValue(entry->arg1, "num");
+			char * denB = getValue(entry->arg1, "den");
+			printf("h0 = %s %s %s;\n", numA, get_operator(entry->op), numB);
+			printf("h1 = %s %s %s;\n", denA, get_operator(entry->op), denB);
+			printf("t%p = h0 && h1;\n", entry);
 			break;
 		}
 		case TAC_LT:
@@ -234,6 +228,8 @@ char * get_operator(tac_op operator){
 		case TAC_GEQ: return ">="; break;
 		case TAC_NEQ: return "!="; break;
 		case TAC_EQ: return "=="; break;
+		case TAC_IFF: return "=="; break;
+		case TAC_XOR: return "!="; break;
 		case TAC_PRINT: return "printf"; break;
 		case TAC_ASSIGNMENT: return "="; break;
 		case TAC_GOTO: return "goto"; break;

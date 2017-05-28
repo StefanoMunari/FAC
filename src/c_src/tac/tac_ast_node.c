@@ -62,6 +62,7 @@ tac_list * tac_ast_node(ast_node * node){
 		}
 		case AST_AOP2:
 		case AST_BOP2:
+		case AST_BOP_RELOP:
 		case AST_RELOP:
 		{
 			/* create a new node with the right operation */

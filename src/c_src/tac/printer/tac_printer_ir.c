@@ -54,6 +54,8 @@ char * get_operator(tac_op operator){
 		case TAC_GEQ: return ">="; break;
 		case TAC_NEQ: return "!="; break;
 		case TAC_EQ: return "=="; break;
+		case TAC_IFF: return "IFF"; break;
+		case TAC_XOR: return "XOR"; break;
 		case TAC_PRINT: return "printf"; break;
 		case TAC_ASSIGNMENT: return "="; break;
 		case TAC_GOTO: return "goto"; break;

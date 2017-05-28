@@ -226,7 +226,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_BOP2, @2.first_line, OR, NULL,  2, 0, notA, $3);
 }
 | expr BOP2_3 expr {
-	$$ = astNode(AST_BOP2_TO_CHANGE, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	$$ = astNode(AST_BOP_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_0 expr {
 	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
