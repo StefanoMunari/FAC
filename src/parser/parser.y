@@ -231,20 +231,7 @@ expr AOP_0 expr {
 	$$ = astNode(AST_BOP2, @2.first_line, OR, NULL,  2, 0, notA, $3);
 }
 | expr BOP2_3 expr {
-	switch($2) {
-		case IFF: /* De-Sugaring (!$1 || $3) && ($1 || !$3); */
-		{
-			$$ = astNode(AST_RELOP1, @2.first_line, EQ, NULL, 2, 0, $1, $3);
-			break;
-		}
-		case XOR: /* De-Sugaring as  */
-		{
-			$$ = astNode(AST_RELOP1, @2.first_line, NEQ, NULL, 2, 0, $1, $3);
-			break;
-		}
-		default:
-			yyerror("Operation not known. ");
-	}
+	$$ = astNode(AST_BOP_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_0 expr {
 	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
