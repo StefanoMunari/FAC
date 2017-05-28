@@ -233,8 +233,8 @@ tac_list * tac_ast_node(ast_node * node){
 static
 tac_node* _tac_node(){
 	tac_node* node;
-	node = malloc(sizeof(tac_node));
-	node->value = malloc(sizeof(tac_entry));
+	node = calloc(1, sizeof(tac_node));
+	node->value = calloc(1, sizeof(tac_entry));
 	node->value->op = -1;
 	node->value->arg0 = NULL;
 	node->value->arg1 = NULL;
@@ -339,7 +339,7 @@ static
 tac_node * _tac_goto_unconditioned(tac_node * destination){
 	tac_node * goto_node=_tac_node();
 	goto_node->value->op=TAC_GOTO;
-	goto_node->value->arg0=malloc(sizeof(tac_value));
+	goto_node->value->arg0=calloc(1, sizeof(tac_value));
 	goto_node->value->arg0->instruction=destination->value;
 	return goto_node;
 }
@@ -347,9 +347,9 @@ static
 tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination){
 	tac_node * goto_node=_tac_node();
 	goto_node->value->op=TAC_GOTO;
-	goto_node->value->arg0=malloc(sizeof(tac_value));
+	goto_node->value->arg0=calloc(1, sizeof(tac_value));
 	goto_node->value->arg0->instruction=condition;
-	goto_node->value->arg1=malloc(sizeof(tac_value));
+	goto_node->value->arg1=calloc(1, sizeof(tac_value));
 	goto_node->value->arg1->instruction=destination->value;
 	return goto_node;
 }
