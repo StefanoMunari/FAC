@@ -1,9 +1,9 @@
 /* example: nested while*/
-bool condition;
-fract f;
+bool condition=true;
 
-condition=true;
-f = [5|1];
+fract f = [5|1];
+
+
 
 while(condition){
 	while(f > [0|1]){
