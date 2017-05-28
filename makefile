@@ -1,7 +1,7 @@
 # Provide arguments to the executable using the ARGS variable
-PARSER_PATH = $(PWD)/parser
-LEXER_PATH = $(PWD)/lexer
-C_SRC_PATH = $(PWD)/c_src
+PARSER_PATH = $(PWD)/src/parser
+LEXER_PATH = $(PWD)/src/lexer
+C_SRC_PATH = $(PWD)/src/c_src
 BIN_PATH = $(PWD)/bin
 PARSER_FILE = parser
 C_SOURCES = $(shell find $(C_SRC_PATH) -name *.c)
@@ -13,7 +13,7 @@ all: compile
 
 generate_parser:
 	@echo "==Bison=="
-	bison -dv $(PARSER_PATH)/$(PARSER_FILE).y
+	bison -d $(PARSER_PATH)/$(PARSER_FILE).y
 	mv $(PARSER_FILE).tab.* $(C_SRC_PATH)
 	@echo "========"
 
@@ -35,10 +35,18 @@ compile: lex.yy.c
 	rm $(C_SRC_PATH)/lex.yy.c
 	@echo "========"
 
+.PHONY: run
 run: compile
 	@echo "==Running=="
 	$(BIN_PATH)/$(BIN) $(ARGS)
 	@echo "========"
 
+.PHONY: doc
+doc:
+	@echo "==Generating documentation=="
+	doxygen doxyfile
+	@echo "========"
+
+.PHONY: clean
 clean:
 	rm -rf *.yy.c *.o *.out *.output bin/fac $(LEXER_PATH)/lex.yy.c */*.tab.*
