@@ -1,9 +1,7 @@
 /* example: print */
 
-bool b;
-fract f;
-b = true;
-f = [1|3];
+bool b = true;
+fract f = [1|3];
 
 print(f);
 print(b);

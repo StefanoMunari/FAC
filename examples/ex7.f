@@ -1,8 +1,8 @@
 /* example: while + nested print + nested if */
-bool condition;
-fract f;
-condition = true;
-f = [5|1];
+bool condition = true;
+fract f = [5|1];
+
+
 
 while(condition){
 	print(f);
