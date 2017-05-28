@@ -287,38 +287,3 @@ char * getValue(tac_value * tvalue, char * num_or_den) {
 	}
 }
 
-/*static
-void print_operator(tac_op operator){
-	switch(operator){
-		case TAC_SUM: printf("+"); break;
-		case TAC_DIFF: printf("-"); break;
-		case TAC_MULT: printf("*"); break;
-		case TAC_DIV: printf("/"); break;
-		case TAC_NOT: printf("!"); break;
-		case TAC_AND: printf ("&&"); break;
-		case TAC_OR: printf ("||"); break;
-		case TAC_LT: printf ("<"); break;
-		case TAC_GT: printf (">"); break;
-		case TAC_LEQ: printf ("<="); break;
-		case TAC_GEQ: printf (">="); break;
-		case TAC_NEQ: printf( "!="); break;
-		case TAC_PRINT: printf("printf"); break;
-		case TAC_ASSIGNMENT: printf("="); break;
-		case TAC_GOTO: printf("goto"); break;
-		case TAC_LABEL: printf("label"); break;
-		// the others are all unrecognized operators
-		case TAC_FRACT: yyerror("TAC_Printer - FRACT is not a valid operator"); break;
-		case TAC_BOOL: yyerror("TAC_Printer - BOOL is not a valid operator"); break;
-		case TAC_AOP1: yyerror("TAC_Printer - AOP1 is not a valid operator"); break;
-		case TAC_AOP2: yyerror("TAC_Printer - AOP2 is not a valid operator"); break;
-		case TAC_BOP1: yyerror("TAC_Printer - BOP1 is not a valid operator"); break;
-		case TAC_BOP2: yyerror("TAC_Printer - BOP2 is not a valid operator"); break;
-		case TAC_RELOP: yyerror("TAC_Printer - RELOP is not a valid operator"); break;
-		case TAC_WHILE: yyerror("TAC_Printer - WHILE is not a valid operator"); break;
-		case TAC_IF: yyerror("TAC_Printer - IF is not a valid operator"); break;
-		case TAC_ELSE: yyerror("TAC_Printer - ELSE is not a valid operator"); break;
-		default: yyerror("TAC_Printer - operator not recognized"); break;
-	}
-
-}
-*/
