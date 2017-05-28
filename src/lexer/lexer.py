@@ -6,7 +6,7 @@ import os
 import json
 import shutil
 
-ROOT_DIR=os.getcwd()+"/lexer/"
+ROOT_DIR=os.getcwd()+"/src/lexer/"
 TARGET_CONF="conf"
 OUTPUT_FILE="lexer.fl"
 
@@ -17,8 +17,8 @@ with open(ROOT_DIR+OUTPUT_FILE, 'w+') as output_file:
         ## OPTIONS
         shutil.copyfileobj(options, output_file)
         output_file.write("\n")
-        options.close()        
-        ## HEADER 
+        options.close()
+        ## HEADER
         output_file.write("%{\n")
         shutil.copyfileobj(header, output_file)
         output_file.write("\n%}")
