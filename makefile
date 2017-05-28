@@ -1,4 +1,5 @@
 # Provide arguments to the executable using the ARGS variable
+# Provide arguments to the memory debugger/profiler using the VGOPTS variable
 PARSER_PATH = $(PWD)/src/parser
 LEXER_PATH = $(PWD)/src/lexer
 C_SRC_PATH = $(PWD)/src/c_src
@@ -6,6 +7,7 @@ BIN_PATH = $(PWD)/bin
 PARSER_FILE = parser
 C_SOURCES = $(shell find $(C_SRC_PATH) -name *.c)
 BIN=fac
+VALGRIND=valgrind
 
 C_FLAG = -O3 -g -Wall -Werror
 
@@ -39,6 +41,12 @@ compile: lex.yy.c
 run: compile
 	@echo "==Running=="
 	$(BIN_PATH)/$(BIN) $(ARGS)
+	@echo "========"
+
+.PHONY: run
+profile: compile
+	@echo "==Profiling=="
+	$(VALGRIND) $(VGOPTS) $(BIN_PATH)/$(BIN) $(ARGS)
 	@echo "========"
 
 .PHONY: doc
