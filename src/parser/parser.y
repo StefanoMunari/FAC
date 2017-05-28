@@ -330,10 +330,12 @@ void yyerror(const char * err_msg, ...) {
 	vfprintf(stderr, err_msg, ap);
 	fputc('\n', stderr);
 	success = false;
+	finalize();
 	exit(EXIT_FAILURE);
 }
 
 void finalize(){
+	printf("Clean up..\n");
 	freeSeqNode(head);
 	freeTable();
 	free_tac(tlist);
