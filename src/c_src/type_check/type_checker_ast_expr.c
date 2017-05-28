@@ -111,7 +111,7 @@ bool type_check_bool(ast_node * node){
 					case NEQ:
 						yyerror("Line %d: %s can only be used on fract variables. If lhs and rhs are bool use %s.\n", 
 							node->data->line, 
-							node->data->op==EQ?"==":"!=",
+							node->data->op==EQ?"==":"<>",
 							node->data->op==EQ?"<->":"XOR"
 							);
 						 break; 
