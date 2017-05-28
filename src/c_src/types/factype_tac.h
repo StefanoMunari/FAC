@@ -28,6 +28,8 @@ typedef enum {
 	TAC_GT,
 	TAC_EQ,
 	TAC_NEQ,
+	TAC_PLUS,
+	TAC_MINUS,
 	TAC_FRACT,
 	TAC_BOOL,
 	TAC_AOP1,
@@ -42,7 +44,10 @@ typedef enum {
 	TAC_ELSE,
 	TAC_LABEL,
 	TAC_GOTO,
-	TAC_COND
+	/** artificial label used to make "type checking" on the enum:
+	 * @link  https://stackoverflow.com/questions/9161863/how-to-check-if-an-enum-variable-is-valid
+	 */
+	TAC_END_MARKER
 } tac_op;
 
 #endif /*_FACTYPE_TAC_H_*/

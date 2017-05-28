@@ -64,7 +64,15 @@ typedef enum op_t
 	/** equals */
 	EQ,
 	/** not equals */
-	NEQ
+	NEQ,
+	/** sign plus */
+	PLUS,
+	/** sign minus */
+	MINUS,
+	/** artificial label used to make "type checking" on the enum:
+	 * @link  https://stackoverflow.com/questions/9161863/how-to-check-if-an-enum-variable-is-valid
+	 */
+	OP_END_MARKER
 } op_t;
 
 /**
