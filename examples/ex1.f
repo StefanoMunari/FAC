@@ -1,11 +1,8 @@
 /* example: arithmetic expression */
 
-fract a;
-fract b;
-fract c;
-fract d;
-a = [1|2];
-b = [ 2 | 3 ];
-c = [5 | 3];
-d = [5 | 3];
+fract a = [1|2];
+fract b = [2|3];
+fract c = [5|3];
+fract d = [5|3];
+
 c = a + -b + (d*c + b/a);
