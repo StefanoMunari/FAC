@@ -17,11 +17,11 @@ tac_list * generate_tac(seq_node * node){
 		init_tac(tlist);
 	else {
 		tac_list * help = generate_tac(node->left);
-		tlist = _tac_append(tlist, help);
+		tlist = tac_append(tlist, help);
 	}
 	if(node->right){
 		tac_list * help = tac_ast_node(node->right);
-		tlist = _tac_append(tlist, help);
+		tlist = tac_append(tlist, help);
 	}
 	return tlist;
 }

@@ -8,10 +8,6 @@ extern void yyerror(const char *, ...);
 
 static
 tac_node * _tac_node();
-static
-tac_list * _tac_connect(tac_list *, tac_node *);
-
-tac_list * _tac_append(tac_list *, tac_list *);
 
 static
 tac_node * _tac_print(ast_node *);
@@ -54,10 +50,10 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_list * left_list = tac_ast_node(node->ast_children[0]);
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left_list->last->value;
-				tlist = _tac_append(tlist, left_list);
+				tlist = tac_append(tlist, left_list);
 			}
 			/* connect tnode to the current list of triples */
-			return _tac_connect(tlist, tnode);
+			return tac_connect(tlist, tnode);
 		}
 		case AST_AOP2:
 		case AST_BOP2:
@@ -76,7 +72,7 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_list* left = tac_ast_node(node->ast_children[0]);
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left->last->value;
-				tlist = _tac_append(tlist, left);
+				tlist = tac_append(tlist, left);
 			}
 
 			tac_value * right = _tac_leaf(node->ast_children[1]);
@@ -86,10 +82,10 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_list* right = tac_ast_node(node->ast_children[1]);
 				tnode->value->arg1= calloc(1, sizeof(tac_value));
 				tnode->value->arg1->instruction= right->last->value;
-				tlist = _tac_append(tlist, right);
+				tlist = tac_append(tlist, right);
 			}
 
-			return _tac_connect(tlist, tnode);
+			return tac_connect(tlist, tnode);
 		}
 		case AST_ASSIGNMENT:
 		{
@@ -108,10 +104,10 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_list* right = tac_ast_node(node->ast_children[1]);
 				tnode->value->arg1 = calloc(1, sizeof(tac_value));
 				tnode->value->arg1->instruction =  right->last->value;
-				tlist = _tac_append(tlist, right);
+				tlist = tac_append(tlist, right);
 			}
 			/* connect tnode to the current list of triples */
-			return _tac_connect(tlist, tnode);
+			return tac_connect(tlist, tnode);
 		}
 
 		case AST_WHILE:
@@ -119,7 +115,7 @@ tac_list * tac_ast_node(ast_node * node){
 
 			// Create a label for the bexpr and connect it to the actual tlist
 			tac_node * start_bexpr = _tac_label();
-			tlist = _tac_connect(tlist, start_bexpr);
+			tlist = tac_connect(tlist, start_bexpr);
 
 			// Create a label that points to the end of the body
 			tac_node * end_while_label = _tac_label();
@@ -132,32 +128,32 @@ tac_list * tac_ast_node(ast_node * node){
 					tac_node * node = _tac_node();
 					node->value->op = TAC_NOT;
 					node->value->arg0 = bexpr;
-					tlist = _tac_connect(tlist, node);
+					tlist = tac_connect(tlist, node);
 				} else {
 					tac_list * bexpr = tac_ast_node(node->ast_children[0]);
 					tac_node * negateCondition = _tac_node();
 					negateCondition->value->op = TAC_NOT;
 					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
 					negateCondition->value->arg0->instruction = bexpr->last->value;
-					tlist = _tac_append(tlist, bexpr);
-					tlist = _tac_connect(tlist, negateCondition);
+					tlist = tac_append(tlist, bexpr);
+					tlist = tac_connect(tlist, negateCondition);
 				}
 			}
 
 			//If the negate condition is true goto end of while
 			tac_node * goto_skip_while_body = _tac_goto_conditioned(tlist->last->value, end_while_label);
-			tlist = _tac_connect(tlist, goto_skip_while_body);
+			tlist = tac_connect(tlist, goto_skip_while_body);
 
 			//Calculate the code for the body of the while and append it to the tlist */
 			tac_list * stmt = generate_tac(node->seq_children[0]);
-			tlist = _tac_append(tlist, stmt);
+			tlist = tac_append(tlist, stmt);
 
 			// generate goto node that points to the start_bexpr label
 			tac_node * goto_bexpr_evaluation = _tac_goto_unconditioned(start_bexpr);
-			tlist = _tac_connect(tlist, goto_bexpr_evaluation);
+			tlist = tac_connect(tlist, goto_bexpr_evaluation);
 
 			/* Add the label to exit from the while loop */
-			tlist = _tac_connect(tlist, end_while_label);
+			tlist = tac_connect(tlist, end_while_label);
 
 			return tlist;
 		}
@@ -171,15 +167,15 @@ tac_list * tac_ast_node(ast_node * node){
 					tac_node * node = _tac_node();
 					node->value->op = TAC_NOT;
 					node->value->arg0 = bexpr;
-					tlist = _tac_connect(tlist, node);
+					tlist = tac_connect(tlist, node);
 				} else {
 					tac_list * bexpr = tac_ast_node(node->ast_children[0]);
 					tac_node * negateCondition = _tac_node();
 					negateCondition->value->op = TAC_NOT;
 					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
 					negateCondition->value->arg0->instruction = bexpr->last->value;
-					tlist = _tac_append(tlist, bexpr);
-					tlist = _tac_connect(tlist, negateCondition);
+					tlist = tac_append(tlist, bexpr);
+					tlist = tac_connect(tlist, negateCondition);
 				}
 			}
 
@@ -189,9 +185,9 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_node * goto_skip_if_body = _tac_goto_conditioned(tlist->last->value, end_if_body);
 				//calculate tlist of the stmt following bexpr
 				tac_list * stmt = generate_tac(node->seq_children[0]);
-				tlist = _tac_connect(tlist, goto_skip_if_body);
-				tlist = _tac_append(tlist, stmt);
-				tlist = _tac_connect(tlist, end_if_body);
+				tlist = tac_connect(tlist, goto_skip_if_body);
+				tlist = tac_append(tlist, stmt);
+				tlist = tac_connect(tlist, end_if_body);
 			} else if(node->number_of_seq_children == 2){ //IF THEN ELSE
 				tac_node * start_else_body = _tac_label();
 				tac_node * end_else_body = _tac_label();
@@ -200,12 +196,12 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_node * goto_end_else_body = _tac_goto_unconditioned(end_else_body);
 				tac_list * else_body = generate_tac(node->seq_children[1]);
 
-				tlist = _tac_connect(tlist, goto_start_else_body);
-				tlist = _tac_append(tlist, if_body);
-				tlist = _tac_connect(tlist, goto_end_else_body);
-				tlist = _tac_connect(tlist, start_else_body);
-				tlist = _tac_append(tlist, else_body);
-				tlist = _tac_connect(tlist, end_else_body);
+				tlist = tac_connect(tlist, goto_start_else_body);
+				tlist = tac_append(tlist, if_body);
+				tlist = tac_connect(tlist, goto_end_else_body);
+				tlist = tac_connect(tlist, start_else_body);
+				tlist = tac_append(tlist, else_body);
+				tlist = tac_connect(tlist, end_else_body);
 			} else {
 				char * s = malloc(sizeof(char) * strlen(__FILE__) + 1);
 				strcpy(s, __FILE__);
@@ -217,7 +213,7 @@ tac_list * tac_ast_node(ast_node * node){
 		/* Leaves */
 		case AST_PRINT: /* one child subtree */
 		{
-			return _tac_connect(tlist, _tac_print(node));
+			return tac_connect(tlist, _tac_print(node));
 		}
 		case AST_DECLARATION:
 			return tlist;
@@ -241,48 +237,6 @@ tac_node* _tac_node(){
 	node->prev=NULL;
 	node->next=NULL;
 	return node;
-}
-
-
-
-
-
-
-
-
-tac_list * _tac_connect(tac_list * tlist, tac_node * tnode){
-	if(!tlist->last && !tlist->first){
-		/* first node of the TAC list - nothing to connect */
-		tlist->first=tnode;
-		tlist->last=tnode;
-	}
-	else{
-		if(tnode == NULL)
-			return tlist;
-		printf("CONNECT : %p -> %p\n", tlist->last->value, tnode->value);
-		tlist->last->next=tnode;
-		tnode->prev=tlist->last;
-		tlist->last=tlist->last->next;
-	}
-	return tlist;
-}
-
-
-tac_list * _tac_append(tac_list * tlist, tac_list * to_append){
-
-	if(!to_append->first && !to_append->last)
-		return tlist;
-	if(!tlist->last && !tlist->first){
-		/* first node of the TAC list - nothing to connect */
-		tlist->first=to_append->first;
-		tlist->last=to_append->last;
-		return tlist;
-	}
-	tlist->last->next=to_append->first;
-	to_append->first->prev=tlist->last;
-	tlist->last=to_append->last;
-	to_append->first=tlist->first;
-	return tlist;
 }
 
 
