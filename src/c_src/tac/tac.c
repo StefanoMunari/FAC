@@ -4,33 +4,19 @@
 #include <stdio.h>
 
 
-static
-tac_list * tac(seq_node *);
+
 static
 tac_list * init_tac(tac_list *);
 static
 void free_tac_entry(tac_entry * entry);
 
 
-tac_list * generate_tac(seq_node * input){
-	return tac(input);
-}
-
-/*
-	PRE= tlist is pointing to a valid record (not NULL) on the heap
-	POST= tlist is a valid TAC representation of the AST given as input
-	DEFINITIONS:
-	- valid TAC representation:
-		a post-order linearized representation of the AST where the first
-		TAC block is assigned to tlist->first while the last is assigned to
-		tlist->last
-*/
-tac_list * tac(seq_node * node){
+tac_list * generate_tac(seq_node * node){
 	tac_list * tlist = calloc(1, sizeof(tac_list));
 	if(!node->left) 
 		init_tac(tlist);
 	else {
-		tac_list * help = tac(node->left);
+		tac_list * help = generate_tac(node->left);
 		tlist = _tac_append(tlist, help);
 	}
 	if(node->right){
@@ -39,6 +25,7 @@ tac_list * tac(seq_node * node){
 	}
 	return tlist;
 }
+
 
 static
 tac_list * init_tac(tac_list * tlist){
