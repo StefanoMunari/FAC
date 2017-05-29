@@ -13,5 +13,5 @@
 #include "tac_list.h"
 
 tac_list* tac_ast_node(ast_node * node);
-tac_list* _tac_append(tac_list * , tac_list *);
+
 #endif /*__TAC_AST_NODE_H__*/
