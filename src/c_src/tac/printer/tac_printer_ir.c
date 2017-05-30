@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 static
-void print_tac(tac_list *);
+void print_tac(tac_list *, char *);
 
 const struct _tprinter_vtable IR[] = { { print_tac } };
 
@@ -16,7 +16,7 @@ char * get_operator(tac_op operator);
 static
 void print_value(tac_value * value);
 
-void print_tac(tac_list * tlist){
+void print_tac(tac_list * tlist, char * path){
 	printf("======= IR: Print the 3AC =======\n");
 	tac_node * iterator = tlist->first;
 	int i=0;
