@@ -38,5 +38,5 @@ typedef struct tac_list{
 
 
 tac_list* tac_append(tac_list * tlist , tac_list * to_append);
-tac_list * tac_connect(tac_list * tlist, tac_node * tnode)
+tac_list * tac_connect(tac_list * tlist, tac_node * tnode);
 #endif /*__TAC_LIST_H__*/
