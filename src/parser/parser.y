@@ -144,7 +144,7 @@ stmt { head=$1; }
 stmt :
 /* empty */ { $$ = NULL; }
 | stmt declaration SEPARATOR {
-	
+
 	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
 	$$ = newSeqNode(subtree, $2->ast_children[1]);
 	free($2);
@@ -251,19 +251,19 @@ expr AOP_0 expr {
 declaration :
 TYPE ID ASSIGNMENT expr {
 	/* Desugare this stmt in a declaration and an assignment */
-	
+
 	/* Construct the node for the declaration */
 	ast_node * id_node = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
 	ast_node * declaration = astNode(AST_DECLARATION, @1.first_line, -1, NULL, 1, 0, id_node);
-	declaration->data->type = $1; 
-	
+	declaration->data->type = $1;
+
 	/* Construct the node for the assignment */
 	ast_node * id_node_assignment = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
 	ast_node * assignment =  astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL, 2, 0, id_node_assignment, $4);
-	
+
 	/* Encode the information in a single ast node */
 	$$ = astNode(AST_DECLARATION, @2.first_line, -1, NULL, 2, 0, declaration, assignment);
-	
+
 }
 
 
