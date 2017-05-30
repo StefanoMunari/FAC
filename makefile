@@ -9,6 +9,7 @@ C_SRC_PATH = $(PWD)/src/c_src
 BIN_PATH = $(PWD)/bin
 PARSER_FILE = parser
 C_SOURCES = $(shell find $(C_SRC_PATH) -name *.c)
+EXAMPLE_SOURCES = $(shell find $(PWD)/examples -name ex*.f)
 BIN=fac
 VALGRIND=valgrind
 
@@ -46,7 +47,13 @@ run: compile
 	$(BIN_PATH)/$(BIN) $(ARGS)
 	@echo "========"
 
-.PHONY: run
+.PHONY: examples
+examples:
+	$(shell for ex in $(EXAMPLE_SOURCES); do\
+	 $(BIN_PATH)/$(BIN) $$ex "IR"; \
+	 done)
+
+.PHONY: profile
 profile: compile
 	@echo "==Profiling=="
 	$(VALGRIND) $(VGOPTS) $(BIN_PATH)/$(BIN) $(ARGS)
