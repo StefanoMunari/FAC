@@ -18,7 +18,7 @@
 #include "tac/tac.h"
 #include "tac/tac_list.h"
 #include "tac/printer/tac_printer.h"
-#include "tac/printer/tac_printer_c.h"
+//#include "tac/printer/tac_printer_c.h"
 
 #include "utils/facmath.h"
 #include "err/facerr.h"
@@ -164,9 +164,6 @@ stmt :
 }
 ;
 
-
-
-
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	if($6 == NULL){
@@ -283,14 +280,24 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 %%
 /* Entrypoint of the program */
 int main(int argc, char * argv[]) {
-	tprinter printer= { IR };
+	tprinter printer;
+	FILE * fp = NULL;
 
-	if(argc < 2){
+	if(argc < 3){
 		fprintf(stderr, "Usage: %s <file-to-compile> <printer>\n Arguments: \n\t <printer> \t {std, c, java}\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 
-	FILE * fp = fopen(argv[1], "r");
+	if (strcmp(argv[2], "C") == 0)
+		printer = (tprinter) { C };
+	else if (strcmp(argv[2], "IR") == 0)
+		printer = (tprinter) { IR };
+	else{
+	  err_handler(argv[1], FAC_STANDARD_ERROR);
+	  return EXIT_FAILURE;
+	}
+
+	fp = fopen(argv[1], "r");
 	if (fp == NULL) {
 	  err_handler(argv[1], FAC_STANDARD_ERROR);
 	  return EXIT_FAILURE;
@@ -317,7 +324,6 @@ int main(int argc, char * argv[]) {
 
 	tlist=generate_tac(head);
 	tdynamic_dispatch(&printer, tlist);
-	print_tac_c(tlist);
 	/* generate code ??? */
 	finalize();
 	return EXIT_SUCCESS;

@@ -1,6 +1,11 @@
 #include "tac_printer.h"
+#include "../tac_list.h"
 #include <stdio.h>
-static int tcounter = 0;
+
+static
+void print_tac(tac_list *);
+
+const struct _tprinter_vtable C[] = { { print_tac } };
 
 static
 void print_tac_entry(tac_node *);
@@ -14,16 +19,16 @@ char * getValue(tac_value * tvalue, char * num_or_den);
 static
 char * getBooleanValue(tac_value * tvalue);
 
+static int tcounter = 0;
 char buffer[256];
 
-void print_tac_c(tac_list * tlist){
+void print_tac(tac_list * tlist){
 	printf("=== C: Print the 3AC ===\n");
 	printf("#include<stdio.h>\n");
 	printf("int MCD(int u, int v) {\n");
 	printf("\treturn (v != 0)?MCD(v, u %c v):u;\n}\n", 37);
 
 	printf("int main(void){\n");
-
 
 	int i=0;
 	tcounter = 0;
@@ -44,7 +49,6 @@ void print_tac_entry(tac_node * node){
 	tac_entry * entry = node->value;
 	if(entry == NULL)
 		return;
-
 	//int tcounter = 0;
 	switch(entry->op){
 		case TAC_ASSIGNMENT:
@@ -80,12 +84,12 @@ void print_tac_entry(tac_node * node){
 		case TAC_SUM:
 		case TAC_DIFF:
 		{
-			
+
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
 			char * numB = getValue(entry->arg1, "num");
 			char * denB = getValue(entry->arg1, "den");
-			
+
 			printf("/* SUM */\n");
 			printf("h0 = %s * %s;\n", numA, denB);
 			printf("h1 = %s * %s;\n", numB, denA);
@@ -94,12 +98,12 @@ void print_tac_entry(tac_node * node){
 			printf("h4 = MCD(h2, h3);\n");
 			printf("t%pnum = h2 / h5;\n", entry);
 			printf("t%pden = h3 / h5;\n", entry);
-			
+
 			free(denA);
 			free(denB);
 			free(numA);
 			free(numB);
-			
+
 			break;
 		}
 		case TAC_MULT:
@@ -165,7 +169,7 @@ void print_tac_entry(tac_node * node){
 		case TAC_EQ:
 		case TAC_NEQ:
 		{
-			
+
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
 			char * numB = getValue(entry->arg1, "num");
@@ -196,8 +200,9 @@ void print_tac_entry(tac_node * node){
 		}
 		case TAC_GOTO:
 		{
-			if(entry->arg1 != NULL){ //Codnitioned goto
-				printf("if (t%p) goto L%p;\n", entry->arg0->instruction, entry->arg1->instruction);
+			if(entry->arg1 != NULL){ //Conditional goto
+				printf("if (t%p) goto L%p;\n", entry->arg0->instruction,
+				entry->arg1->instruction);
 			} else {
 				printf("goto L%p;\n", entry->arg0->instruction);
 			}
@@ -205,9 +210,6 @@ void print_tac_entry(tac_node * node){
 		}
 		default:printf("Not yet implemented\n");
 	}
-
-
-
 }
 
 static
@@ -256,7 +258,6 @@ char * getBooleanValue(tac_value * tvalue){
 		sprintf(buffer, "%d", tvalue->boolean);
 		return buffer;
 	}
-
 }
 
 static
@@ -264,9 +265,10 @@ char * getValue(tac_value * tvalue, char * num_or_den) {
 	if(tvalue == NULL){
 		return NULL;
 	}
-	
 	if(tvalue->address != NULL){
-		char * buffer = malloc(sizeof(char) * (strlen(tvalue->address->id) + strlen(num_or_den) + 1));
+		char * buffer =
+			malloc(sizeof(char) * (strlen(tvalue->address->id)
+			+ strlen(num_or_den) + 1));
 		sprintf(buffer, "%s%s", tvalue->address->id, num_or_den);
 		return buffer;
 	}
@@ -286,4 +288,3 @@ char * getValue(tac_value * tvalue, char * num_or_den) {
 		return "";
 	}
 }
-
