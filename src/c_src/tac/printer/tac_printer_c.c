@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 static
-void print_tac(tac_list *);
+void print_tac(tac_list *, char *);
 
 const struct _tprinter_vtable C[] = { { print_tac } };
 
@@ -19,11 +19,11 @@ char * getValue(tac_value * tvalue, char * num_or_den);
 static
 char * getBooleanValue(tac_value * tvalue);
 
-static int tcounter = 0;
 char buffer[256];
 
-void print_tac(tac_list * tlist){
+void print_tac(tac_list * tlist, char * path){
 	printf("=== C: Print the 3AC ===\n");
+	printf("#include \"fvariables.h\"\n");
 	printf("#include<stdio.h>\n");
 	printf("int MCD(int u, int v) {\n");
 	printf("\treturn (v != 0)?MCD(v, u %c v):u;\n}\n", 37);
@@ -31,7 +31,6 @@ void print_tac(tac_list * tlist){
 	printf("int main(void){\n");
 
 	int i=0;
-	tcounter = 0;
 	tac_node * iterator = tlist->first;
 	while(iterator != NULL){
 		print_tac_entry(iterator);
@@ -49,7 +48,6 @@ void print_tac_entry(tac_node * node){
 	tac_entry * entry = node->value;
 	if(entry == NULL)
 		return;
-	//int tcounter = 0;
 	switch(entry->op){
 		case TAC_ASSIGNMENT:
 		{

@@ -18,7 +18,6 @@
 #include "tac/tac.h"
 #include "tac/tac_list.h"
 #include "tac/printer/tac_printer.h"
-//#include "tac/printer/tac_printer_c.h"
 
 #include "utils/facmath.h"
 #include "err/facerr.h"
@@ -327,8 +326,7 @@ int main(int argc, char * argv[]) {
 
 
 	tlist=generate_tac(head);
-	tdynamic_dispatch(&printer, tlist);
-	/* generate code ??? */
+	tdynamic_dispatch(&printer, tlist, "result/");
 	finalize();
 	return EXIT_SUCCESS;
 }
