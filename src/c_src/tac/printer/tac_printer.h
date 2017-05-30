@@ -3,15 +3,18 @@
 #include "../tac_list.h"
 
 typedef struct _tprinter_vtable {
-    void (*print_tac)(tac_list *);
+   void (*print_tac)(tac_list *);
 } _tprinter_vtable;
 
 typedef struct tprinter {
-    struct _tprinter_vtable* _vtable;
+    const struct _tprinter_vtable* _vtable;
 } tprinter;
 
-void tdynamic_dispatch(struct tprinter* this, tac_list* parameter);
+static inline void tdynamic_dispatch(struct tprinter* this, tac_list* parameter)
+{
+	this->_vtable->print_tac(parameter);
+}
 
 extern void yyerror(const char *, ...);
-extern _tprinter_vtable IR[], C[], JAVA[];
+extern const struct _tprinter_vtable IR[], C[], JAVA[];
 #endif /*__TAC_PRINTER_H__*/

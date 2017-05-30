@@ -1,6 +1,12 @@
-#include "tac_printer_ir.h"
+#include "tac_printer.h"
+#include "../tac_list.h"
 #include "../../types/factype_tac.h"
 #include <stdio.h>
+
+static
+void print_tac(tac_list *);
+
+const struct _tprinter_vtable IR[] = { { print_tac } };
 
 extern void yyerror(const char *, ...);
 static
