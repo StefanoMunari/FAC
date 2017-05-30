@@ -289,7 +289,7 @@ int main(int argc, char * argv[]) {
 	FILE * fp = NULL;
 
 	if(argc < 3){
-		fprintf(stderr, "Usage: %s <file-to-compile> <printer>\n Arguments: \n\t <printer> \t {std, c, java}\n", argv[0]);
+		fprintf(stderr, "Usage: %s <file-to-compile> <printer>\n Arguments: \n\t <printer> \t IR - Intermediate Representation\n \t\t\t\t C - C representation\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 

@@ -15,6 +15,7 @@ VALGRIND=valgrind
 
 C_FLAG = -O3 -g -Wall -Werror
 
+.PHONY: all
 all: compile
 
 generate_parser:
@@ -48,7 +49,7 @@ run: compile
 	@echo "========"
 
 .PHONY: examples
-examples:
+examples: compile
 	$(shell for ex in $(EXAMPLE_SOURCES); do\
 	 $(BIN_PATH)/$(BIN) $$ex "IR"; \
 	 done)
