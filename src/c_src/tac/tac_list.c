@@ -26,7 +26,6 @@ tac_list * tac_connect(tac_list * tlist, tac_node * tnode){
 	else{
 		if(tnode == NULL)
 			return tlist;
-		printf("CONNECT : %p -> %p\n", tlist->last->value, tnode->value);
 		tlist->last->next=tnode;
 		tnode->prev=tlist->last;
 		tlist->last=tlist->last->next;
