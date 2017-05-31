@@ -2,6 +2,7 @@
 #include "../tac_list.h"
 #include "../../symbol_table/symbol_table.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 static
 void print_tac(tac_list *, char *);
@@ -12,7 +13,10 @@ static
 void dump_symbol_table(FILE *);
 
 static
-void print_tac_entry(FILE *, tac_node *);
+void print_h_vars(FILE *);
+
+static
+void print_tac_entry(FILE *, tac_node *, FILE *);
 
 static
 char * get_operator(tac_op operator);
@@ -23,6 +27,8 @@ char * getValue(tac_value *, char *);
 static
 char * getBooleanValue(tac_value *);
 
+static
+bool h_flag = false;
 char buffer[256];
 
 void print_tac(tac_list * tlist, char * path){
@@ -49,7 +55,7 @@ void print_tac(tac_list * tlist, char * path){
 	int i=0;
 	tac_node * iterator = tlist->first;
 	while(iterator != NULL){
-		print_tac_entry(c_main, iterator);
+		print_tac_entry(c_main, iterator, c_header);
 		++i;
 		iterator = iterator->next;
 	}
@@ -78,7 +84,16 @@ void dump_symbol_table(FILE * c_header){
     }
 }
 
-void print_tac_entry(FILE * c_main, tac_node * node){
+
+void print_h_vars(FILE * c_header){
+	if(h_flag)
+		return;
+	int i=0;
+	for(;i < 5; ++i)
+		fprintf(c_header, "int h%d;\n", i);
+}
+
+void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 	tac_entry * entry = node->value;
 	if(entry == NULL)
 		return;
@@ -111,6 +126,9 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			char * denA = getValue(entry->arg0, "den");
 			fprintf(c_main, "t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
 			fprintf(c_main, "t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denA);
+
+			fprintf(c_header, "int t%pnum;\n", entry);
+			fprintf(c_header, "int t%pden;\n", entry);
 			break;
 		}
 		case TAC_SUM:
@@ -128,8 +146,13 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			fprintf(c_main, "h2 = h0 %s h1;\n", entry->op==TAC_SUM?"+":"-");
 			fprintf(c_main, "h3 = %s * %s;\n", denA, denB);
 			fprintf(c_main, "h4 = MCD(h2, h3);\n");
-			fprintf(c_main, "t%pnum = h2 / h5;\n", entry);
-			fprintf(c_main, "t%pden = h3 / h5;\n", entry);
+			fprintf(c_main, "t%pnum = h2 / h4;\n", entry);
+			fprintf(c_main, "t%pden = h3 / h4;\n", entry);
+
+			fprintf(c_header, "int t%pnum;\n", entry);
+			fprintf(c_header, "int t%pden;\n", entry);
+			print_h_vars(c_header);
+			h_flag = true;
 
 			free(denA);
 			free(denB);
@@ -159,6 +182,12 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			fprintf(c_main, "t%pnum = h0 / h2;\n", entry);
 			fprintf(c_main, "t%pden = h1 / h3;\n", entry);
 			fprintf(c_main, "/* END %s */\n", entry->op == TAC_MULT?"MULT":"DIV");
+
+			fprintf(c_header, "int t%pnum;\n", entry);
+			fprintf(c_header, "int t%pden;\n", entry);
+			print_h_vars(c_header);
+			h_flag = true;
+
 			free(numA);
 			free(numB);
 			free(denA);
@@ -179,6 +208,9 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 		{
 			char * boolean_value = getBooleanValue(entry->arg0);
 			fprintf(c_main, "t%p = !%s;\n", entry, boolean_value);
+
+			fprintf(c_header, "int t%p;\n", entry);
+
 			free(boolean_value);
 			break;
 		}
@@ -188,6 +220,9 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
 			fprintf(c_main, "t%p = %s %s %s;\n", entry, bool1,  get_operator(entry->op), bool2);
+
+			fprintf(c_header, "int t%p;\n", entry);
+
 			break;
 		}
 		case TAC_XOR:
@@ -196,6 +231,9 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
 			fprintf(c_main, "t%p = %s %s %s; \n", entry, bool1, get_operator(entry->op), bool2);
+
+			fprintf(c_header, "int t%p;\n", entry);
+
 			break;
 		}
 		case TAC_EQ:
@@ -209,6 +247,11 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			fprintf(c_main, "h0 = %s %s %s;\n", numA, get_operator(entry->op), numB);
 			fprintf(c_main, "h1 = %s %s %s;\n", denA, get_operator(entry->op), denB);
 			fprintf(c_main, "t%p = h0 && h1;\n", entry);
+
+			fprintf(c_header, "int t%p;\n", entry);
+			print_h_vars(c_header);
+			h_flag = true;
+
 			break;
 		}
 		case TAC_LT:
@@ -223,6 +266,11 @@ void print_tac_entry(FILE * c_main, tac_node * node){
 			fprintf(c_main, "h0 = %s * %s;\n", numA, denB);
 			fprintf(c_main, "h1 = %s * %s;\n", denA, numB);
 			fprintf(c_main, "t%p = h0 %s h1;\n", entry, get_operator(entry->op));
+
+			fprintf(c_header, "int t%p;\n", entry);
+			print_h_vars(c_header);
+			h_flag = true;
+
 			break;
 		}
 		case TAC_LABEL:
