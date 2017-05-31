@@ -16,4 +16,5 @@ while(condition){
 	condition=false;
 }
 
-f=[7|1];
+print(f);
+print(condition);
