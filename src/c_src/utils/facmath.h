@@ -1,5 +1,5 @@
 /**
- * @brief file defining the operations on the type fract.
+ * @brief Operations on the type fract.
  * @see factype.h
  * @file
  * @author mirko.bez@studenti.unipd.it
