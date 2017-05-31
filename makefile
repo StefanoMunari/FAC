@@ -65,6 +65,7 @@ doc:
 	@echo "==Generating documentation=="
 	doxygen doxyfile
 	@echo "========"
+	@echo "=> documentation accessible in $(PWD)/doc/index.html"
 
 .PHONY: clean
 clean:
