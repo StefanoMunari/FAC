@@ -48,8 +48,8 @@ typedef enum {
 	TAC_PLUS,
 	/** sign minus */
 	TAC_MINUS,
-	
-	
+
+
 	TAC_PRINT,
 	TAC_ASSIGNMENT,
 	TAC_LABEL,
