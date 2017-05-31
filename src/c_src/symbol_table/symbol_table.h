@@ -45,5 +45,9 @@ type_t getType(char * id);
  * Free the symbol table.
  */
 void freeTable();
+/**
+ * @return the symbol_table
+ */
+symbol_table_entry * getTable();
 
 #endif /*__SYMBOL_TABLE_H__*/
