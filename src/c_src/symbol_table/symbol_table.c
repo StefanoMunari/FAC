@@ -61,3 +61,7 @@ void freeTable(){
 		free(e);
 	}
 }
+
+symbol_table_entry * getTable(){
+	return symbol_table;
+}
