@@ -1,5 +1,5 @@
 /* example: simple if-else */
-fract f = [1|1];
+fract f = [1|101];
 
 
 
