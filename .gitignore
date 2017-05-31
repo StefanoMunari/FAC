@@ -42,6 +42,8 @@
 lexer.fl
 fac
 *.output
+result/main.c
+result/fvariables.h
 
 # Ignore all doxygen generated files
 doc/*
