@@ -17,7 +17,7 @@ extern char* yytext;
 extern int yyleng;
 extern int yylineno;
 
-/** enumeration type used in error handling */
+/** enumeration codes used in error handling to select the printing mode */
 typedef enum err_input {
 	FAC_STANDARD_ERROR,
 	FAC_STRING,
@@ -25,9 +25,9 @@ typedef enum err_input {
 	FAC_LINE_STRING,
 } err_input;
 /**
- * error handler function, catch errors
- * @param the string to print
- * @param is the mode format for printing
+ * error handler function
+ * @param err - the string to print
+ * @param mode - the format for printing
  */
-void err_handler(char*, err_input);
+void err_handler(char* err, err_input mode);
 #endif/*_FACERR_H_*/
