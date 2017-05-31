@@ -69,4 +69,4 @@ doc:
 
 .PHONY: clean
 clean:
-	rm -rf *.yy.c *.o *.out *.output bin/fac $(LEXER_PATH)/lex.yy.c */*.tab.*
+	rm -rf *.yy.c *.o *.out *.output bin/fac result/* $(LEXER_PATH)/lex.yy.c */*.tab.*
