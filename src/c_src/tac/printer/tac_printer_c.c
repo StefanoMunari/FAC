@@ -91,6 +91,7 @@ void print_h_vars(FILE * c_header){
 	int i=0;
 	for(;i < 5; ++i)
 		fprintf(c_header, "int h%d;\n", i);
+	h_flag = true;
 }
 
 void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
@@ -152,7 +153,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			free(denA);
 			free(denB);
@@ -186,7 +186,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			free(numA);
 			free(numB);
@@ -250,7 +249,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			break;
 		}
@@ -269,7 +267,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			break;
 		}
