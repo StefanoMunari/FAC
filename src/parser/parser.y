@@ -20,6 +20,7 @@
 #include "tac/printer/tac_printer.h"
 
 #include "utils/facmath.h"
+#include "utils/unix_fs.h"
 #include "err/facerr.h"
 
 #include <stdio.h>
@@ -305,7 +306,7 @@ int main(int argc, char * argv[]) {
 	yyin = fp;
 
 	switch(yyparse()){
-		case 1: yyerror("Input contains a synntax error\n"); return EXIT_FAILURE; break;
+		case 1: yyerror("Input contains a syntax error\n"); return EXIT_FAILURE; break;
 		case 2: yyerror("Memory exhausted\n"); return EXIT_FAILURE; break;
 		case 0: /* successful */ break;
 	}
@@ -322,7 +323,10 @@ int main(int argc, char * argv[]) {
 	}
 
 	tlist=generate_tac(head);
-	tdynamic_dispatch(&printer, tlist, "result/");
+
+	char * root_dir = get_root_dir(getenv("PWD"));
+	tdynamic_dispatch(&printer, tlist, strcat(root_dir, "/result/"));
+	free(root_dir);
 	finalize();
 	return EXIT_SUCCESS;
 }

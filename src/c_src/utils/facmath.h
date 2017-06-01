@@ -39,5 +39,5 @@ fract_t mult(fract_t fract1, fract_t fract2);
  */
 fract_t sum(fract_t fract1, fract_t fract2);
 
-#endif
+#endif /*__FAC__MATH__H__*/
 
