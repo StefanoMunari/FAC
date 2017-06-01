@@ -40,8 +40,8 @@ void print_tac(tac_list * tlist, char * path){
 	sprintf(main_name, "%s%s", path, "main.c");
 	sprintf(header_name, "%s%s", path, "fvariables.h");
 
-	FILE * c_main = fopen(main_name, "w");
-	FILE * c_header = fopen(header_name, "w");
+	FILE * c_main = fopen(main_name, "a");
+	FILE * c_header = fopen(header_name, "a");
 
 	dump_symbol_table(c_header);
 
@@ -91,6 +91,7 @@ void print_h_vars(FILE * c_header){
 	int i=0;
 	for(;i < 5; ++i)
 		fprintf(c_header, "int h%d;\n", i);
+	h_flag = true;
 }
 
 void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
@@ -152,7 +153,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			free(denA);
 			free(denB);
@@ -180,13 +180,12 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_main, "h1 = %s * %s;\n", denA, denB);
 			fprintf(c_main, "h2 = MCD(h0, h1);\n");
 			fprintf(c_main, "t%pnum = h0 / h2;\n", entry);
-			fprintf(c_main, "t%pden = h1 / h2;\n", entry);
+			fprintf(c_main, "t%pden = h1 / h3;\n", entry);
 			fprintf(c_main, "/* END %s */\n", entry->op == TAC_MULT?"MULT":"DIV");
 
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			free(numA);
 			free(numB);
@@ -250,7 +249,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			break;
 		}
@@ -269,7 +267,6 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			h_flag = true;
 
 			break;
 		}
