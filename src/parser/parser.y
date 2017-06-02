@@ -29,6 +29,10 @@
 /********************************************
 		GLOBAL SCOPE DECLARATIONS
 *********************************************/
+/* NULL OPerator macro */
+#ifndef NULL_OP
+#define NULL_OP -1
+#endif
 /** External vars **/
 extern FILE * yyin;
 /** Shared vars */
@@ -170,7 +174,8 @@ WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 		yyerror("Lines %d-%d: The while body cannot be empty  \n",
 			@5.first_line, @7.first_line);
 	}
-	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_WHILE, @1.first_line, operator, NULL, 1, 1, $3, $6);
 }
 ;
 
@@ -186,7 +191,8 @@ stmt R_DEL_SCOPE {
 		yyerror("Lines %d-%d: The else body cannot be empty  \n", @9.first_line,
 			@11.first_line);
 	}
-	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 2, $3, $6, $10);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_IF, @1.first_line, operator, NULL, 1, 2, $3, $6, $10);
 }
 |
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
@@ -194,96 +200,116 @@ IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line,
 			@7.first_line);
 	}
-	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 1, $3, $6);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_IF, @1.first_line, operator, NULL, 1, 1, $3, $6);
 }
 ;
 
 expr :
 expr AOP_1 expr {
-	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_AOP2, @2.first_line, operator, NULL , 2, 0,  $1, $3);
 }
 | expr AOP_0 expr {
-	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_AOP2, @2.first_line, operator, NULL , 2, 0,  $1, $3);
 }
 | AOP_1 expr %prec USIGN {
-	$$ = astNode(AST_AOP1, @1.first_line, $1==SUM?PLUS:MINUS, NULL,  1, 0, $2);
+	op_t operator = ($1==SUM?PLUS:MINUS);
+	$$ = astNode(AST_AOP1, @1.first_line, operator, NULL,  1, 0, $2);
 }
-| L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
+| L_DEL_EXPR expr R_DEL_EXPR {
+	$$ = $2;
+}
 | FRACT {
 	fract_t * f = malloc(sizeof(fract_t));
 	*f = $1;
-
-	$$ = astNode(AST_FRACT, @1.first_line, -1, f, 0, 0);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_FRACT, @1.first_line, operator, f, 0, 0);
 }
 | expr BOP2_0 expr {
-	$$ = astNode(AST_BOP2, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_BOP2, @2.first_line, operator, NULL, 2, 0, $1, $3);
 }
 | expr BOP2_1 expr {
-	$$ = astNode(AST_BOP2, @2.first_line, $2, NULL,  2, 0, $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_BOP2, @2.first_line, operator, NULL,  2, 0, $1, $3);
 }
 | expr BOP2_2 expr {
 	/* Applying desugaring of "->" operator:
-	 * "A imply B"  can be rewritten as "not A or B" */
+	   "A imply B"  can be rewritten as "not A or B" */
 	ast_node * notA = astNode(AST_BOP1, @2.first_line, NOT, NULL, 1, 0, $1);
 	$$ = astNode(AST_BOP2, @2.first_line, OR, NULL,  2, 0, notA, $3);
 }
 | expr BOP2_3 expr {
-	$$ = astNode(AST_BOP_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_BOP_RELOP, @2.first_line, operator, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_0 expr {
-	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_RELOP, @2.first_line, operator, NULL, 2, 0, $1, $3);
 }
 | expr RELOP_1 expr {
-	$$ = astNode(AST_RELOP, @2.first_line, $2, NULL, 2, 0, $1, $3);
+	op_t operator = $2;
+	$$ = astNode(AST_RELOP, @2.first_line, operator, NULL, 2, 0, $1, $3);
 }
 | BOP1 expr %prec UBOP1{
-	$$ = astNode(AST_BOP1, @1.first_line, $1, NULL, 1, 0, $2);
+	op_t operator = $1;
+	$$ = astNode(AST_BOP1, @1.first_line, operator, NULL, 1, 0, $2);
 }
 | BOOL	{
 	bool * b = malloc(sizeof(bool));
 	*b = $1;
-	$$ = astNode(AST_BOOL, @1.first_line, -1, b, 0, 0);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_BOOL, @1.first_line, operator, b, 0, 0);
 }
 | ID	{
 	char * identifier = strdup($1);
-	$$ = astNode(AST_ID, @1.first_line, -1, identifier, 0, 0);
+	op_t operator = NULL_OP;
+	$$ = astNode(AST_ID, @1.first_line, operator, identifier, 0, 0);
 }
 ;
 
 declaration :
 TYPE ID ASSIGNMENT expr {
 	/* Desugare this stmt in a declaration and an assignment */
-
+	op_t operator = NULL_OP;
 	/* Construct the node for the declaration */
-	ast_node * id_node = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
-	ast_node * declaration = astNode(AST_DECLARATION, @1.first_line, -1, NULL,
+	ast_node * id_node =
+		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
+	ast_node * declaration =
+		astNode(AST_DECLARATION, @1.first_line, operator, NULL,
 		1, 0, id_node);
 	declaration->data->type = $1;
 
 	/* Construct the node for the assignment */
-	ast_node * id_node_assignment = astNode(AST_ID, @2.first_line, -1,
-		strdup($2), 0, 0);
-	ast_node * assignment =  astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL,
+	ast_node * id_node_assignment =
+		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
+	ast_node * assignment =
+		astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL,
 		2, 0, id_node_assignment, $4);
 
 	/* Encode the information in a single ast node */
-	$$ = astNode(AST_DECLARATION, @2.first_line, -1, NULL, 2, 0, declaration,
-		assignment);
-
+	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
+		declaration, assignment);
 }
-
+;
 
 var_assignment :
 ID ASSIGNMENT expr {
-	ast_node * id_node = astNode(AST_ID, @1.first_line, -1, strdup($1), 0, 0);
-	$$ = astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL, 2, 0, id_node, $3);
-
+	op_t operator = NULL_OP;
+	ast_node * id_node =
+		astNode(AST_ID, @1.first_line, operator, strdup($1), 0, 0);
+	$$ = astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL, 2, 0, id_node,
+		$3);
 }
 
 print_var :
 PRINT L_DEL_EXPR ID R_DEL_EXPR {
-	ast_node * id_node = astNode(AST_ID, @3.first_line, -1, strdup($3), 0, 0);
-	$$ = astNode(AST_PRINT, @1.first_line, -1, NULL, 1, 0, id_node);
+	op_t operator = NULL_OP;
+	ast_node * id_node =
+		astNode(AST_ID, @3.first_line, operator, strdup($3), 0, 0);
+	$$ = astNode(AST_PRINT, @1.first_line, operator, NULL, 1, 0, id_node);
 }
 
 %%
