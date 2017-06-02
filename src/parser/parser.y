@@ -325,7 +325,18 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 int main(int argc, char * argv[]) {
 	option_flag options = get_option(argc, argv);
 
+
 	FILE * fp = NULL;
+
+	if (strcmp(argv[2], "C") == 0)
+		printer = (tprinter) { C };
+	else if (strcmp(argv[2], "IR") == 0)
+		printer = (tprinter) { IR };
+	else{
+	  yyerror("main: invalid printer");
+	  return EXIT_FAILURE;
+	}
+
 
 	fp = fopen(options.input_file, "r");
 	if (fp == NULL) {
