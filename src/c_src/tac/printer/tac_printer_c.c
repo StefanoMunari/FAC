@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 static
-void print_tac(tac_list *, char *);
+void print_tac(tac_list *);
 
 const struct _tprinter_vtable C[] = { { print_tac } };
 
@@ -31,10 +31,10 @@ static
 bool h_flag = false;
 char buffer[256];
 
-void print_tac(tac_list * tlist, char * path){
-	sprintf(buffer, "%s%s", path, "main.c");
+void print_tac(tac_list * tlist){
+	sprintf(buffer, "%s", "main.c");
 	char * main_name = strdup(buffer);
-	sprintf(buffer, "%s%s", path, "fvariables.h");
+	sprintf(buffer, "%s", "fvariables.h");
 	char * header_name = strdup(buffer);
 
 
@@ -73,6 +73,8 @@ void print_tac(tac_list * tlist, char * path){
 	if(fclose(c_header) != 0){
 		yyerror("tac_printer_c::print_tac:Could not close %s", header_name);
 	}
+	free(main_name);
+	free(header_name);
 	
 }
 

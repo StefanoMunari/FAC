@@ -3,7 +3,7 @@
 #include "../tac_list.h"
 
 typedef struct _tprinter_vtable {
-   void (*print_tac)(tac_list *, char *);
+   void (*print_tac)(tac_list *);
 } _tprinter_vtable;
 
 typedef struct tprinter {
@@ -11,9 +11,9 @@ typedef struct tprinter {
 } tprinter;
 
 static inline
-void tdynamic_dispatch(struct tprinter* this, tac_list* parameter, char * path)
+void tdynamic_dispatch(struct tprinter* this, tac_list* parameter)
 {
-	this->_vtable->print_tac(parameter, path);
+	this->_vtable->print_tac(parameter);
 }
 
 extern void yyerror(const char *, ...);
