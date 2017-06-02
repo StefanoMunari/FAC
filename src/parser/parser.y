@@ -20,7 +20,6 @@
 #include "tac/printer/tac_printer.h"
 
 #include "utils/facmath.h"
-#include "utils/unix_fs.h"
 #include "err/facerr.h"
 
 #include <stdio.h>
@@ -324,9 +323,8 @@ int main(int argc, char * argv[]) {
 
 	tlist=generate_tac(head);
 
-	char * root_dir = get_root_dir(getenv("PWD"));
-	tdynamic_dispatch(&printer, tlist, strcat(root_dir, "/result/"));
-	free(root_dir);
+	
+	tdynamic_dispatch(&printer, tlist);
 	finalize();
 	return EXIT_SUCCESS;
 }
