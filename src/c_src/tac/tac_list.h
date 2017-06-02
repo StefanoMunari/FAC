@@ -37,7 +37,7 @@ typedef struct tac_list{
 } tac_list;
 
 /**
- * append the second list to the first one
+ * append the second list to the first one and destroy the second argument
  * @param tlist the list to which the list to_append is appended
  * @param to_append the list to append
  * @return a pointer corresponding to tlist that represent the new concatenated list

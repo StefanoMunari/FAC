@@ -35,8 +35,12 @@ tac_list * init_tac(tac_list * tlist){
 }
 
 void free_tac(tac_list * tlist){
-	if(!tlist || !tlist->first || !tlist->last)
+	if(!tlist)
 		return;
+	if(!tlist->first || !tlist->last){
+		free(tlist);
+		return;
+	}
 	tac_node * iterator = tlist->last;
 	while(iterator){
 		free_tac_entry(iterator->value);
