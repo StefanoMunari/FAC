@@ -144,14 +144,12 @@ stmt { head=$1; }
 stmt :
 /* empty */ { $$ = NULL; }
 | stmt declaration SEPARATOR {
-
 	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
 	$$ = newSeqNode(subtree, $2->ast_children[1]);
 	free($2);
 }
 | stmt var_assignment SEPARATOR {
 	$$=newSeqNode($1, $2);
-
 }
 | stmt print_var SEPARATOR {
 	$$=newSeqNode($1, $2);
@@ -164,7 +162,7 @@ stmt :
 }
 ;
 
-whilerule:
+whilerule :
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	if($6 == NULL){
 		yyerror("Lines %d-%d: The while body cannot be empty  \n",
@@ -176,7 +174,7 @@ WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 ;
 
 
-ifrule:
+ifrule :
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE
 stmt R_DEL_SCOPE {
 	if($6 == NULL){
@@ -383,7 +381,6 @@ void yyerror(const char * err_msg, ...) {
 }
 
 void finalize(){
-	printf("Clean up..\n");
 	freeSeqNode(head);
 	freeTable();
 	free_tac(tlist);
