@@ -27,12 +27,12 @@ typedef struct fract_t
  */
 typedef enum op_t
 {
-	/* AOP_0 */
+	/* AOP_1 */
 	/** sum */
 	SUM,
 	/** difference */
 	DIFF,
-	/* AOP_1 */
+	/* AOP_0 */
 	/** mutiplication */
 	MULT,
 	/** division */

@@ -6,3 +6,5 @@ fract c = [5|3];
 fract d = [5|3];
 
 c = a + -b + (d*c + b/a);
+
+print(c);
