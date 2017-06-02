@@ -298,8 +298,7 @@ int main(int argc, char * argv[]) {
 
 	fp = fopen(argv[1], "r");
 	if (fp == NULL) {
-	  err_handler(argv[1], FAC_STANDARD_ERROR);
-	  return EXIT_FAILURE;
+		yyerror("parser.y::main: could not open file %s", fp);
 	}
 
 	yyin = fp;
