@@ -15,10 +15,21 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_seq_children = number_of_seq_children;
-
-	node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
-	node->seq_children = (seq_node**)calloc(number_of_seq_children, sizeof(seq_node*));
-
+	
+	if(node->number_of_ast_children == 0){
+		node->ast_children = NULL;
+	}
+	else {
+		node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
+	}
+	
+	if(node->number_of_seq_children == 0){
+		node->seq_children = NULL;
+	}
+	else {
+		node->seq_children = (seq_node**)calloc(number_of_seq_children, sizeof(seq_node*));
+	}
+	
 	va_list args_iterator;
 	va_start(args_iterator, number_of_seq_children);
 	{
@@ -33,10 +44,6 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 		}
 	}
 	va_end(args_iterator);
-	if(node->number_of_ast_children == 0)
-		node->ast_children = NULL;
-	if(node->number_of_seq_children == 0)
-		node->seq_children = NULL;
 	node->data = (record *) astRecord(token, line, op, value);
 	return node;
 }
