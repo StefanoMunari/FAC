@@ -31,10 +31,11 @@ static
 bool h_flag = false;
 char buffer[256];
 
-void print_tac(tac_list * tlist){
-	sprintf(buffer, "%s", "main.c");
+
+void print_tac(tac_list * tlist, char * path){
+	sprintf(buffer, "%s%s", path, "main.c");
 	char * main_name = strdup(buffer);
-	sprintf(buffer, "%s", "fvariables.h");
+	sprintf(buffer, "%s%s", path, "fvariables.h");
 	char * header_name = strdup(buffer);
 
 
