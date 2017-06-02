@@ -59,9 +59,6 @@ int yylex ();
  * @param error message
  */
 void yyerror(const char *, ...);
-
-bool success = true;
-
 %}
 /********************************************
 		TRANSLATION RULES
@@ -79,10 +76,7 @@ bool success = true;
 
 /* Non-Terminal symbols */
 %type <seq_tree> stmt;
-
-
 %type <syntax_tree> declaration;
-
 %type <syntax_tree> expr
 %type <syntax_tree> var_assignment;
 %type <syntax_tree> print_var;
@@ -98,13 +92,15 @@ bool success = true;
 %token L_DEL_EXPR		/* Expression left delimiter */
 %token R_DEL_EXPR		/* Expression right delimiter */
 %token <op> AOP_1	   	/* Arithmetic operation: + and - */
-%token <op> AOP_0	   	/* Arithmetic operation */
+%token <op> AOP_0	   	/* Arithmetic operation: * and / */
 %token <op> TYPE		/* Token for types: fract and bool */
 %token <op> BOP1		/* Boolean operation with arity 1 */
-%token <op> BOP2_0		/* Boolean operation with arity 2: "&&"*/
+%token <op> BOP2_0		/* Boolean operation with arity 2
+							(highest precedence): "&&"*/
 %token <op> BOP2_1		/* Boolean operation with arity 2: "||"*/
 %token <op> BOP2_2		/* Boolean operation with arity 2: "->"*/
-%token <op> BOP2_3		/* Boolean operation with arity 2: "<->","X"*/
+%token <op> BOP2_3		/* Boolean operation with arity 2
+							(lowest precedence): "<->","XOR"*/
 %token <op> RELOP_0		/* Relation operation "<",">=",...: highest precedence*/
 %token <op> RELOP_1		/* Relation operation "==","!=": lowest precedence*/
 %token WHILE			/* token for the while symbol */
@@ -167,7 +163,8 @@ stmt :
 whilerule:
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	if($6 == NULL){
-		yyerror("Lines %d-%d: The while body cannot be empty  \n", @5.first_line, @7.first_line);
+		yyerror("Lines %d-%d: The while body cannot be empty  \n",
+			@5.first_line, @7.first_line);
 	}
 	$$ = astNode(AST_WHILE, @1.first_line, -1, NULL, 1, 1, $3, $6);
 }
@@ -175,19 +172,23 @@ WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 
 
 ifrule:
-IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE stmt R_DEL_SCOPE {
+IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE
+stmt R_DEL_SCOPE {
 	if($6 == NULL){
-		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line, @7.first_line);
+		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line,
+			@7.first_line);
 	}
 	if($10 == NULL){
-		yyerror("Lines %d-%d: The else body cannot be empty  \n", @9.first_line, @11.first_line);
+		yyerror("Lines %d-%d: The else body cannot be empty  \n", @9.first_line,
+			@11.first_line);
 	}
 	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 2, $3, $6, $10);
 }
 |
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 	if($6 == NULL){
-		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line, @7.first_line);
+		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line,
+			@7.first_line);
 	}
 	$$ = astNode(AST_IF, @1.first_line, -1, NULL, 1, 1, $3, $6);
 }
@@ -251,15 +252,19 @@ TYPE ID ASSIGNMENT expr {
 
 	/* Construct the node for the declaration */
 	ast_node * id_node = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
-	ast_node * declaration = astNode(AST_DECLARATION, @1.first_line, -1, NULL, 1, 0, id_node);
+	ast_node * declaration = astNode(AST_DECLARATION, @1.first_line, -1, NULL,
+		1, 0, id_node);
 	declaration->data->type = $1;
 
 	/* Construct the node for the assignment */
-	ast_node * id_node_assignment = astNode(AST_ID, @2.first_line, -1, strdup($2), 0, 0);
-	ast_node * assignment =  astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL, 2, 0, id_node_assignment, $4);
+	ast_node * id_node_assignment = astNode(AST_ID, @2.first_line, -1,
+		strdup($2), 0, 0);
+	ast_node * assignment =  astNode(AST_ASSIGNMENT, @2.first_line, -1, NULL,
+		2, 0, id_node_assignment, $4);
 
 	/* Encode the information in a single ast node */
-	$$ = astNode(AST_DECLARATION, @2.first_line, -1, NULL, 2, 0, declaration, assignment);
+	$$ = astNode(AST_DECLARATION, @2.first_line, -1, NULL, 2, 0, declaration,
+		assignment);
 
 }
 
@@ -284,7 +289,11 @@ int main(int argc, char * argv[]) {
 	FILE * fp = NULL;
 
 	if(argc < 3){
-		fprintf(stderr, "Usage: %s <file-to-compile> <printer>\n Arguments: \n\t <printer> \t IR - Intermediate Representation\n \t\t\t\t C - C representation\n", argv[0]);
+		char * err_msg =
+			"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
+			<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
+			C representation\n";
+		fprintf(stderr, err_msg, argv[0]);
 		return EXIT_FAILURE;
 	}
 
@@ -306,8 +315,14 @@ int main(int argc, char * argv[]) {
 	yyin = fp;
 
 	switch(yyparse()){
-		case 1: yyerror("Input contains a syntax error\n"); return EXIT_FAILURE; break;
-		case 2: yyerror("Memory exhausted\n"); return EXIT_FAILURE; break;
+		case 1:
+			yyerror("Input contains a syntax error\n");
+			return EXIT_FAILURE;
+			break;
+		case 2:
+			yyerror("Memory exhausted\n");
+			return EXIT_FAILURE;
+			break;
 		case 0: /* successful */ break;
 	}
 
@@ -337,7 +352,6 @@ void yyerror(const char * err_msg, ...) {
 	fprintf(stderr, "(Around line %d):\t", yylineno);
 	vfprintf(stderr, err_msg, ap);
 	fputc('\n', stderr);
-	success = false;
 	finalize();
 	exit(EXIT_FAILURE);
 }
