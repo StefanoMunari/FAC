@@ -84,14 +84,14 @@ void dump_symbol_table(FILE * c_header){
 
     for(iterator = table; iterator != NULL; iterator = iterator->hh.next){
 		switch(iterator->type) {
-			case 0:
+			case BOOL_T:
 				fprintf(c_header, "int %s;\n", iterator->id);
 				break;
-			case 1:
+			case FRACT_T:
 				fprintf(c_header, "int %snum;\n", iterator->id);
 				fprintf(c_header, "int %sden;\n", iterator->id);
 				break;
-			default: yyerror("TAC_Printer - wrong symbol table type"); break;
+			default: yyerror("tac_printer_c:dump_symbol_table:wrong symbol table type"); break;
 		}
     }
 }
