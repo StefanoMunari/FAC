@@ -32,20 +32,18 @@ bool h_flag = false;
 char buffer[256];
 
 void print_tac(tac_list * tlist, char * path){
-	char * header_name =
-		malloc(sizeof(char) * (strlen(path) + 1) + sizeof(char) * (strlen("fvariables.h")));
-	char * main_name =
-		malloc(sizeof(char) * (strlen(path) + 1) + sizeof(char) * (strlen("main.c")));
+	sprintf(buffer, "%s%s", path, "main.c");
+	char * main_name = strdup(buffer);
+	sprintf(buffer, "%s%s", path, "fvariables.h");
+	char * header_name = strdup(buffer);
 
-	sprintf(main_name, "%s%s", path, "main.c");
-	sprintf(header_name, "%s%s", path, "fvariables.h");
 
 	FILE * c_main = fopen(main_name, "w");
 	if(c_main == NULL){
 		yyerror("tac_printer_c::print_tac:Could not open %s", main_name);
 	}
 	FILE * c_header = fopen(header_name, "w");
-	if(c_main == NULL){
+	if(c_header == NULL){
 		yyerror("tac_printer_c::print_tac:Could not open %s", header_name);
 	}
 	
@@ -72,7 +70,7 @@ void print_tac(tac_list * tlist, char * path){
 	if(fclose(c_main) != 0){
 		yyerror("tac_printer_c::print_tac:Could not close %s", main_name);
 	}
-	if(fclose(c_main) != 0){
+	if(fclose(c_header) != 0){
 		yyerror("tac_printer_c::print_tac:Could not close %s", header_name);
 	}
 	
@@ -233,7 +231,9 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_main, "t%p = %s %s %s;\n", entry, bool1,  get_operator(entry->op), bool2);
 
 			fprintf(c_header, "int t%p;\n", entry);
-
+			
+			free(bool1);
+			free(bool2);
 			break;
 		}
 		case TAC_XOR:
@@ -242,9 +242,10 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
 			fprintf(c_main, "t%p = %s %s %s; \n", entry, bool1, get_operator(entry->op), bool2);
-
 			fprintf(c_header, "int t%p;\n", entry);
-
+			
+			free(bool1);
+			free(bool2);
 			break;
 		}
 		case TAC_EQ:
@@ -261,7 +262,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-
+			
+			free(numA);
+			free(denA);
+			free(numB);
+			free(denB);
 			break;
 		}
 		case TAC_LT:
@@ -279,7 +284,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-
+			
+			free(numA);
+			free(denA);
+			free(numB);
+			free(denB);
 			break;
 		}
 		case TAC_LABEL:
@@ -297,7 +306,9 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			}
 			break;
 		}
-		default: fprintf(c_main, "Not yet implemented\n");
+		default: 
+			yyerror("tac_printer_c:print_tac_entry:%d operator not recognized", 
+				entry->op);
 	}
 }
 
@@ -326,7 +337,7 @@ char * get_operator(tac_op operator){
 		case TAC_GOTO: return "goto"; break;
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
-		default: yyerror("TAC_Printer - operator not recognized"); break;
+		default: yyerror("tac_pritner:get_operator - operator not recognized"); break;
 	}
 	return "";
 }
@@ -373,7 +384,7 @@ char * getValue(tac_value * tvalue, char * num_or_den) {
 		sprintf(buffer, "t%p%s", tvalue->instruction, num_or_den);
 		return buffer;
 	} else {
-		yyerror("Error in fetching numerator %s %d \n", __FILE__, __LINE__);
+		yyerror("tac_printer_c:getValue:Error in fetching numerator %s %d \n");
 		return "";
 	}
 }
