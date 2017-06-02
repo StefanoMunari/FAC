@@ -101,8 +101,8 @@ bool success = true;
 %token R_DEL_SCOPE		/* Scope right delimiter */
 %token L_DEL_EXPR		/* Expression left delimiter */
 %token R_DEL_EXPR		/* Expression right delimiter */
-%token <op> AOP_0	   	/* Arithmetic operation: + and - */
-%token <op> AOP_1	   	/* Arithmetic operation */
+%token <op> AOP_1	   	/* Arithmetic operation: + and - */
+%token <op> AOP_0	   	/* Arithmetic operation */
 %token <op> TYPE		/* Token for types: fract and bool */
 %token <op> BOP1		/* Boolean operation with arity 1 */
 %token <op> BOP2_0		/* Boolean operation with arity 2: "&&"*/
@@ -130,8 +130,8 @@ bool success = true;
 %left RELOP_1
 %left RELOP_0
 
-%left AOP_0
 %left AOP_1
+%left AOP_0
 
 %right BOP1
 %right USIGN
@@ -198,13 +198,13 @@ IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 ;
 
 expr :
-expr AOP_0 expr {
+expr AOP_1 expr {
 	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
 }
-| expr AOP_1 expr {
+| expr AOP_0 expr {
 	$$ = astNode(AST_AOP2, @2.first_line, $2, NULL , 2, 0,  $1, $3);
 }
-| AOP_0 expr %prec USIGN {
+| AOP_1 expr %prec USIGN {
 	$$ = astNode(AST_AOP1, @1.first_line, $1==SUM?PLUS:MINUS, NULL,  1, 0, $2);
 }
 | L_DEL_EXPR expr R_DEL_EXPR { $$ = $2; }
