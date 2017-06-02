@@ -80,9 +80,9 @@ void print_tac(tac_list * tlist){
 
 void dump_symbol_table(FILE * c_header){
 	symbol_table_entry * iterator;
-    symbol_table_entry * table = getTable();
+	symbol_table_entry * table = getTable();
 
-    for(iterator = table; iterator != NULL; iterator = iterator->hh.next){
+	for(iterator = table; iterator != NULL; iterator = iterator->hh.next){
 		switch(iterator->type) {
 			case BOOL_T:
 				fprintf(c_header, "int %s;\n", iterator->id);
@@ -119,6 +119,8 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 				{
 					char * boolean_value = getBooleanValue(entry->arg1);
 					fprintf(c_main, "%s = %s;\n", id, boolean_value);
+					
+					free(boolean_value);
 					break;
 				}
 				case FRACT_T:
@@ -127,6 +129,9 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 					char * fract_val_den = getValue(entry->arg1, "den");
 					fprintf(c_main, "%snum = %s;\n", id, fract_val_num);
 					fprintf(c_main, "%sden = %s;\n", id, fract_val_den);
+					
+					free(fract_val_num);
+					free(fract_val_den);
 					break;
 				}
 			}
@@ -142,6 +147,9 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
+			
+			free(numA);
+			free(denA);
 			break;
 		}
 		case TAC_SUM:
@@ -166,10 +174,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
 
-			free(denA);
-			free(denB);
+			
 			free(numA);
 			free(numB);
+			free(denA);
+			free(denB);
 
 			break;
 		}
