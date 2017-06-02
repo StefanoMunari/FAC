@@ -41,8 +41,14 @@ void print_tac(tac_list * tlist, char * path){
 	sprintf(header_name, "%s%s", path, "fvariables.h");
 
 	FILE * c_main = fopen(main_name, "w");
+	if(c_main == NULL){
+		yyerror("tac_printer_c::print_tac:Could not open %s", main_name);
+	}
 	FILE * c_header = fopen(header_name, "w");
-
+	if(c_main == NULL){
+		yyerror("tac_printer_c::print_tac:Could not open %s", header_name);
+	}
+	
 	dump_symbol_table(c_header);
 
 	fprintf(c_main, "#include \"fvariables.h\"\n");
@@ -61,9 +67,15 @@ void print_tac(tac_list * tlist, char * path){
 	}
 	fprintf(c_main, "return 0;\n");
 	fprintf(c_main, "}\n");
-
-	fclose(c_header);
-	fclose(c_main);
+	
+	/* Close the files and check if error happens */
+	if(fclose(c_main) != 0){
+		yyerror("tac_printer_c::print_tac:Could not close %s", main_name);
+	}
+	if(fclose(c_main) != 0){
+		yyerror("tac_printer_c::print_tac:Could not close %s", header_name);
+	}
+	
 }
 
 void dump_symbol_table(FILE * c_header){
