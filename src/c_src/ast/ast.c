@@ -58,6 +58,8 @@ void freeastNode(ast_node * node){
 			freeSeqNode(node->seq_children[i]);
 		}
 	}
+	free(node->ast_children);
+	free(node->seq_children);
 	/* Free resources */
 	freeastRecord(node->data);
 	free(node);
