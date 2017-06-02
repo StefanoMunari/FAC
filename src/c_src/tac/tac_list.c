@@ -14,6 +14,7 @@ tac_list * tac_append(tac_list * tlist, tac_list * to_append){
 	to_append->first->prev=tlist->last;
 	tlist->last=to_append->last;
 	to_append->first=tlist->first;
+	free(to_append);
 	return tlist;
 }
 
