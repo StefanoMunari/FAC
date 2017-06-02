@@ -325,7 +325,7 @@ int main(int argc, char * argv[]) {
 	else if (strcmp(argv[2], "IR") == 0)
 		printer = (tprinter) { IR };
 	else{
-	  err_handler("main: invalid printer", FAC_STRING);
+	  yyerror("main: invalid printer");
 	  return EXIT_FAILURE;
 	}
 
