@@ -296,7 +296,6 @@ TYPE ID ASSIGNMENT expr {
 	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
 				declaration, assignment);
 
-
 	free($2);
 }
 ;
@@ -325,8 +324,17 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 int main(int argc, char * argv[]) {
 	option_flag options = get_option(argc, argv);
 
-
 	FILE * fp = NULL;
+
+	if(argc < 3){
+		fprintf(stderr, 
+				"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
+				<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
+				C representation\n"
+				, argv[0]
+		);
+		return EXIT_FAILURE;
+	}
 
 	if (strcmp(argv[2], "C") == 0)
 		printer = (tprinter) { C };
