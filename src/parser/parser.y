@@ -145,6 +145,9 @@ stmt :
 | stmt declaration SEPARATOR {
 	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
 	$$ = newSeqNode(subtree, $2->ast_children[1]);
+	
+	free($2->data);
+	free($2->ast_children);
 	free($2);
 }
 | stmt var_assignment SEPARATOR {
