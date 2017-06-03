@@ -1,6 +1,6 @@
 /**
- * @brief definition of fac_err codes and err_handler function. It deals with the
- * errors encountered during the lexer phase.
+ * @brief definition of fac_err codes and err_handler function. It deals with 
+ * the errors encountered during the lexer phase.
  * @file
  * @author mirko.bez@studenti.unipd.it
  * @author stefano.munari.1@studenti.unipd.it
