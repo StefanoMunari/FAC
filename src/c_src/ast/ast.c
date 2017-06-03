@@ -20,14 +20,14 @@ ast_node * astNode(ast_category token, int line, op_t op, void * value,
 		node->ast_children = NULL;
 	}
 	else {
-		node->ast_children = (ast_node**)calloc(number_of_ast_children, sizeof(ast_node*));
+		node->ast_children = calloc(number_of_ast_children, sizeof(ast_node*));
 	}
 	
 	if(node->number_of_seq_children == 0){
 		node->seq_children = NULL;
 	}
 	else {
-		node->seq_children = (seq_node**)calloc(number_of_seq_children, sizeof(seq_node*));
+		node->seq_children = calloc(number_of_seq_children, sizeof(seq_node*));
 	}
 	
 	va_list args_iterator;
