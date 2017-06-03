@@ -18,7 +18,6 @@ seq_node * newSeqNode(seq_node * left, ast_node * right){
 void freeSeqNode(seq_node * this){
 	if(this == NULL)
 		return;
-	//printf("%s freeing \n\n\n", tokenString(this->right->data->token));
 	freeSeqNode(this->left);
 	freeastNode(this->right);
 	free(this);
