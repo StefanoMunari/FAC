@@ -44,7 +44,9 @@ void free_tac(tac_list * tlist){
 	tac_node * iterator = tlist->last;
 	while(iterator){
 		free_tac_entry(iterator->value);
+		tac_node * old = iterator;
 		iterator = iterator->prev;
+		free(old);
 	}
 	free(tlist);
 }
