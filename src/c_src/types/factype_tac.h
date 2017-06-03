@@ -48,11 +48,13 @@ typedef enum {
 	TAC_PLUS,
 	/** sign minus */
 	TAC_MINUS,
-
-
+	/** print-statement */
 	TAC_PRINT,
+	/** assignment */
 	TAC_ASSIGNMENT,
+	/** label */
 	TAC_LABEL,
+	/** goto instruction */
 	TAC_GOTO,
 	/** artificial label used to make "type checking" on the enum:
 	 * @link  https://stackoverflow.com/questions/9161863/how-to-check-if-an-enum-variable-is-valid
