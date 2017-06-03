@@ -69,7 +69,9 @@ char * get_operator(tac_op operator){
 		case TAC_GOTO: return "goto"; break;
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
-		default: yyerror("TAC_Printer - operator %d not recognized", operator); break;
+		default: 
+			yyerror("TAC_Printer - operator %d not recognized", operator); 
+			break;
 	}
 	return "";
 }
