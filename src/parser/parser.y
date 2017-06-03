@@ -270,9 +270,9 @@ TYPE ID ASSIGNMENT expr {
 	/* Construct the node for the declaration */
 	ast_node * id_node =
 		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
+	
 	ast_node * declaration =
-		astNode(AST_DECLARATION, @1.first_line, operator, NULL,
-		1, 0, id_node);
+		astNode(AST_DECLARATION, @1.first_line, operator, NULL, 1, 0, id_node);
 	declaration->data->type = $1;
 
 	/* Construct the node for the assignment */
@@ -280,11 +280,11 @@ TYPE ID ASSIGNMENT expr {
 		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
 	ast_node * assignment =
 		astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL,
-		2, 0, id_node_assignment, $4);
+				2, 0, id_node_assignment, $4);
 
 	/* Encode the information in a single ast node */
 	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
-		declaration, assignment);
+				declaration, assignment);
 }
 ;
 
@@ -294,7 +294,7 @@ ID ASSIGNMENT expr {
 	ast_node * id_node =
 		astNode(AST_ID, @1.first_line, operator, strdup($1), 0, 0);
 	$$ = astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL, 2, 0, id_node,
-		$3);
+				$3);
 }
 
 print_var :
@@ -312,11 +312,12 @@ int main(int argc, char * argv[]) {
 	FILE * fp = NULL;
 
 	if(argc < 3){
-		char * err_msg =
-			"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
-			<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
-			C representation\n";
-		fprintf(stderr, err_msg, argv[0]);
+		fprintf(stderr, 
+				"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
+				<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
+				C representation\n"
+				, argv[0]
+		);
 		return EXIT_FAILURE;
 	}
 
