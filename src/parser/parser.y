@@ -265,6 +265,7 @@ expr AOP_1 expr {
 	char * identifier = strdup($1);
 	op_t operator = NULL_OP;
 	$$ = astNode(AST_ID, @1.first_line, operator, identifier, 0, 0);
+	free($1);
 }
 ;
 
@@ -290,6 +291,9 @@ TYPE ID ASSIGNMENT expr {
 	/* Encode the information in a single ast node */
 	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
 				declaration, assignment);
+				
+				
+	free($2);
 }
 ;
 
@@ -300,6 +304,7 @@ ID ASSIGNMENT expr {
 		astNode(AST_ID, @1.first_line, operator, strdup($1), 0, 0);
 	$$ = astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL, 2, 0, id_node,
 				$3);
+	free($1);
 }
 
 print_var :
