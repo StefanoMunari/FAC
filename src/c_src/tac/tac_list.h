@@ -40,14 +40,16 @@ typedef struct tac_list{
  * append the second list to the first one and destroy the second argument
  * @param tlist the list to which the list to_append is appended
  * @param to_append the list to append
- * @return a pointer corresponding to tlist that represent the new concatenated list
+ * @return a pointer corresponding to tlist that represents the new concatenated
+ * list
  */
 tac_list* tac_append(tac_list * tlist , tac_list * to_append);
 /**
  * attach a node at the end of the given tac_list
  * @param tlist the list to which the tac_node is appended
  * @param tnode a tac node that has to be appended to the tlist
- * @return a pointer corresponding to tlist that represent the new concatenated list
+ * @return a pointer corresponding to tlist that represents the new concatenated
+ * list
  */
 tac_list * tac_connect(tac_list * tlist, tac_node * tnode);
 #endif /*__TAC_LIST_H__*/

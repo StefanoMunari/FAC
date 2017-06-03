@@ -1,6 +1,6 @@
 /**
- * @brief Interface that provides the function to trasform an AST tree into a list
- * of three address code instructions.
+ * @brief Interface that provides the function to trasform an AST tree into a 
+ * list of three address code instructions.
  * @file
  * @author mirko.bez@studenti.unipd.it
  * @author stefano.munari.1@studenti.unipd.t
