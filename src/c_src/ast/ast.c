@@ -20,26 +20,26 @@ ast_node * astNode(ast_category token, int line, op_t op, void * value,
 		node->ast_children = NULL;
 	}
 	else {
-		node->ast_children = calloc(number_of_ast_children, sizeof(ast_node*));
+		node->ast_children = calloc(node->number_of_ast_children, sizeof(ast_node*));
 	}
 	
 	if(node->number_of_seq_children == 0){
 		node->seq_children = NULL;
 	}
 	else {
-		node->seq_children = calloc(number_of_seq_children, sizeof(seq_node*));
+		node->seq_children = calloc(node->number_of_seq_children, sizeof(seq_node*));
 	}
 	
 	va_list args_iterator;
 	va_start(args_iterator, number_of_seq_children);
 	{
 		int i;
-		for(i = 0; i < number_of_ast_children; ++i) {
+		for(i = 0; i < node->number_of_ast_children; ++i) {
 
 			node->ast_children[i] = va_arg(args_iterator, ast_node*);
 
 		}
-		for(i = 0; i < number_of_seq_children; ++i){
+		for(i = 0; i < node->number_of_seq_children; ++i){
 			node->seq_children[i] = va_arg(args_iterator, seq_node*);
 		}
 	}
@@ -66,8 +66,6 @@ void freeastNode(ast_node * node){
 			freeSeqNode(node->seq_children[i]);
 		}
 	}
-	free(node->ast_children);
-	free(node->seq_children);
 	/* Free resources */
 	freeastRecord(node->data);
 	free(node->ast_children);
