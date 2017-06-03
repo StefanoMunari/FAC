@@ -316,6 +316,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	ast_node * id_node =
 		astNode(AST_ID, @3.first_line, operator, strdup($3), 0, 0);
 	$$ = astNode(AST_PRINT, @1.first_line, operator, NULL, 1, 0, id_node);
+	free($3);
 }
 
 %%
