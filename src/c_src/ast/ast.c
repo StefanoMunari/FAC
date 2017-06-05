@@ -85,12 +85,12 @@ int printastNodeRec(ast_node * node, int instruction, int tab){
 		printf(" %s", (char*)node->data->value);
 	}
 	putchar('\n');
-
-	for(i = 0; i < node->number_of_ast_children; ++i){
-		instruction = printastNodeRec(node->ast_children[i], instruction, tab+1);
+	++tab; //increment tab to print children
+	for(i = 0; i < node->number_of_ast_children; i++){
+		instruction = printastNodeRec(node->ast_children[i], instruction, tab);
 	}
 	for(i = 0; i < node->number_of_seq_children; ++i){
-		instruction = printSeqNodeRec(node->seq_children[i], instruction, tab+1);
+		instruction = printSeqNodeRec(node->seq_children[i], instruction, tab);
 	}
 	return instruction;
 
