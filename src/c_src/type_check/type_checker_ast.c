@@ -15,7 +15,9 @@ bool type_check_ast_node(ast_node * ast) {
 	switch(node->data->token){
 		case AST_DECLARATION:
 			/* Perform a declaration */
-			installID((char*) node->ast_children[0]->data->value, node->data->type);
+			installID((char*) node->ast_children[0]->data->value,
+				node->data->type
+			);
 			break;
 		case AST_ASSIGNMENT:
 		{ 	/* Perform an assignment */
