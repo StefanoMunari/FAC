@@ -25,15 +25,16 @@ tac_list * tac_append(tac_list * tlist, tac_list * to_append){
 tac_list * tac_connect(tac_list * tlist, tac_node * tnode){
 	if(!tlist->last && !tlist->first){
 		/* first node of the TAC list - nothing to connect */
-		tlist->first=tnode;
-		tlist->last=tnode;
+		tlist->first = tnode;
+		tlist->last = tnode;
 	}
 	else{
 		if(tnode == NULL)
 			return tlist;
 		tlist->last->next=tnode;
-		tnode->prev=tlist->last;
-		tlist->last=tlist->last->next;
+		tnode->prev = tlist->last;
+		tlist->last = tlist->last->next;
+		tnode->next = NULL;
 	}
 	return tlist;
 }

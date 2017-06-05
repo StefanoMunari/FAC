@@ -91,7 +91,9 @@ void dump_symbol_table(FILE * c_header){
 				fprintf(c_header, "int %snum;\n", iterator->id);
 				fprintf(c_header, "int %sden;\n", iterator->id);
 				break;
-			default: yyerror("tac_printer_c:dump_symbol_table:wrong symbol table type"); break;
+			default: 
+				yyerror("tac_printer_c:dump_symbol_table:wrong symbol table type"); 
+				break;
 		}
     }
 }
@@ -142,9 +144,13 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
-			fprintf(c_main, "t%pnum = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", numA);
-			fprintf(c_main, "t%pden = %s %s;\n", entry, entry->op==TAC_SUM?"+":"-", denA);
-
+			fprintf(c_main, "t%pnum = %s %s;\n", 
+						entry, entry->op==TAC_SUM?"+":"-", numA
+			);
+			fprintf(c_main, "t%pden = %s %s;\n", 
+						entry, entry->op==TAC_SUM?"+":"-", denA
+			);
+			
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
 			
@@ -219,8 +225,14 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * id = entry->arg0->address->id;
 			switch(getType(id)){
-				case BOOL_T: fprintf(c_main, "printf(\"%cd\\n\", %s);\n", 37, id); break;
-				case FRACT_T: fprintf(c_main, "printf(\"[%%d|%%d]\\n\", %snum, %sden);\n", id, id); break;
+				case BOOL_T: 
+					fprintf(c_main, "printf(\"%cd\\n\", %s);\n", 37, id); 
+					break;
+				case FRACT_T: 
+					fprintf(c_main, "printf(\"[%%d|%%d]\\n\", %snum, %sden);\n", 
+								id, id
+					); 
+					break;
 			}
 			break;
 		}
@@ -239,7 +251,10 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
-			fprintf(c_main, "t%p = %s %s %s;\n", entry, bool1,  get_operator(entry->op), bool2);
+			fprintf(c_main, 
+						"t%p = %s %s %s;\n", 
+						entry, bool1, get_operator(entry->op), bool2
+			);
 
 			fprintf(c_header, "int t%p;\n", entry);
 			
@@ -252,7 +267,9 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
-			fprintf(c_main, "t%p = %s %s %s; \n", entry, bool1, get_operator(entry->op), bool2);
+			fprintf(c_main, "t%p = %s %s %s; \n", 
+						entry, bool1, get_operator(entry->op), bool2
+			);
 			fprintf(c_header, "int t%p;\n", entry);
 			
 			free(bool1);
@@ -348,7 +365,9 @@ char * get_operator(tac_op operator){
 		case TAC_GOTO: return "goto"; break;
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
-		default: yyerror("tac_pritner:get_operator - operator not recognized"); break;
+		default: 
+			yyerror("tac_pritner:get_operator - operator not recognized");
+			break;
 	}
 	return "";
 }

@@ -34,7 +34,7 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 	va_start(args_iterator, number_of_seq_children);
 	{
 		int i;
-		for(i = 0; i < number_of_ast_children; ++i) {
+		for(i = 0; i < >number_of_ast_children; ++i) {
 
 			node->ast_children[i] = va_arg(args_iterator, ast_node*);
 
@@ -54,6 +54,7 @@ ast_node * astNode(unsigned int token, int line, op_t op, void * value,
 void freeastNode(ast_node * node){
 	if(node == NULL)
 		return;
+	
 	{
 		int i;
 		/* Free children */
@@ -65,10 +66,10 @@ void freeastNode(ast_node * node){
 			freeSeqNode(node->seq_children[i]);
 		}
 	}
-	free(node->ast_children);
-	free(node->seq_children);
 	/* Free resources */
 	freeastRecord(node->data);
+	free(node->ast_children);
+	free(node->seq_children);
 	free(node);
 }
 

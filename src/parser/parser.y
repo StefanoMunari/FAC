@@ -145,6 +145,9 @@ stmt :
 | stmt declaration SEPARATOR {
 	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
 	$$ = newSeqNode(subtree, $2->ast_children[1]);
+	
+	free($2->data);
+	free($2->ast_children);
 	free($2);
 }
 | stmt var_assignment SEPARATOR {
@@ -260,6 +263,7 @@ expr AOP_1 expr {
 	char * identifier = strdup($1);
 	op_t operator = NULL_OP;
 	$$ = astNode(AST_ID, @1.first_line, operator, identifier, 0, 0);
+	free($1);
 }
 ;
 
@@ -270,9 +274,9 @@ TYPE ID ASSIGNMENT expr {
 	/* Construct the node for the declaration */
 	ast_node * id_node =
 		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
+	
 	ast_node * declaration =
-		astNode(AST_DECLARATION, @1.first_line, operator, NULL,
-		1, 0, id_node);
+		astNode(AST_DECLARATION, @1.first_line, operator, NULL, 1, 0, id_node);
 	declaration->data->type = $1;
 
 	/* Construct the node for the assignment */
@@ -280,11 +284,14 @@ TYPE ID ASSIGNMENT expr {
 		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
 	ast_node * assignment =
 		astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL,
-		2, 0, id_node_assignment, $4);
+				2, 0, id_node_assignment, $4);
 
 	/* Encode the information in a single ast node */
 	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
-		declaration, assignment);
+				declaration, assignment);
+				
+				
+	free($2);
 }
 ;
 
@@ -294,7 +301,8 @@ ID ASSIGNMENT expr {
 	ast_node * id_node =
 		astNode(AST_ID, @1.first_line, operator, strdup($1), 0, 0);
 	$$ = astNode(AST_ASSIGNMENT, @2.first_line, operator, NULL, 2, 0, id_node,
-		$3);
+				$3);
+	free($1);
 }
 
 print_var :
@@ -303,6 +311,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 	ast_node * id_node =
 		astNode(AST_ID, @3.first_line, operator, strdup($3), 0, 0);
 	$$ = astNode(AST_PRINT, @1.first_line, operator, NULL, 1, 0, id_node);
+	free($3);
 }
 
 %%
@@ -312,11 +321,12 @@ int main(int argc, char * argv[]) {
 	FILE * fp = NULL;
 
 	if(argc < 3){
-		char * err_msg =
-			"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
-			<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
-			C representation\n";
-		fprintf(stderr, err_msg, argv[0]);
+		fprintf(stderr, 
+				"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
+				<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
+				C representation\n"
+				, argv[0]
+		);
 		return EXIT_FAILURE;
 	}
 
