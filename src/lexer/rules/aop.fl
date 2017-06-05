@@ -1,4 +1,4 @@
-{SUM}	{ setYYlloc(); yylval.op = SUM; return (AOP_1); }
-{DIFF}	{ setYYlloc(); yylval.op = DIFF; return (AOP_1); }
-{MULT}	{ setYYlloc(); yylval.op = MULT; return (AOP_0); }
-{DIV}	{ setYYlloc(); yylval.op = DIV; return (AOP_0); }
+{SUM}	{ setYYlloc(); yylval.op = SUM; return AOP_1; }
+{DIFF}	{ setYYlloc(); yylval.op = DIFF; return AOP_1; }
+{MULT}	{ setYYlloc(); yylval.op = MULT; return AOP_0; }
+{DIV}	{ setYYlloc(); yylval.op = DIV; return AOP_0; }

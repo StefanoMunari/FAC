@@ -1,7 +1,7 @@
 \n					{ yylloc.first_column = yylloc.last_column = 0; }
 {SPACE}*			{ yylloc.first_column = yylloc.last_column; yylloc.last_column = yyleng; /* get rid of spaces */ }
-{SEPARATOR}			{ setYYlloc();  return (SEPARATOR); }
-{L_DEL_EXPR}		{ setYYlloc();  return (L_DEL_EXPR); }
-{R_DEL_EXPR}		{ setYYlloc();  return (R_DEL_EXPR); }
-{L_DEL_SCOPE}		{ setYYlloc();  return (L_DEL_SCOPE); }
-{R_DEL_SCOPE}		{ setYYlloc();  return (R_DEL_SCOPE); }
+{SEPARATOR}			{ setYYlloc();  return SEPARATOR; }
+{L_DEL_EXPR}		{ setYYlloc();  return L_DEL_EXPR; }
+{R_DEL_EXPR}		{ setYYlloc();  return R_DEL_EXPR; }
+{L_DEL_SCOPE}		{ setYYlloc();  return L_DEL_SCOPE; }
+{R_DEL_SCOPE}		{ setYYlloc();  return R_DEL_SCOPE; }

@@ -1,13 +1,13 @@
-{NOT}	{ setYYlloc(); yylval.op = NOT; return (BOP1); }
-{AND}	{ setYYlloc(); yylval.op = AND; return (BOP2_0); }
-{OR}	{ setYYlloc(); yylval.op = OR; return (BOP2_1); }
-{IMPLY}	{ setYYlloc(); yylval.op = IMPLY; return (BOP2_2); }
-{XOR}	{ setYYlloc(); yylval.op = XOR; return (BOP2_3); }
-{IFF}	{ setYYlloc(); yylval.op = IFF; return (BOP2_3); }
-{LT}	{ setYYlloc(); yylval.op = LT; return (RELOP_0); }
-{GT}	{ setYYlloc(); yylval.op = GT; return (RELOP_0); }
-{LEQ}	{ setYYlloc(); yylval.op = LEQ; return (RELOP_0); }
-{GEQ}	{ setYYlloc(); yylval.op = GEQ; return (RELOP_0); }
-{EQ}	{ setYYlloc(); yylval.op = EQ; return (RELOP_1); }
-{NEQ}	{ setYYlloc(); yylval.op = NEQ; return (RELOP_1); }
-{BOOL}	{ setYYlloc(); yylval.bval = ((yytext[0] == 't') ? true : false); return (BOOL); }
+{NOT}	{ setYYlloc(); yylval.op = NOT; return BOP1; }
+{AND}	{ setYYlloc(); yylval.op = AND; return BOP2_0; }
+{OR}	{ setYYlloc(); yylval.op = OR; return BOP2_1; }
+{IMPLY}	{ setYYlloc(); yylval.op = IMPLY; return BOP2_2; }
+{XOR}	{ setYYlloc(); yylval.op = XOR; return BOP2_3; }
+{IFF}	{ setYYlloc(); yylval.op = IFF; return BOP2_3; }
+{LT}	{ setYYlloc(); yylval.op = LT; return RELOP_0; }
+{GT}	{ setYYlloc(); yylval.op = GT; return RELOP_0; }
+{LEQ}	{ setYYlloc(); yylval.op = LEQ; return RELOP_0; }
+{GEQ}	{ setYYlloc(); yylval.op = GEQ; return RELOP_0; }
+{EQ}	{ setYYlloc(); yylval.op = EQ; return RELOP_1; }
+{NEQ}	{ setYYlloc(); yylval.op = NEQ; return RELOP_1; }
+{BOOL}	{ setYYlloc(); yylval.bval = (yytext[0] == 't') ? true : false; return BOOL; }
