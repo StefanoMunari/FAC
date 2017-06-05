@@ -104,7 +104,8 @@ bool type_check_bool(ast_node * node){
 			bool ret = type_check_bool(node->ast_children[0]) &&
 					   type_check_bool(node->ast_children[1]);
 			if(!ret){
-				yyerror("Line %d: operator %s can be used only on bool expressions", 
+				yyerror("type_checker_ast_expr::type_check_bool:Line %d: \
+					operator %s can be used only on bool expressions", 
 					node->data->line,
 					node->data->op==IFF?"<->":"XOR"
 				);
@@ -121,16 +122,20 @@ bool type_check_bool(ast_node * node){
 				switch(node->data->op){ 
 					case EQ:
 					case NEQ:
-						yyerror("Line %d: %s can only be used on fract variables.\
-								If lhs and rhs are bool use %s.\n", 
-								node->data->line, 
-								node->data->op==EQ?"==":"<>",
-								node->data->op==EQ?"<->":"XOR"
+						yyerror("type_checker_ast_expr::type_check_bool:\
+							Line %d:\ %s can only be used on fract variables.\
+							If lhs and rhs are bool use %s.\n", 
+							node->data->line, 
+							node->data->op==EQ?"==":"<>",
+							node->data->op==EQ?"<->":"XOR"
 						);
 						break; 
 					default:
-						yyerror("Line %d: relop can be used only on fract variables.", 
-					node->data->line);
+						yyerror("type_checker_ast_expr::type_check_bool: \
+							Line %d: relop can be used only on fract \
+							variables.", 
+							node->data->line
+						);
 				
 				}
 			}
