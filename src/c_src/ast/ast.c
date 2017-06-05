@@ -34,7 +34,7 @@ ast_node * astNode(ast_category token, int line, op_t op, void * value,
 	va_start(args_iterator, number_of_seq_children);
 	{
 		int i;
-		for(i = 0; i < >number_of_ast_children; ++i) {
+		for(i = 0; i < number_of_ast_children; ++i) {
 
 			node->ast_children[i] = va_arg(args_iterator, ast_node*);
 
