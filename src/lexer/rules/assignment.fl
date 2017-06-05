@@ -1,1 +1,1 @@
-{ASSIGNMENT}	{ setYYlloc(); return (ASSIGNMENT); }
+{ASSIGNMENT}	{ setYYlloc(); return ASSIGNMENT; }
