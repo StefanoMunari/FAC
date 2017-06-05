@@ -84,7 +84,9 @@ void print_value(tac_value * value){
 		if(value->address->id != NULL)
 			printf("%s",value->address->id);
 		else {
-			yyerror("Entry in symbol table is not initialized");
+			yyerror("tac_printer_ir::print_value:\
+					Entry in symbol table is not initialized"
+			);
 			exit(EXIT_FAILURE);
 		}
 	}
