@@ -215,8 +215,7 @@ tac_list * tac_ast_node(ast_node * node){
 				tlist = tac_connect(tlist, end_else_body);
 			} else {
 				yyerror("tac_ast_node::tac_ast_node:\
-						IF with more than two children, not yet supported", 
-						s
+						IF with more than two children, not yet supported"
 				);
 
 			}
