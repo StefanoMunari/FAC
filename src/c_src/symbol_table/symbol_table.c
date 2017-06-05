@@ -29,7 +29,10 @@ symbol_table_entry * lookupID(char* id) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
-		yyerror("Failed lookup: The variable %s is not yet installed", id);
+		yyerror("symbol_table::lookupID: \
+				Failed lookup: The variable %s is not yet installed",
+				id
+		);
 	}
 	return e;
 }
@@ -38,7 +41,10 @@ type_t getType(char * id) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
-		yyerror("Failed lookup: The variable %s is not yet installed", id);
+		yyerror("symbol_table::getType:\
+				Failed lookup: The variable %s is not yet installed", 
+				id
+		);
 	}
 	return e->type;
 }
@@ -49,7 +55,8 @@ void setValue(char * id, void * value) {
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
 		yyerror(
-			"The variable cannot be assigned because %s is not yet installed",
+			"symbol_table::setValue::\
+			The variable cannot be assigned because %s is not yet installed",
 			id
 		);
 	}
