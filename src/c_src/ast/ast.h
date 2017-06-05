@@ -61,7 +61,7 @@ int printastNode(ast_node * root);
  * @param node the root of the ast tree to print
  * @param instruction the incoming instruction id
  * @param tab the indentation, i.e. the number of '\t' characters
- * to prepend to the real print
+ * to prepend to the real content's print
  * @return an integer that corresponds to the next instruction id
  */
 int printastNodeRec(ast_node * node, int instruction, int tab);
