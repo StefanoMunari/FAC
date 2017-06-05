@@ -49,7 +49,8 @@ typedef enum {
 	AST_IF,
 	/** artificial label used to make "type checking" on the enum:
 	 * @link 
-	 * https://stackoverflow.com/questions/9161863/how-to-check-if-an-enum-variable-is-valid
+	 * https://stackoverflow.com/questions/9161863/
+	 * how-to-check-if-an-enum-variable-is-valid
 	 */
 	AST_END_MARKER
 } ast_category;
