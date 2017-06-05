@@ -92,7 +92,9 @@ void dump_symbol_table(FILE * c_header){
 				fprintf(c_header, "int %sden;\n", iterator->id);
 				break;
 			default: 
-				yyerror("tac_printer_c:dump_symbol_table:wrong symbol table type"); 
+				yyerror("tac_printer_c::dump_symbol_table:\
+						wrong symbol table type"
+				); 
 				break;
 		}
     }
