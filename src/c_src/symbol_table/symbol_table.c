@@ -48,8 +48,10 @@ void setValue(char * id, void * value) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
-		yyerror("The variable cannot be assigned because %s is not yet installed",
-					id);
+		yyerror(
+			"The variable cannot be assigned because %s is not yet installed",
+			id
+		);
 	}
 }
 
