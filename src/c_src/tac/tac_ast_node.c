@@ -31,7 +31,9 @@ tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination);
 */
 tac_list * tac_ast_node(ast_node * node){
 	if(node == NULL || node->data == NULL){
-		yyerror("TAC - malformed AST, null node found");
+		yyerror("tac_ast_node::tac_ast_node: \
+				TAC - malformed AST, null node found"
+		);
 		exit(EXIT_FAILURE);
 	}
 	/* Create an empty tlist */
@@ -175,7 +177,8 @@ tac_list * tac_ast_node(ast_node * node){
 					tac_node * negateCondition = _tac_node();
 					negateCondition->value->op = TAC_NOT;
 					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
-					negateCondition->value->arg0->instruction = bexpr->last->value;
+					negateCondition->value->arg0->instruction = 
+						bexpr->last->value;
 					tlist = tac_append(tlist, bexpr);
 					tlist = tac_connect(tlist, negateCondition);
 				}
@@ -196,7 +199,9 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_node * start_else_body = _tac_label();
 				tac_node * end_else_body = _tac_label();
 				tac_node * goto_start_else_body = 
-						_tac_goto_conditioned(tlist->last->value, start_else_body);
+							_tac_goto_conditioned(tlist->last->value, 
+													start_else_body
+							);
 				tac_list * if_body = generate_tac(node->seq_children[0]);
 				tac_node * goto_end_else_body = 
 						_tac_goto_unconditioned(end_else_body);
@@ -209,10 +214,11 @@ tac_list * tac_ast_node(ast_node * node){
 				tlist = tac_append(tlist, else_body);
 				tlist = tac_connect(tlist, end_else_body);
 			} else {
-				char * s = malloc(sizeof(char) * strlen(__FILE__) + 1);
-				strcpy(s, __FILE__);
-				yyerror("%s: IF with more than two children, not yet supported", s);
-				free(s);
+				yyerror("tac_ast_node::tac_ast_node:\
+						IF with more than two children, not yet supported", 
+						s
+				);
+
 			}
 			return tlist;
 			break;
@@ -225,7 +231,7 @@ tac_list * tac_ast_node(ast_node * node){
 		case AST_DECLARATION:
 			return tlist;
 		default:
-			yyerror("TAC - token not recognized");
+			yyerror("tac_ast_node::tac_ast_node: token not recognized");
 			exit(EXIT_FAILURE);
 	}
 }
