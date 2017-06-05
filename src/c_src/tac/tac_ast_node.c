@@ -199,7 +199,9 @@ tac_list * tac_ast_node(ast_node * node){
 				tac_node * start_else_body = _tac_label();
 				tac_node * end_else_body = _tac_label();
 				tac_node * goto_start_else_body = 
-						_tac_goto_conditioned(tlist->last->value, start_else_body);
+							_tac_goto_conditioned(tlist->last->value, 
+													start_else_body
+							);
 				tac_list * if_body = generate_tac(node->seq_children[0]);
 				tac_node * goto_end_else_body = 
 						_tac_goto_unconditioned(end_else_body);
