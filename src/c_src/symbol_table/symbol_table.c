@@ -11,7 +11,7 @@ void installID(char* id, type_t type) {
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e != NULL) { /* ID ALREADY INSTALLED -> ERROR */
-		yyerror("The id %s is already installed", id);
+		yyerror("symol_table::installID:The id %s is already installed", id);
 	}
 	e = (symbol_table_entry*)malloc(sizeof(symbol_table_entry));
 	//strlen does not take into account '\0'
@@ -25,7 +25,6 @@ void installID(char* id, type_t type) {
 
 
 symbol_table_entry * lookupID(char* id) {
-	printf("symbol table %s\n", id);
 	symbol_table_entry * e;
 	HASH_FIND_STR(symbol_table, id, e);
 	if(e == NULL){
