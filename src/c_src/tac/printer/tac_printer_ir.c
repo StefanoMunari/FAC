@@ -1,10 +1,11 @@
 #include "tac_printer.h"
 #include "../tac_list.h"
+#include "../../utils/get_option.h"
 #include "../../types/factype_tac.h"
 #include <stdio.h>
 
 static
-void print_tac(tac_list *);
+void print_tac(tac_list *, char * out_dir, char * out_file);
 
 const struct _tprinter_vtable IR[] = { { print_tac } };
 
@@ -16,7 +17,7 @@ char * get_operator(tac_op operator);
 static
 void print_value(tac_value * value);
 
-void print_tac(tac_list * tlist){
+void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	printf("======= IR: Print the 3AC =======\n");
 	tac_node * iterator = tlist->first;
 	int i=0;

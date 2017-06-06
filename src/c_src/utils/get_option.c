@@ -1,6 +1,6 @@
 #include "get_option.h"
 
-
+extern void yyerror(const char *, ...);
 
 /** Struct containing the long options */
 static struct option long_options[] = {
@@ -91,6 +91,10 @@ option_flags get_option(int argc,  char * argv[]){
 				break;
 		}
 	}
+	if(options.output_dir == NULL)
+		options.output_dir = strdup("./");
+	if(options.output_main_file == NULL)
+		options.output_main_file = strdup("main.c");
 	return options;
 }
 

@@ -9,8 +9,10 @@
 #define __TAC_PRINTER_H__
 #include "../tac_list.h"
 
+struct option_flags;
+
 typedef struct _tprinter_vtable {
-   void (*print_tac)(tac_list *);
+   void (*print_tac)(tac_list *, char *, char *);
 } _tprinter_vtable;
 
 typedef struct tprinter {
@@ -18,9 +20,10 @@ typedef struct tprinter {
 } tprinter;
 
 static inline
-void tdynamic_dispatch(struct tprinter* this, tac_list* parameter)
+void tdynamic_dispatch(struct tprinter* this, tac_list* parameter,
+	 char * out_dir, char * out_file)
 {
-	this->_vtable->print_tac(parameter);
+	(*this)._vtable->print_tac(parameter, out_dir, out_file);
 }
 
 extern void yyerror(const char *, ...);

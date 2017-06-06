@@ -1,11 +1,12 @@
 #include "tac_printer.h"
 #include "../tac_list.h"
+#include "../../utils/get_option.h"
 #include "../../symbol_table/symbol_table.h"
 #include <stdio.h>
 #include <stdbool.h>
 
 static
-void print_tac(tac_list *);
+void print_tac(tac_list *, char * out_dir, char * out_file);
 
 const struct _tprinter_vtable C[] = { { print_tac } };
 
@@ -29,13 +30,20 @@ char * getBooleanValue(tac_value *);
 
 static
 bool h_flag = false;
-char buffer[256];
 
-void print_tac(tac_list * tlist){
-	sprintf(buffer, "%s", "main.c");
-	char * main_name = strdup(buffer);
-	sprintf(buffer, "%s", "fvariables.h");
-	char * header_name = strdup(buffer);
+void print_tac(tac_list * tlist, char * out_dir, char * out_file){
+
+	if(out_dir == NULL)
+		yyerror("tac_printer_c::print_tac:Invalid output directory");
+	if(out_file == NULL)
+		yyerror("tac_printer_c::print_tac:Invalid output file");
+
+	char buffer0[sizeof(char) * (strlen(out_dir) + strlen(out_file))];
+	sprintf(buffer0, "%s%s", out_dir, out_file);
+	char * main_name = strdup(buffer0);
+	char buffer1[sizeof(char) * (strlen(out_dir) + strlen("fvariables.h"))];
+	sprintf(buffer1, "%s%s",  out_dir, "fvariables.h");
+	char * header_name = strdup(buffer1);
 
 
 	FILE * c_main = fopen(main_name, "w");
@@ -46,7 +54,7 @@ void print_tac(tac_list * tlist){
 	if(c_header == NULL){
 		yyerror("tac_printer_c::print_tac:Could not open %s", header_name);
 	}
-	
+
 	dump_symbol_table(c_header);
 
 	fprintf(c_main, "#include \"fvariables.h\"\n");
@@ -65,7 +73,7 @@ void print_tac(tac_list * tlist){
 	}
 	fprintf(c_main, "return 0;\n");
 	fprintf(c_main, "}\n");
-	
+
 	/* Close the files and check if error happens */
 	if(fclose(c_main) != 0){
 		yyerror("tac_printer_c::print_tac:Could not close %s", main_name);
@@ -75,7 +83,7 @@ void print_tac(tac_list * tlist){
 	}
 	free(main_name);
 	free(header_name);
-	
+
 }
 
 void dump_symbol_table(FILE * c_header){
@@ -91,10 +99,10 @@ void dump_symbol_table(FILE * c_header){
 				fprintf(c_header, "int %snum;\n", iterator->id);
 				fprintf(c_header, "int %sden;\n", iterator->id);
 				break;
-			default: 
+			default:
 				yyerror("tac_printer_c::dump_symbol_table:\
 						wrong symbol table type"
-				); 
+				);
 				break;
 		}
     }
@@ -123,7 +131,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 				{
 					char * boolean_value = getBooleanValue(entry->arg1);
 					fprintf(c_main, "%s = %s;\n", id, boolean_value);
-					
+
 					free(boolean_value);
 					break;
 				}
@@ -133,7 +141,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 					char * fract_val_den = getValue(entry->arg1, "den");
 					fprintf(c_main, "%snum = %s;\n", id, fract_val_num);
 					fprintf(c_main, "%sden = %s;\n", id, fract_val_den);
-					
+
 					free(fract_val_num);
 					free(fract_val_den);
 					break;
@@ -146,16 +154,16 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * numA = getValue(entry->arg0, "num");
 			char * denA = getValue(entry->arg0, "den");
-			fprintf(c_main, "t%pnum = %s %s;\n", 
+			fprintf(c_main, "t%pnum = %s %s;\n",
 						entry, entry->op==TAC_SUM?"+":"-", numA
 			);
-			fprintf(c_main, "t%pden = %s %s;\n", 
+			fprintf(c_main, "t%pden = %s %s;\n",
 						entry, entry->op==TAC_SUM?"+":"-", denA
 			);
-			
+
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
-			
+
 			free(numA);
 			free(denA);
 			break;
@@ -182,7 +190,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_header, "int t%pden;\n", entry);
 			print_h_vars(c_header);
 
-			
+
 			free(numA);
 			free(numB);
 			free(denA);
@@ -227,13 +235,13 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * id = entry->arg0->address->id;
 			switch(getType(id)){
-				case BOOL_T: 
-					fprintf(c_main, "printf(\"%cd\\n\", %s);\n", 37, id); 
+				case BOOL_T:
+					fprintf(c_main, "printf(\"%cd\\n\", %s);\n", 37, id);
 					break;
-				case FRACT_T: 
-					fprintf(c_main, "printf(\"[%%d|%%d]\\n\", %snum, %sden);\n", 
+				case FRACT_T:
+					fprintf(c_main, "printf(\"[%%d|%%d]\\n\", %snum, %sden);\n",
 								id, id
-					); 
+					);
 					break;
 			}
 			break;
@@ -253,13 +261,13 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
-			fprintf(c_main, 
-						"t%p = %s %s %s;\n", 
+			fprintf(c_main,
+						"t%p = %s %s %s;\n",
 						entry, bool1, get_operator(entry->op), bool2
 			);
 
 			fprintf(c_header, "int t%p;\n", entry);
-			
+
 			free(bool1);
 			free(bool2);
 			break;
@@ -269,11 +277,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		{
 			char * bool1 = getBooleanValue(entry->arg0);
 			char * bool2 = getBooleanValue(entry->arg1);
-			fprintf(c_main, "t%p = %s %s %s; \n", 
+			fprintf(c_main, "t%p = %s %s %s; \n",
 						entry, bool1, get_operator(entry->op), bool2
 			);
 			fprintf(c_header, "int t%p;\n", entry);
-			
+
 			free(bool1);
 			free(bool2);
 			break;
@@ -292,7 +300,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			
+
 			free(numA);
 			free(denA);
 			free(numB);
@@ -314,7 +322,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%p;\n", entry);
 			print_h_vars(c_header);
-			
+
 			free(numA);
 			free(denA);
 			free(numB);
@@ -336,8 +344,8 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			}
 			break;
 		}
-		default: 
-			yyerror("tac_printer_c:print_tac_entry:%d operator not recognized", 
+		default:
+			yyerror("tac_printer_c:print_tac_entry:%d operator not recognized",
 				entry->op);
 	}
 }
@@ -367,7 +375,7 @@ char * get_operator(tac_op operator){
 		case TAC_GOTO: return "goto"; break;
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
-		default: 
+		default:
 			yyerror("tac_pritner:get_operator - operator not recognized");
 			break;
 	}
