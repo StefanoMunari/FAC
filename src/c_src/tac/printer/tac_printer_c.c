@@ -329,7 +329,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_GOTO:
 		{
 			if(entry->arg1 != NULL){ //Conditional goto
-				fprintf(c_main, "if (t%p) goto L%p;\n", entry->arg0->instruction,
+				fprintf(c_main, "if(t%p) goto L%p;\n", entry->arg0->instruction,
 				entry->arg1->instruction);
 			} else {
 				fprintf(c_main, "goto L%p;\n", entry->arg0->instruction);
