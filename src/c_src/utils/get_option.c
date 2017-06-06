@@ -93,7 +93,7 @@ option_flags get_option(int argc,  char * argv[]){
 		}
 	}
 	if(options.output_dir == NULL)
-		options.output_dir = strdup("");
+		options.output_dir = strdup(".");
 	if(options.output_main_file == NULL)
 		options.output_main_file = strdup("main.c");
 	return options;
