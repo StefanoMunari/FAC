@@ -7,7 +7,7 @@
 #include "../types/factype.h"
 #include "../../lib/uthash.h"
 
-/** Struct contained in the symbol table */
+/** @brief Struct contained in the symbol table */
 typedef struct symbol_table_entry {
 	/** the key */
 	char * id;

@@ -20,7 +20,7 @@
 
 
 /**
- * A value of a TAC entry, i.e. one argument of an indirect triple entry
+ * @brief A value of a TAC entry, i.e. one argument of an indirect triple entry
  */
 typedef struct tac_value{
 	/** boolean constant */
@@ -34,7 +34,7 @@ typedef struct tac_value{
 } tac_value;
 
 /**
- * A TAC entry represented as a triple (operator, argument0, argument1)
+ * @brief A TAC entry represented as a triple (operator, argument0, argument1)
  */
 typedef struct tac_entry{
 	/** the three address code operation (+, -, ...) */
