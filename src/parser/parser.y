@@ -378,9 +378,9 @@ int main(int argc, char * argv[]) {
 
 	tlist = generate_tac(head);
 
-
 	tdynamic_dispatch(&options.printer, tlist);
 
+	/* Clean up memory */
 	finalize();
 	free_option_flag(options);
 	return EXIT_SUCCESS;
