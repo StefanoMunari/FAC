@@ -55,7 +55,7 @@ void finalize();
 *
 * @brief recognize tokens from the input stream and returns them to the Parser
 */
-int yylex ();
+int yylex();
 /**
  * Error handler of BISON
  * @brief handle errors detected by the parser
@@ -357,7 +357,8 @@ int main(int argc, char * argv[]) {
 	tlist = generate_tac(head);
 
 
-	tdynamic_dispatch(&options.printer, tlist);
+	tdynamic_dispatch(&options.printer, tlist, options.output_dir,
+		options.output_main_file);
 
 	/* Clean up memory */
 	finalize();
