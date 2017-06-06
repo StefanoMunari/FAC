@@ -54,8 +54,5 @@ bool type_check_ast_node(ast_node * ast) {
 					tokenString(node->data->token), node->data->line);
 		}
 	}
-	// DEBUG : %TODO - remove
-	if(result == true)
-		printf("Type checking successful!\n");
 	return result;
 }
