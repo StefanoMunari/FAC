@@ -34,7 +34,7 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 			break;
 		default:
 		{
-			fprintf(stderr, 
+			fprintf(stderr,
 					"Line %d: Type not recognized by type_checker\n",
 					ast->data->line
 			);
@@ -43,7 +43,7 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 	}
 	if(!result){
 		fprintf(stderr,
-				"Type Mismatch on line %d: Expected type %s!\n", 
+				"Type Mismatch on line %d: Expected type %s!\n",
 				ast->data->line, type==FRACT_T?"FRACT":"BOOL"
 		);
 		printastNode(ast);
@@ -89,38 +89,38 @@ bool type_check_bool(ast_node * node){
 					   type_check_bool(node->ast_children[1]);
 			if(!ret){
 				yyerror("type_checker_ast_expr::type_check_bool:Line %d: \
-					operator %s can be used only on bool expressions", 
+					operator %s can be used only on bool expressions",
 					node->data->line,
 					node->data->op==IFF?"<->":"XOR"
 				);
 			}
-			
+
 			return ret;
 		}
 		case AST_RELOP:
 		{
 			bool ret = type_check_fract(node->ast_children[0]) &&
 				type_check_fract(node->ast_children[1]);
-			
+
 			if(!ret){
-				switch(node->data->op){ 
+				switch(node->data->op){
 					case EQ:
 					case NEQ:
 						yyerror("type_checker_ast_expr::type_check_bool:\
 							Line %d: %s can only be used on fract variables.\
-							If lhs and rhs are bool use %s.\n", 
-							node->data->line, 
+							If lhs and rhs are bool use %s.\n",
+							node->data->line,
 							node->data->op==EQ?"==":"<>",
 							node->data->op==EQ?"<->":"XOR"
 						);
-						break; 
+						break;
 					default:
 						yyerror("type_checker_ast_expr::type_check_bool: \
 							Line %d: relop can be used only on fract \
-							variables.", 
+							variables.",
 							node->data->line
 						);
-				
+
 				}
 			}
 			return ret;

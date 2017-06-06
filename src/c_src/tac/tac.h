@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief Three Address Code (TAC) - translate an AST to the corresponding
- *	Three Address Code (TAC) representation using indirect triples. 
+ *	Three Address Code (TAC) representation using indirect triples.
  * @details It is a
  * 	linearized representation of the AST which enables code optimization.
  *	Indeed the list of triples is stored as a doubly linked list, so the

@@ -13,7 +13,7 @@ void free_tac_entry(tac_entry * entry);
 
 tac_list * generate_tac(seq_node * node){
 	tac_list * tlist = calloc(1, sizeof(tac_list));
-	if(!node->left) 
+	if(!node->left)
 		init_tac(tlist);
 	else {
 		tac_list * help = generate_tac(node->left);

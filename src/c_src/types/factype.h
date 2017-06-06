@@ -1,5 +1,5 @@
 /**
- * @brief definition of the fract type, internal representation of the 
+ * @brief definition of the fract type, internal representation of the
  * operations, and the internal representation of the type of the variables
  *
  * @file
@@ -70,7 +70,7 @@ typedef enum op_t
 	/** sign minus */
 	MINUS,
 	/** artificial label used to make "type checking" on the enum, as suggested
-	 * by this 
+	 * by this
 	 * <a href="https://stackoverflow.com/questions/9161863/
 	 * how-to-check-if-an-enum-variable-is-valid"> stackoverflow link </a>
 	 */
