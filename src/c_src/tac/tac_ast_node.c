@@ -23,21 +23,19 @@ static
 tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination);
 
 /**
-* @brief builds the 3AC list of triples from the last to the first node by
-*	traversing the AST bottom-up
+* @brief builds the 3AC list of triples from the last to the first node of the
+* 		given AST by traversing the AST bottom-up
 * @note opt_t and tac_op have the same value because the enums follow
 * 		the same declaration order
 * @note do not free the goto NULL NULL node, reuse it to keep consistency
 */
 tac_list * tac_ast_node(ast_node * node){
-	if(node == NULL || node->data == NULL){
+	if(node == NULL || node->data == NULL)
 		yyerror("tac_ast_node::tac_ast_node: \
-				TAC - malformed AST, null node found"
-		);
-		exit(EXIT_FAILURE);
-	}
+				TAC - malformed AST, null node found");
 	/* Create an empty tlist */
 	tac_list* tlist = calloc(1, sizeof(tac_list));
+	/* Process an AST node */
 	switch(node->data->token){
 		/* Internal nodes */
 		case AST_AOP1:
@@ -46,12 +44,14 @@ tac_list * tac_ast_node(ast_node * node){
 			tac_node* tnode=_tac_node();
 			tnode->value->op = node->data->op;
 			tac_value * left = _tac_leaf(node->ast_children[0]);
-			if(left != NULL){ /* It is a leaf */
+			/* left is a leaf */
+			if(left != NULL){
 				tnode->value->arg0 = left;
-			} else {
+			} else {/* left is a tree */
 				tac_list * left_list = tac_ast_node(node->ast_children[0]);
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left_list->last->value;
+				/* append the current computed list to the 3AC list */
 				tlist = tac_append(tlist, left_list);
 			}
 			/* connect tnode to the current list of triples */
@@ -62,31 +62,32 @@ tac_list * tac_ast_node(ast_node * node){
 		case AST_BOP_RELOP:
 		case AST_RELOP:
 		{
-			/* create a new node with the right operation */
+			/* create a new node 3AC node */
 			tac_node* tnode=_tac_node();
 			tnode->value->op = node->data->op;
-
+			/* compute the left-subtree in 3AC */
 			tac_value * left = _tac_leaf(node->ast_children[0]);
-
-			if(left != NULL){ /* It is a leaf */
+			/* left is a leaf */
+			if(left != NULL){
 				tnode->value->arg0 = left;
-			} else {
+			} else {/* left is a tree */
 				tac_list* left = tac_ast_node(node->ast_children[0]);
 				tnode->value->arg0= calloc(1, sizeof(tac_value));
 				tnode->value->arg0->instruction= left->last->value;
 				tlist = tac_append(tlist, left);
 			}
-
+			/* compute the right-subtree in 3AC */
 			tac_value * right = _tac_leaf(node->ast_children[1]);
+			/* right is a leaf */
 			if(right != NULL){
 				tnode->value->arg1 = right;
-			} else {
+			} else {/* right is a tree */
 				tac_list* right = tac_ast_node(node->ast_children[1]);
 				tnode->value->arg1= calloc(1, sizeof(tac_value));
 				tnode->value->arg1->instruction= right->last->value;
 				tlist = tac_append(tlist, right);
 			}
-
+			/* connect tnode to the current list of triples */
 			return tac_connect(tlist, tnode);
 		}
 		case AST_ASSIGNMENT:
@@ -96,13 +97,12 @@ tac_list * tac_ast_node(ast_node * node){
 			tnode->value->arg0 = calloc(1, sizeof(tac_value));
 			tnode->value->arg0->address = (symbol_table_entry*)
 				lookupID(node->ast_children[0]->data->value);
-
-			/* Compute the value of the rhs */
+			/* Compute the value of the right hand side */
 			tac_value * leaf = _tac_leaf(node->ast_children[1]);
-
-			if(leaf != NULL){ /* It is leaf */
+			/* the right hand side is a leaf */
+			if(leaf != NULL){
 				tnode->value->arg1 = leaf;
-			} else { /* It is a whole list of instructions */
+			} else {/* the right hand side is a tree */
 				tac_list* right = tac_ast_node(node->ast_children[1]);
 				tnode->value->arg1 = calloc(1, sizeof(tac_value));
 				tnode->value->arg1->instruction =  right->last->value;
@@ -111,10 +111,8 @@ tac_list * tac_ast_node(ast_node * node){
 			/* connect tnode to the current list of triples */
 			return tac_connect(tlist, tnode);
 		}
-
 		case AST_WHILE:
 		{
-
 			// Create a label for the bexpr and connect it to the actual tlist
 			tac_node * start_bexpr = _tac_label();
 			tlist = tac_connect(tlist, start_bexpr);
@@ -276,7 +274,6 @@ tac_value * _tac_leaf(ast_node * node){
 		}
 		default : break;
 	}
-
 	return val;
 }
 
