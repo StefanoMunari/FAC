@@ -27,13 +27,22 @@ typedef struct ast_node {
 } ast_node;
 
 /** Create a new ast node
- * @param number_of_children nodes
- * @param list of children
- * @return a new initialized node with the children given in the list
+ * @param token the ast
+ * @param line the source code's line number, where you can find the op
+ * @param op the real operation, e.g. SUM @see fac_type.h
+ * @param value an optional parameter containing the content, e.g. in fract it 
+ * is a fract number
+ * @param number_of_ast_children number of children of type ast. For instance
+ * a SUM has two ast_children
+ * @param number_of_seq_children number of children of type seq_tree. For 
+ * instance while has 1 ast child (the condition) and one seq child (the body)
+ * @param ... a list containing exactly number_of_ast_children ast nodes and
+ * number_of_seq_children seq nodes. These are the children of the new created
+ * node
+ * @return a new initialized node with the given parameters
  */
-
-ast_node * astNode(unsigned int token, int line, op_t op, void * value, 
-const int number_of_ast_children, const int number_of_seq_children, ...);
+ast_node * astNode(ast_category token, int line, op_t op, void * value, 
+	const int number_of_ast_children, const int number_of_seq_children, ...);
 
 /**
  * Free (recursively) the syntax three given in input
@@ -51,7 +60,7 @@ int printastNode(ast_node * root);
  * Print a syntax tree on the screen
  * @param node the root of the ast tree to print
  * @param instruction the incoming instruction id
- * @param tab the indentation, i.e. the number of '\t' characters
+ * @param tab the indentation, i.e. the number of tab characters
  * to prepend to the real content's print
  * @return an integer that corresponds to the next instruction id
  */
