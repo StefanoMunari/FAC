@@ -143,7 +143,7 @@ tac_list * tac_ast_node(ast_node * node){
 			}
 
 			//If the negate condition is true goto end of while
-			tac_node * goto_skip_while_body = 
+			tac_node * goto_skip_while_body =
 				_tac_goto_conditioned(tlist->last->value, end_while_label);
 			tlist = tac_connect(tlist, goto_skip_while_body);
 
@@ -152,7 +152,7 @@ tac_list * tac_ast_node(ast_node * node){
 			tlist = tac_append(tlist, stmt);
 
 			// generate goto node that points to the start_bexpr label
-			tac_node * goto_bexpr_evaluation = 
+			tac_node * goto_bexpr_evaluation =
 					_tac_goto_unconditioned(start_bexpr);
 			tlist = tac_connect(tlist, goto_bexpr_evaluation);
 
@@ -177,7 +177,7 @@ tac_list * tac_ast_node(ast_node * node){
 					tac_node * negateCondition = _tac_node();
 					negateCondition->value->op = TAC_NOT;
 					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
-					negateCondition->value->arg0->instruction = 
+					negateCondition->value->arg0->instruction =
 						bexpr->last->value;
 					tlist = tac_append(tlist, bexpr);
 					tlist = tac_connect(tlist, negateCondition);
@@ -186,9 +186,9 @@ tac_list * tac_ast_node(ast_node * node){
 
 			if(node->number_of_seq_children == 1){ //IF
 				tac_node * end_if_body = _tac_label();
-				/* Create a conditioned goto that onTrue of the negate condition 
+				/* Create a conditioned goto that onTrue of the negate condition
 				 * goes to end_while_label*/
-				tac_node * goto_skip_if_body = 
+				tac_node * goto_skip_if_body =
 						_tac_goto_conditioned(tlist->last->value, end_if_body);
 				//calculate tlist of the stmt following bexpr
 				tac_list * stmt = generate_tac(node->seq_children[0]);
@@ -198,12 +198,12 @@ tac_list * tac_ast_node(ast_node * node){
 			} else if(node->number_of_seq_children == 2){ //IF THEN ELSE
 				tac_node * start_else_body = _tac_label();
 				tac_node * end_else_body = _tac_label();
-				tac_node * goto_start_else_body = 
-							_tac_goto_conditioned(tlist->last->value, 
+				tac_node * goto_start_else_body =
+							_tac_goto_conditioned(tlist->last->value,
 													start_else_body
 							);
 				tac_list * if_body = generate_tac(node->seq_children[0]);
-				tac_node * goto_end_else_body = 
+				tac_node * goto_end_else_body =
 						_tac_goto_unconditioned(end_else_body);
 				tac_list * else_body = generate_tac(node->seq_children[1]);
 
