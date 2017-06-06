@@ -18,11 +18,15 @@
 #include "../ast/seq_tree.h"
 #include "../parser.tab.h"
 
-
-
+/** flex's last read token */
 extern char* yytext;
+/** flex's length of last read token */
 extern int yyleng;
+/** flex's line number */
 extern int yylineno;
+/** bison/flex variable that should be initialized with the information about
+ * the token position in the source code (first_column, last_column, first_line,
+ * last_line) */
 extern YYLTYPE yylloc;
 /**
  * function called when a fract is recognized in order to extract numerator
