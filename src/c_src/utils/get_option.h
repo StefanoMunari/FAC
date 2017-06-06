@@ -1,0 +1,40 @@
+/**
+ * @file 
+ * @author mirko.bez@studenti.unipd.it
+ * @author stefano.munari.1@studenti.unipd.it
+ * @brief files containing the utilities to fetch the options from the command
+ * line.
+ */
+#ifndef __GET_OPTION_H__
+#define __GET_OPTION_H__
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <libgen.h>
+#include <string.h>
+#include <getopt.h>
+#include "../tac/printer/tac_printer.h"
+
+/** structure that encodes the options */
+typedef struct {
+	/** true if the user want to print the ast, false otherwise */
+	bool print_ast;
+	/** name of the input file */
+	char * input_file;
+	/** name of the output dir */
+	char * output_dir;
+	/** name of the output file */
+	char * output_main_file;
+	/** printer used to print the three address code */
+	tprinter printer;
+} option_flag;
+
+/** 
+ * get the options from the command line
+ * @param argc the argument counter
+ * @param argv the argument vector
+ * @return an option_flag object containing the user-defined options.
+ */
+option_flag get_option(int argc,  char * argv[]);
+
+#endif /* __GET_OPTION_H__ */

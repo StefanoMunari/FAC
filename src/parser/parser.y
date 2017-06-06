@@ -20,6 +20,7 @@
 #include "tac/printer/tac_printer.h"
 
 #include "utils/facmath.h"
+#include "utils/get_option.h"
 #include "err/facerr.h"
 
 #include <stdio.h>
@@ -322,29 +323,11 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 %%
 /* Entrypoint of the program */
 int main(int argc, char * argv[]) {
-	tprinter printer;
+	option_flag options = get_option(argc, argv);
+	
 	FILE * fp = NULL;
-
-	if(argc < 3){
-		fprintf(stderr, 
-				"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
-				<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
-				C representation\n"
-				, argv[0]
-		);
-		return EXIT_FAILURE;
-	}
-
-	if (strcmp(argv[2], "C") == 0)
-		printer = (tprinter) { C };
-	else if (strcmp(argv[2], "IR") == 0)
-		printer = (tprinter) { IR };
-	else{
-	  yyerror("main: invalid printer");
-	  return EXIT_FAILURE;
-	}
-
-	fp = fopen(argv[1], "r");
+	
+	fp = fopen(options.input_file, "r");
 	if (fp == NULL) {
 		yyerror("parser.y::main: could not open file %s", fp);
 	}
@@ -376,7 +359,7 @@ int main(int argc, char * argv[]) {
 	tlist=generate_tac(head);
 
 	
-	tdynamic_dispatch(&printer, tlist);
+	tdynamic_dispatch(&options.printer, tlist);
 	finalize();
 	return EXIT_SUCCESS;
 }
