@@ -146,7 +146,7 @@ stmt :
 | stmt declaration SEPARATOR {
 	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
 	$$ = newSeqNode(subtree, $2->ast_children[1]);
-	
+
 	free($2->data);
 	free($2->ast_children);
 	free($2);
@@ -275,7 +275,7 @@ TYPE ID ASSIGNMENT expr {
 	/* Construct the node for the declaration */
 	ast_node * id_node =
 		astNode(AST_ID, @2.first_line, operator, strdup($2), 0, 0);
-	
+
 	ast_node * declaration =
 		astNode(AST_DECLARATION, @1.first_line, operator, NULL, 1, 0, id_node);
 	declaration->data->type = $1;
@@ -290,8 +290,8 @@ TYPE ID ASSIGNMENT expr {
 	/* Encode the information in a single ast node */
 	$$ = astNode(AST_DECLARATION, @2.first_line, operator, NULL, 2, 0,
 				declaration, assignment);
-				
-				
+
+
 	free($2);
 }
 ;
@@ -319,9 +319,9 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 /* Entrypoint of the program */
 int main(int argc, char * argv[]) {
 	option_flag options = get_option(argc, argv);
-	
+
 	FILE * fp = NULL;
-	
+
 	fp = fopen(options.input_file, "r");
 	if (fp == NULL) {
 		yyerror("parser.y::main: could not open file %s", fp);
@@ -344,7 +344,7 @@ int main(int argc, char * argv[]) {
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
 		err_handler(options.input_file, FAC_STANDARD_ERROR);
-		
+
 	if(options.print_ast)
 		printSeqNode(head);
 
@@ -356,9 +356,9 @@ int main(int argc, char * argv[]) {
 
 	tlist = generate_tac(head);
 
-	
+
 	tdynamic_dispatch(&options.printer, tlist);
-	
+
 	/* Clean up memory */
 	finalize();
 	free_option_flag(options);

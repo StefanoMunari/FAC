@@ -16,7 +16,7 @@ static struct option long_options[] = {
 };
 
 
-/** 
+/**
  * print the help message
  * @param argv in order to get the name of the compiled program
  */
@@ -28,8 +28,8 @@ void print_help(char * argv[]){
 	printf("-o, --output\t\t set the output file for the tac printer\n");
 	printf("-a, --ast\t\t print to stdout the abstract syntax tree\n");
 	printf("-t, --tac-printer\t choose the tac printer (default = C)\n");
-	printf("                 \t\t - IR : the internal representation\n");
-	printf("                 \t\t - C  : write the output in a C file");
+	printf("                 \t\t - IR : prints the internal representation to stdout\n");
+	printf("                 \t\t - C  : prints the TAC in a main.c file");
 	putchar('\n');
 	putchar('\n');
 }
@@ -57,18 +57,18 @@ option_flag get_option(int argc,  char * argv[]){
 		printf("Try '%s --help' for more information", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	options.input_file = strdup(argv[1]);
 
 	//Starting from index 2, because the first place is destinated to the f file
-	optind = 2; 
+	optind = 2;
 	int option_index;
-	
+
 	options.print_ast = false;
 	options.printer = (tprinter) { C };
 	options.output_dir = NULL;
 	options.output_main_file = NULL;
-	
+
 	while((c = getopt_long (argc, argv, "ht:o:a", long_options, &option_index)) != EOF) {
 		switch(c){
 			case 'h': print_help(argv); exit(EXIT_SUCCESS); break;
@@ -87,7 +87,7 @@ option_flag get_option(int argc,  char * argv[]){
 					free_option_flag(options);
 					exit(EXIT_FAILURE);
 				}
-			
+
 				break;
 		}
 	}

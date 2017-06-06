@@ -13,7 +13,7 @@ EXAMPLE_SOURCES = $(shell find $(PWD)/examples -name ex*.f)
 BIN=fac
 VALGRIND=valgrind
 
-C_FLAG = -O3 -g -Wall -Werror
+C_FLAG = -g -Wall -Werror
 
 .PHONY: all
 all: compile
@@ -65,8 +65,8 @@ doc:
 	@echo "==Generating documentation=="
 	doxygen doxyfile
 	@echo "========"
-	@echo "=> documentation accessible in $(PWD)/doc/index.html"
+	@echo "=> documentation generated in $(PWD)/doc/index.html"
 
 .PHONY: clean
 clean:
-	rm -rf *.yy.c *.o *.out *.output bin/fac result/* $(LEXER_PATH)/lex.yy.c */*.tab.*
+	rm -rf *.yy.c *.o *.out *.output bin/fac */main.c */facvariables.h $(LEXER_PATH)/lex.yy.c */*.tab.*
