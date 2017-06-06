@@ -41,6 +41,7 @@ typedef struct tprinter {
  * @param out_file - the output file (will contain the generated representation)
  */
 static inline
+<<<<<<< HEAD
 void tdynamic_dispatch(struct tprinter* this, tac_list* data,
 	 char * out_dir, char * out_file)
 {

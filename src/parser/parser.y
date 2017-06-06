@@ -55,12 +55,9 @@ void finalize();
 *
 * @brief recognize tokens from the input stream and returns them to the Parser
 */
-<<<<<<< HEAD
 
 seq_node * head = NULL;
 
-=======
->>>>>>> implement printer options for C printer;
 int yylex();
 /**
  * Error handler of BISON
