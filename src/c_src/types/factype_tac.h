@@ -56,10 +56,10 @@ typedef enum {
 	TAC_LABEL,
 	/** goto instruction */
 	TAC_GOTO,
-	/** artificial label used to make "type checking" on the enum:
-	 * @link 
-	 * https://stackoverflow.com/questions/9161863/
-	 * how-to-check-if-an-enum-variable-is-valid
+	/** artificial label used to make "type checking" on the enum, as suggested
+	 * by this 
+	 * <a href="https://stackoverflow.com/questions/9161863/
+	 * how-to-check-if-an-enum-variable-is-valid"> stackoverflow link </a>
 	 */
 	TAC_END_MARKER
 } tac_op;

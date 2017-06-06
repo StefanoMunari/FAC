@@ -69,10 +69,10 @@ typedef enum op_t
 	PLUS,
 	/** sign minus */
 	MINUS,
-	/** artificial label used to make "type checking" on the enum:
-	 * @link 
-	 * https://stackoverflow.com/questions/9161863/
-	 * how-to-check-if-an-enum-variable-is-valid
+	/** artificial label used to make "type checking" on the enum, as suggested
+	 * by this 
+	 * <a href="https://stackoverflow.com/questions/9161863/
+	 * how-to-check-if-an-enum-variable-is-valid"> stackoverflow link </a>
 	 */
 	OP_END_MARKER
 } op_t;
