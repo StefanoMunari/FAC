@@ -13,8 +13,8 @@
 
 /**
  * @brief Struct definining a single node of the tac_list
- * 
- * @details It contains a value, 
+ *
+ * @details It contains a value,
  * the actual three address code instruction, a link to the previous and a link
  * to the next instruction
  */
@@ -28,7 +28,7 @@ typedef struct tac_node {
 } tac_node;
 
 /**
- * @brief Struct defining a doubly-linked list of tac_nodes. 
+ * @brief Struct defining a doubly-linked list of tac_nodes.
  * @details It has a pointer to the first and to the last element.
  */
 typedef struct tac_list{
