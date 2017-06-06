@@ -47,10 +47,10 @@ typedef enum {
 	AST_DECLARATION,
 	/** represents both the if with one and the if with two children */
 	AST_IF,
-	/** artificial label used to make "type checking" on the enum:
-	 * @link 
-	 * https://stackoverflow.com/questions/9161863/
-	 * how-to-check-if-an-enum-variable-is-valid
+	/** artificial label used to make "type checking" on the enum, as suggested
+	 * by this 
+	 * <a href="https://stackoverflow.com/questions/9161863/
+	 * how-to-check-if-an-enum-variable-is-valid"> stackoverflow link </a>
 	 */
 	AST_END_MARKER
 } ast_category;
