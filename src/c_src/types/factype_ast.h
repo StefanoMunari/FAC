@@ -48,7 +48,7 @@ typedef enum {
 	/** represents both the if with one and the if with two children */
 	AST_IF,
 	/** artificial label used to make "type checking" on the enum, as suggested
-	 * by this 
+	 * by this
 	 * <a href="https://stackoverflow.com/questions/9161863/
 	 * how-to-check-if-an-enum-variable-is-valid"> stackoverflow link </a>
 	 */
