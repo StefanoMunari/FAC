@@ -13,6 +13,8 @@ tac_node * _tac_print(ast_node *);
 static
 tac_value * _tac_leaf(ast_node * node);
 static
+tac_list * _tac_bexpr(ast_node * node, tac_list * tlist);
+static
 tac_node * _tac_label();
 static
 tac_node * _tac_goto_unconditioned(tac_node * destination);
@@ -117,25 +119,7 @@ tac_list * tac_ast_node(ast_node * node){
 			/* Create a label that points to the end of the body of the while */
 			tac_node * end_while_label = _tac_label();
 			/* Compute the bexpr in 3AC */
-			{
-				tac_value * bexpr = _tac_leaf(node->ast_children[0]);
-				/* bexpr is a leaf */
-				if(bexpr != NULL){
-					tac_node * node = _tac_node();
-					node->value->op = TAC_NOT;
-					node->value->arg0 = bexpr;
-					tlist = tac_connect(tlist, node);
-				} else {/* bexpr is a tree with height > 0 */
-					tac_list * bexpr = tac_ast_node(node->ast_children[0]);
-					tac_node * negateCondition = _tac_node();
-					negateCondition->value->op = TAC_NOT;
-					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
-					negateCondition->value->arg0->instruction =
-						bexpr->last->value;
-					tlist = tac_append(tlist, bexpr);
-					tlist = tac_connect(tlist, negateCondition);
-				}
-			}
+			tlist = _tac_bexpr(node, tlist);
 			/* If the negate condition is true goto end of while */
 			tac_node * goto_skip_while_body =
 				_tac_goto_conditioned(tlist->last->value, end_while_label);
@@ -154,26 +138,8 @@ tac_list * tac_ast_node(ast_node * node){
 		}
 		case AST_IF:
 		{
-			/* Treating bexpr - in a similar way as while */
-			{
-				tac_value * bexpr = _tac_leaf(node->ast_children[0]);
-
-				if(bexpr != NULL){ //It is a leaf
-					tac_node * node = _tac_node();
-					node->value->op = TAC_NOT;
-					node->value->arg0 = bexpr;
-					tlist = tac_connect(tlist, node);
-				} else {
-					tac_list * bexpr = tac_ast_node(node->ast_children[0]);
-					tac_node * negateCondition = _tac_node();
-					negateCondition->value->op = TAC_NOT;
-					negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
-					negateCondition->value->arg0->instruction =
-						bexpr->last->value;
-					tlist = tac_append(tlist, bexpr);
-					tlist = tac_connect(tlist, negateCondition);
-				}
-			}
+			/* Compute the bexpr in 3AC */
+			tlist = _tac_bexpr(node, tlist);
 
 			if(node->number_of_seq_children == 1){ //IF
 				tac_node * end_if_body = _tac_label();
@@ -268,6 +234,27 @@ tac_value * _tac_leaf(ast_node * node){
 		default : break;
 	}
 	return val;
+}
+
+static
+tac_list * _tac_bexpr(ast_node * node, tac_list * tlist){
+	tac_value * bexpr = _tac_leaf(node->ast_children[0]);
+	/* bexpr is a leaf */
+	if(bexpr != NULL){
+		tac_node * node = _tac_node();
+		node->value->op = TAC_NOT;
+		node->value->arg0 = bexpr;
+		return tac_connect(tlist, node);
+	} else {/* bexpr is a tree with height > 0 */
+		tac_list * bexpr = tac_ast_node(node->ast_children[0]);
+		tac_node * negateCondition = _tac_node();
+		negateCondition->value->op = TAC_NOT;
+		negateCondition->value->arg0 = calloc(1, sizeof(tac_value));
+		negateCondition->value->arg0->instruction =
+			bexpr->last->value;
+		tlist = tac_append(tlist, bexpr);
+		return tac_connect(tlist, negateCondition);
+	}
 }
 
 static
