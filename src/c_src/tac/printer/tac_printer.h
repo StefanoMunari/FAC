@@ -47,7 +47,24 @@ void tdynamic_dispatch(struct tprinter* this, tac_list* data,
 	this->_vtable->print_tac(data, out_dir, out_file);
 }
 
+/** @brief The error handler of the parser (external definition) */
 extern void yyerror(const char *, ...);
-/** The available "concrete types" declared in this interface file */
-extern const struct _tprinter_vtable IR[], C[], JAVA[];
+/**
+ * @brief "Concrete" type which implements the printer for the
+ * Internal Representation (IR) of the 3AC
+ */
+extern const struct _tprinter_vtable IR[];
+/**
+ * @brief "Concrete" type which implements the printer (code generator) for the
+ * C representation of the 3AC
+ * @details it generates 2 files:
+ * 1) main.c - contains the implementation
+ * 2) fvariables.h - contains the declarations of the variables used in main.c
+ */
+extern const struct _tprinter_vtable C[];
+/**
+ * @brief "Concrete" type which implements the printer (code generator) for the
+ * Java representation of the 3AC
+ */
+extern const struct _tprinter_vtable JAVA[];
 #endif /*__TAC_PRINTER_H__*/
