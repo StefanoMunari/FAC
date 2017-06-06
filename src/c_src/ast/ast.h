@@ -60,7 +60,7 @@ int printastNode(ast_node * root);
  * Print a syntax tree on the screen
  * @param node the root of the ast tree to print
  * @param instruction the incoming instruction id
- * @param tab the indentation, i.e. the number of '\t' characters
+ * @param tab the indentation, i.e. the number of tab characters
  * to prepend to the real content's print
  * @return an integer that corresponds to the next instruction id
  */
