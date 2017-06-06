@@ -12,7 +12,7 @@
 #include <stdbool.h>
 
 /**
- * struct representing a fract instance
+ * @brief struct representing a fract instance
  */
 typedef struct fract_t
 {

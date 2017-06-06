@@ -15,7 +15,7 @@
 #include <getopt.h>
 #include "../tac/printer/tac_printer.h"
 
-/** structure that encodes the options */
+/** @brief structure that encodes fetched options */
 typedef struct {
 	/** true if the user want to print the ast, false otherwise */
 	bool print_ast;

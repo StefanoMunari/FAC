@@ -12,9 +12,11 @@
 #include "tac.h"
 
 /**
- * Struct definining a single node of the tac_list. It contains a value, the
- * actual three address code instruction, a link to the previous and a link to
- * the next instruction
+ * @brief Struct definining a single node of the tac_list
+ * 
+ * @details It contains a value, 
+ * the actual three address code instruction, a link to the previous and a link
+ * to the next instruction
  */
 typedef struct tac_node {
 	/** the actual content of the node */
@@ -26,8 +28,8 @@ typedef struct tac_node {
 } tac_node;
 
 /**
- * Struct defining a doubly-linked list of tac_nodes. It has a pointer to
- * the first and to the last element.
+ * @brief Struct defining a doubly-linked list of tac_nodes. 
+ * @details It has a pointer to the first and to the last element.
  */
 typedef struct tac_list{
 	/** pointer to the first node of the list */
