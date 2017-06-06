@@ -1,3 +1,10 @@
+/**
+ * @brief definition of an API for printing the three adress code.
+ * @file
+ * @author mirko.bez@studenti.unipd.it
+ * @author stefano.munari.1@studenti.unipd.it
+ */
+
 #ifndef __TAC_PRINTER_H__
 #define __TAC_PRINTER_H__
 #include "../tac_list.h"
