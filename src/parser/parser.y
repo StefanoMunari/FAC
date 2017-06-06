@@ -345,7 +345,6 @@ int main(int argc, char * argv[]) {
 	  return EXIT_FAILURE;
 	}
 
-
 	fp = fopen(options.input_file, "r");
 	if (fp == NULL) {
 		yyerror("parser.y::main: could not open file %s", fp);

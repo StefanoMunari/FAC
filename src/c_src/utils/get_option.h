@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * @file
+=======
+ * @file 
+>>>>>>> Add option utility to FAC with options -ast-- print-ast(Issue #24) and other options that now are not used.
  * @author mirko.bez@studenti.unipd.it
  * @author stefano.munari.1@studenti.unipd.it
  * @brief files containing the utilities to fetch the options from the command
@@ -29,7 +33,8 @@ typedef struct {
 	tprinter printer;
 } option_flag;
 
-/**
+
+/** 
  * get the options from the command line
  * @param argc the argument counter
  * @param argv the argument vector
