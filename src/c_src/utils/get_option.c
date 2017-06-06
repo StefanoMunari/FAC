@@ -16,7 +16,7 @@ static struct option long_options[] = {
 };
 
 
-/** 
+/**
  * print the help message
  * @param argv in order to get the name of the compiled program
  */
@@ -57,11 +57,11 @@ option_flag get_option(int argc,  char * argv[]){
 		printf("Try '%s --help' for more information", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	options.input_file = strdup(argv[1]);
 
 	//Starting from index 2, because the first place is destinated to the f file
-	optind = 2; 
+	optind = 2;
 	int option_index;
 
 	options.print_ast = false;
