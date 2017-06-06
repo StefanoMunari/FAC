@@ -74,10 +74,15 @@ option_flags get_option(int argc,  char * argv[]){
 			case 'h': print_help(argv); exit(EXIT_SUCCESS); break;
 			case 'a': options.print_ast = true; break;
 			case 'o':
-				if(!(strcmp(dirname(optarg), ".") == 0))
-					options.output_dir = strdup(dirname(optarg));
-				options.output_main_file = strdup(basename(optarg));
+			{
+				char * copy_dir_name = strdup(optarg);
+				char * copy_base_name = strdup(optarg);
+				options.output_dir = strdup(dirname(copy_dir_name));
+				options.output_main_file = strdup(basename(copy_base_name));
+				free(copy_dir_name);
+				free(copy_base_name);
 				break;
+			}
 			case 't':
 				if (strcmp(optarg, "C") == 0)
 					options.printer = (tprinter) { C };

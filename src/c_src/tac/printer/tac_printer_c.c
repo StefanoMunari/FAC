@@ -39,12 +39,12 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 		yyerror("tac_printer_c::print_tac:Invalid output file");
 
 	char buffer0[sizeof(char) * (strlen(out_dir) + strlen(out_file))];
-	sprintf(buffer0, "%s%s", out_dir, out_file);
+	sprintf(buffer0, "%s/%s", out_dir, out_file);
 	char * main_name = strdup(buffer0);
 	char buffer1[sizeof(char) * (strlen(out_dir) + strlen("fvariables.h"))];
-	sprintf(buffer1, "%s%s",  out_dir, "fvariables.h");
+	sprintf(buffer1, "%s/%s",  out_dir, "fvariables.h");
 	char * header_name = strdup(buffer1);
-
+	printf("%s\n", main_name);
 
 	FILE * c_main = fopen(main_name, "w");
 	if(c_main == NULL){
