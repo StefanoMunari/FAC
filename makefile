@@ -20,6 +20,7 @@ all: compile
 
 generate_parser:
 	@echo "==Bison=="
+	rm -rf main.c fvariables.h
 	bison -d $(PARSER_PATH)/$(PARSER_FILE).y
 	mv $(PARSER_FILE).tab.* $(C_SRC_PATH)
 	@echo "========"
@@ -69,4 +70,4 @@ doc:
 
 .PHONY: clean
 clean:
-	rm -rf *.yy.c *.o *.out *.output bin/fac */main.c */facvariables.h $(LEXER_PATH)/lex.yy.c */*.tab.*
+	rm -rf *.yy.c *.o *.out *.output bin/fac main.c facvariables.h $(LEXER_PATH)/lex.yy.c *.tab.*
