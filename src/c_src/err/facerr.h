@@ -11,17 +11,20 @@
 #include <stdio.h>
 #include <errno.h>
 
-typedef unsigned int uint;
-
+/** flex's variable that contains the last read token */
 extern char* yytext;
-extern int yyleng;
+/** flex's variable that contains the actual line number of the lexer */
 extern int yylineno;
 
 /** enumeration codes used in error handling to select the printing mode */
 typedef enum err_input {
+	/** error that exploits the perror utility */
 	FAC_STANDARD_ERROR,
+	/** error that should print yytext */
 	FAC_STRING,
+	/** error that should print ONLY yylineno */
 	FAC_LINE,
+	/** error that should print both yylineno and yytext */
 	FAC_LINE_STRING,
 } err_input;
 /**
