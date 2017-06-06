@@ -84,11 +84,7 @@ option_flag get_option(int argc,  char * argv[]){
 					options.printer = (tprinter) { IR };
 				else{
 					fprintf(stderr, "get_option::get_option: invalid printer");
-					if(options.output_dir != NULL){
-						free(options.output_dir);
-						free(options.output_main_file);
-					}
-					free(options.input_file);
+					free_option_flag(options);
 					exit(EXIT_FAILURE);
 				}
 			
@@ -96,5 +92,14 @@ option_flag get_option(int argc,  char * argv[]){
 		}
 	}
 	return options;
+}
+
+void free_option_flag(option_flag options) {
+	if(options.input_file != NULL)
+		free(options.input_file);
+	if(options.output_dir != NULL)
+		free(options.output_dir);
+	if(options.output_main_file != NULL)
+		free(options.output_main_file);
 }
 
