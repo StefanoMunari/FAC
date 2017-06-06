@@ -10,10 +10,10 @@
 #include "../ast/seq_tree.h"
 /** Performs type checking by pre-order traversing the ast,
  * which is stored in RAM as a seq_tree
- * @param seq_node the root of the ast
+ * @param root the root of the ast
  * @return bool true if the type checking is successful, false otherwise
  * @see Dragon Book - 2nd ed. (§2.8.2 - Construction of Syntax Trees)
  */
-bool type_check(seq_node *);
+bool type_check(seq_node * root);
 
 #endif /* __TYPE__CHECKER__H__ */
