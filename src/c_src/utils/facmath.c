@@ -42,7 +42,4 @@ fract_t sum(fract_t fract1, fract_t fract2) {
 	return normalizeFract(res);
 }
 
-int lcm(int a, int b) {
-	return a*b/gcd(a,b);
-}
 
