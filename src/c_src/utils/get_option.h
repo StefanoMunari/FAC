@@ -16,7 +16,7 @@
 #include "../tac/printer/tac_printer.h"
 
 /** @brief structure that encodes fetched options */
-typedef struct {
+typedef struct option_flags {
 	/** true if the user want to print the ast, false otherwise */
 	bool print_ast;
 	/** name of the input file */
@@ -26,7 +26,7 @@ typedef struct {
 	/** name of the output file */
 	char * output_main_file;
 	/** printer used to print the three address code */
-	tprinter printer;
+	struct tprinter printer;
 } option_flags;
 
 /**
