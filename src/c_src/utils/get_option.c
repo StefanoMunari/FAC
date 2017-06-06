@@ -74,7 +74,8 @@ option_flags get_option(int argc,  char * argv[]){
 			case 'h': print_help(argv); exit(EXIT_SUCCESS); break;
 			case 'a': options.print_ast = true; break;
 			case 'o':
-				options.output_dir = strdup(dirname(optarg));
+				if(!(strcmp(dirname(optarg), ".") == 0))
+					options.output_dir = strdup(dirname(optarg));
 				options.output_main_file = strdup(basename(optarg));
 				break;
 			case 't':
@@ -92,7 +93,7 @@ option_flags get_option(int argc,  char * argv[]){
 		}
 	}
 	if(options.output_dir == NULL)
-		options.output_dir = strdup("./");
+		options.output_dir = strdup("");
 	if(options.output_main_file == NULL)
 		options.output_main_file = strdup("main.c");
 	return options;
