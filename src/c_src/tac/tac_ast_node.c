@@ -137,52 +137,50 @@ tac_list * tac_ast_node(ast_node * node){
 			return tlist;
 		}
 		case AST_IF:
-		{
+		{/* IF || IF THEN ELSE Statement */
 			/* Compute the bexpr in 3AC */
 			tlist = _tac_bexpr(node, tlist);
-
-			if(node->number_of_seq_children == 1){ //IF
+			/* Check if it is an IF statement */
+			if(node->number_of_seq_children == 1){
 				tac_node * end_if_body = _tac_label();
-				/* Create a conditioned goto that onTrue of the negate condition
-				 * goes to end_while_label*/
+				/* Create a conditional jump:
+					if the negated condition is true then skip the IF body */
 				tac_node * goto_skip_if_body =
 						_tac_goto_conditioned(tlist->last->value, end_if_body);
-				//calculate tlist of the stmt following bexpr
+				/* calculate tlist of the stmt following bexpr */
 				tac_list * stmt = generate_tac(node->seq_children[0]);
 				tlist = tac_connect(tlist, goto_skip_if_body);
 				tlist = tac_append(tlist, stmt);
 				tlist = tac_connect(tlist, end_if_body);
-			} else if(node->number_of_seq_children == 2){ //IF THEN ELSE
+			}
+			/* IF THEN ELSE statement */
+			else if(node->number_of_seq_children == 2){
 				tac_node * start_else_body = _tac_label();
 				tac_node * end_else_body = _tac_label();
 				tac_node * goto_start_else_body =
 							_tac_goto_conditioned(tlist->last->value,
-													start_else_body
-							);
+													start_else_body);
 				tac_list * if_body = generate_tac(node->seq_children[0]);
 				tac_node * goto_end_else_body =
 						_tac_goto_unconditioned(end_else_body);
 				tac_list * else_body = generate_tac(node->seq_children[1]);
-
+				/* Connect to the current list */
 				tlist = tac_connect(tlist, goto_start_else_body);
 				tlist = tac_append(tlist, if_body);
 				tlist = tac_connect(tlist, goto_end_else_body);
 				tlist = tac_connect(tlist, start_else_body);
 				tlist = tac_append(tlist, else_body);
 				tlist = tac_connect(tlist, end_else_body);
-			} else {
-				yyerror("tac_ast_node::tac_ast_node:\
-						IF with more than two children, not yet supported"
-				);
 			}
+			else
+				yyerror("tac_ast_node::tac_ast_node:\
+						IF with more than two children, not yet supported");
 			return tlist;
 			break;
 		}
 		/* Leaves */
-		case AST_PRINT: /* one child subtree */
-		{
+		case AST_PRINT:/* subtree of height = 1 */
 			return tac_connect(tlist, _tac_print(node));
-		}
 		case AST_DECLARATION:
 			return tlist;
 		default:
@@ -206,7 +204,6 @@ tac_node* _tac_node(){
 	node->next = NULL;
 	return node;
 }
-
 
 static
 tac_value * _tac_leaf(ast_node * node){
@@ -266,6 +263,7 @@ tac_node * _tac_print(ast_node * node){
 		(symbol_table_entry *) lookupID(node->ast_children[0]->data->value);
 	return tnode;
 }
+
 static
 tac_node * _tac_label(){
 	tac_node * label = _tac_node();
@@ -285,6 +283,7 @@ tac_node * _tac_goto_unconditioned(tac_node * destination){
 	goto_node->value->arg0->instruction = destination->value;
 	return goto_node;
 }
+
 static
 tac_node * _tac_goto_conditioned(tac_entry * condition, tac_node * destination){
 	tac_node * goto_node = _tac_node();
