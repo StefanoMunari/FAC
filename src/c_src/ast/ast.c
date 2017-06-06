@@ -7,7 +7,7 @@
 
 char * tokenString(ast_category token);
 
-ast_node * astNode(unsigned int token, int line, op_t op, void * value,
+ast_node * astNode(ast_category token, int line, op_t op, void * value,
 	const int number_of_ast_children, const int number_of_seq_children, ...) {
 
 	assert(number_of_ast_children >= 0 && number_of_seq_children >= 0);
