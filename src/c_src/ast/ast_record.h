@@ -1,4 +1,6 @@
 /**
+ * @brief defines the content of an ast node and the API that can be used
+ * upon it.
  * @file
  * @author <mirko.bez@studenti.unipd.it>
  * @author <stefano.munari.1@studenti.unipd.it>
