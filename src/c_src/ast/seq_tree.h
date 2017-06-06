@@ -9,7 +9,9 @@
 #define __SEQ_TREE__H__
 #include "ast.h"
 
-/** A structure that represents the sequential composition of two statements */
+/** @brief A structure that represents the sequential composition 
+ * of two statements 
+ */
 typedef struct seq_node {
 	/** pointer to the previous statement */
 	struct seq_node * left;
