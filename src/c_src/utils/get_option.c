@@ -40,8 +40,8 @@ void print_help(char * argv[]){
  * @param argv the command line arguments
  * @return an optionFlag containing the configuration of that particular instantiation of the program.
  */
-option_flag get_option(int argc,  char * argv[]){
-	option_flag options;
+option_flags get_option(int argc,  char * argv[]){
+	option_flags options;
 	int c;
 	if(argc < 2) {
 		print_help(argv);
@@ -84,7 +84,7 @@ option_flag get_option(int argc,  char * argv[]){
 					options.printer = (tprinter) { IR };
 				else{
 					fprintf(stderr, "get_option::get_option: invalid printer");
-					free_option_flag(options);
+					free_option_flags(options);
 					exit(EXIT_FAILURE);
 				}
 
@@ -94,7 +94,7 @@ option_flag get_option(int argc,  char * argv[]){
 	return options;
 }
 
-void free_option_flag(option_flag options) {
+void free_option_flags(option_flags options) {
 	if(options.input_file != NULL)
 		free(options.input_file);
 	if(options.output_dir != NULL)
