@@ -37,4 +37,10 @@ typedef struct {
  */
 option_flag get_option(int argc,  char * argv[]);
 
+/**
+ * free the fields of the given option field
+ * @param options the option field to free
+ */
+void free_option_flag(option_flag options);
+
 #endif /* __GET_OPTION_H__ */
