@@ -70,7 +70,10 @@ char * get_operator(tac_op operator){
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
 		default: 
-			yyerror("TAC_Printer - operator %d not recognized", operator); 
+			yyerror("tac_printer_ir::get_operator:\
+					operator %d not recognized", 
+					operator
+			); 
 			break;
 	}
 	return "";
