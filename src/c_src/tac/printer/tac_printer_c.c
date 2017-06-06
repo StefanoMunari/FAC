@@ -32,7 +32,6 @@ static
 bool h_flag = false;
 
 void print_tac(tac_list * tlist, char * out_dir, char * out_file){
-
 	if(out_dir == NULL)
 		yyerror("tac_printer_c::print_tac:Invalid output directory");
 	if(out_file == NULL)
