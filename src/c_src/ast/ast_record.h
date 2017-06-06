@@ -12,7 +12,7 @@
  * represents the data stored in each node of the ast
  */
 typedef struct record {
-	/** the category of the token defined in @link factype_ast.h*/
+	/** the category of the token defined in @ref factype_ast.h*/
 	ast_category token;
 	/** The line that corresponds to this token in the source file */
 	int line;
@@ -27,7 +27,7 @@ typedef struct record {
 	 * - a fract value if the token is AST_FRACT.
 	 * - NULL, otherwise
 	 *
-	 * @check dependencies: factype_ast.h
+	 * @see dependencies: factype_ast.h
 	 */
 	void * value;
 } record;
@@ -46,6 +46,6 @@ record * astRecord(ast_category token, int line, op_t op, void * value);
  * free the given record instance
  * @param this the record instance to free
  */
-void freeastRecord(record *);
+void freeastRecord(record * this);
 
 #endif /* __AST_RECORD__H__ */
