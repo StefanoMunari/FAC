@@ -29,7 +29,6 @@ typedef struct option_flags {
 	struct tprinter printer;
 } option_flags;
 
-
 /**
  * get the options from the command line
  * @param argc the argument counter
