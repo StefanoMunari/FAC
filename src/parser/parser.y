@@ -343,7 +343,7 @@ int main(int argc, char * argv[]) {
 
 	int err_code = fclose(yyin);
 	if(err_code == EOF)
-		err_handler(argv[1], FAC_STANDARD_ERROR);
+		err_handler(options.input_file, FAC_STANDARD_ERROR);
 		
 	if(options.print_ast)
 		printSeqNode(head);
@@ -354,11 +354,14 @@ int main(int argc, char * argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	tlist=generate_tac(head);
+	tlist = generate_tac(head);
 
 	
 	tdynamic_dispatch(&options.printer, tlist);
+	
+	/* Clean up memory */
 	finalize();
+	free_option_flag(options);
 	return EXIT_SUCCESS;
 }
 
