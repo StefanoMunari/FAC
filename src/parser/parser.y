@@ -318,7 +318,7 @@ PRINT L_DEL_EXPR ID R_DEL_EXPR {
 %%
 /* Entrypoint of the program */
 int main(int argc, char * argv[]) {
-	option_flag options = get_option(argc, argv);
+	option_flags options = get_option(argc, argv);
 
 	FILE * fp = NULL;
 
@@ -361,7 +361,7 @@ int main(int argc, char * argv[]) {
 
 	/* Clean up memory */
 	finalize();
-	free_option_flag(options);
+	free_option_flags(options);
 	return EXIT_SUCCESS;
 }
 

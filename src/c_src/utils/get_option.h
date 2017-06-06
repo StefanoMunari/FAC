@@ -27,20 +27,20 @@ typedef struct {
 	char * output_main_file;
 	/** printer used to print the three address code */
 	tprinter printer;
-} option_flag;
+} option_flags;
 
 /**
  * get the options from the command line
  * @param argc the argument counter
  * @param argv the argument vector
- * @return an option_flag object containing the user-defined options.
+ * @return an option_flags object containing the user-defined options.
  */
-option_flag get_option(int argc,  char * argv[]);
+option_flags get_option(int argc,  char * argv[]);
 
 /**
  * free the fields of the given option field
  * @param options the option field to free
  */
-void free_option_flag(option_flag options);
+void free_option_flags(option_flags options);
 
 #endif /* __GET_OPTION_H__ */
