@@ -13,8 +13,6 @@ typedef struct symbol_table_entry {
 	char * id;
 	/** type */
 	type_t type;
-	/** the concrete value */
-	void * value;
 	/** needed by uthash.h to make this structure hashable */
 	UT_hash_handle hh;
 } symbol_table_entry;
@@ -30,12 +28,7 @@ void installID(char* id, type_t type);
  * @return the symbol table entry for the variable named id
  */
 symbol_table_entry * lookupID(char* id);
-/**
- * Set the value of the entry "id" to the given value
- * @param id
- * @param value
- */
-void setValue(char * id, void * value);
+
 /**
  * For its usage in the type_checker @see type_checker_ast_expr.c
  * @return the type of the entry "id" in the symbol table
