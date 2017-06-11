@@ -1,11 +1,11 @@
 #include "facmath.h"
 
-long long gcd(long long x, long long y) {
-	return (y != 0)? gcd(y, x%y) : x;
+static long long _gcd(long long x, long long y) {
+	return (y != 0)? _gcd(y, x%y) : x;
 }
 
 fract_t normalizeFract(fract_t f) {
-	long long g = gcd(f.num, f.den);
+	long long g = _gcd(f.num, f.den);
 	fract_t ret;
 	ret.num = f.num/g;
 	ret.den = f.den/g;
@@ -20,26 +20,3 @@ fract_t normalizeFract(fract_t f) {
 	}
 	return ret;
 }
-
-fract_t reciprocal(fract_t fract1) {
-	fract_t res;
-	res.num = fract1.den;
-	res.den = fract1.num;
-	return res;
-}
-
-fract_t mult(fract_t fract1, fract_t fract2) {
-	fract_t res;
-	res.num = fract1.num * fract2.num;
-	res.den = fract1.den * fract2.den;
-	return normalizeFract(res);
-}
-
-fract_t sum(fract_t fract1, fract_t fract2) {
-	fract_t res;
-	res.num = fract1.num * fract2.den + fract1.den * fract2.num;
-	res.den = fract1.den * fract2.den;
-	return normalizeFract(res);
-}
-
-
