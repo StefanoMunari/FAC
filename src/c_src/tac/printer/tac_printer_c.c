@@ -157,8 +157,8 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			fprintf(c_main, "t%pnum = %s %s;\n",
 						entry, entry->op==TAC_SUM?"+":"-", numA
 			);
-			fprintf(c_main, "t%pden = %s %s;\n",
-						entry, entry->op==TAC_SUM?"+":"-", denA
+			fprintf(c_main, "t%pden = %s;\n",
+						entry, denA
 			);
 
 			fprintf(c_header, "int t%pnum;\n", entry);
