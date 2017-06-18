@@ -1,7 +1,4 @@
 #include "symbol_table.h"
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
 
 extern symbol_table_entry * symbol_table;
 extern void yyerror(char *, ...);
