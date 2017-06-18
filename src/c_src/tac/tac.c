@@ -1,7 +1,6 @@
 #include "tac.h"
 #include "tac_ast_node.h"
 #include "tac_list.h"
-#include <stdio.h>
 
 
 

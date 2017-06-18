@@ -17,7 +17,6 @@
 #include "../symbol_table/symbol_table.h"
 #include "../types/factype.h"
 #include "../types/factype_tac.h"
-#include <stdbool.h>
 
 
 /**

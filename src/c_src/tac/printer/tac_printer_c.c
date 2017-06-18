@@ -2,8 +2,6 @@
 #include "../tac_list.h"
 #include "../../utils/get_option.h"
 #include "../../symbol_table/symbol_table.h"
-#include <stdio.h>
-#include <stdbool.h>
 
 static
 void print_tac(tac_list *, char * out_dir, char * out_file);
