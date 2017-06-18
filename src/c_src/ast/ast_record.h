@@ -42,12 +42,12 @@ typedef struct record {
  * @param value @see ast.h @see parser.y for its usage
  * @return a new ast record with the given values
  */
-record * astRecord(ast_category token, int line, op_t op, void * value);
+record * ast_record(ast_category token, int line, op_t op, void * value);
 
 /**
  * free the given record instance
  * @param this the record instance to free
  */
-void freeastRecord(record * this);
+void free_ast_record(record * this);
 
 #endif /* __AST_RECORD__H__ */

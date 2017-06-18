@@ -8,26 +8,26 @@ for(i = 0; i < tab; i++) \
 	putchar('\t'); \
 
 
-seq_node * newSeqNode(seq_node * left, ast_node * right){
+seq_node * new_seq_node(seq_node * left, ast_node * right){
 	seq_node * this=calloc(1, sizeof(seq_node));
 	this->left=left;
 	this->right=right;
 	return this;
 }
 
-void freeSeqNode(seq_node * this){
+void free_seq_node(seq_node * this){
 	if(this == NULL)
 		return;
-	freeSeqNode(this->left);
+	free_seq_node(this->left);
 	free_ast_node(this->right);
 	free(this);
 }
 
-int printSeqNodeRec(seq_node * this, int instruction, int tab){
+int print_seq_node_rec(seq_node * this, int instruction, int tab){
 	if(this == NULL)
 		return instruction;
 
-	instruction = printSeqNodeRec(this->left, instruction, tab);
+	instruction = print_seq_node_rec(this->left, instruction, tab);
 	PRINT_TAB(tab);
 	printf("### Statement %d ###\n", instruction);
 	instruction = print_ast_node_rec(this->right, instruction+1, tab);
@@ -35,8 +35,8 @@ int printSeqNodeRec(seq_node * this, int instruction, int tab){
 	return instruction;
 }
 
-int printSeqNode(seq_node * this){
-	return printSeqNodeRec(this, 1, 0);
+int print_seq_node(seq_node * this){
+	return print_seq_node_rec(this, 1, 0);
 }
 
 
