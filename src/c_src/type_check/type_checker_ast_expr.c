@@ -32,7 +32,7 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 			);
 	}
 	if(!result){
-		printastNode(ast);
+		print_ast_node(ast);
 		yyerror("Type Mismatch on line %d: Expected type %s!\n",
 				ast->data->line, type==FRACT_T?"FRACT":"BOOL"
 		);

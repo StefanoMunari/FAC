@@ -19,7 +19,7 @@ void freeSeqNode(seq_node * this){
 	if(this == NULL)
 		return;
 	freeSeqNode(this->left);
-	freeastNode(this->right);
+	free_ast_node(this->right);
 	free(this);
 }
 
@@ -30,7 +30,7 @@ int printSeqNodeRec(seq_node * this, int instruction, int tab){
 	instruction = printSeqNodeRec(this->left, instruction, tab);
 	PRINT_TAB(tab);
 	printf("### Statement %d ###\n", instruction);
-	instruction = printastNodeRec(this->right, instruction+1, tab);
+	instruction = print_ast_node_rec(this->right, instruction+1, tab);
 
 	return instruction;
 }
