@@ -378,6 +378,6 @@ void yyerror(const char * err_msg, ...) {
 
 void finalize(){
 	free_seq_node(head);
-	freeTable();
+	free_table();
 	free_tac(tlist);
 }

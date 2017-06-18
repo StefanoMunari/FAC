@@ -87,7 +87,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 
 void dump_symbol_table(FILE * c_header){
 	symbol_table_entry * iterator;
-	symbol_table_entry * table = getTable();
+	symbol_table_entry * table = get_table();
 
 	for(iterator = table; iterator != NULL; iterator = iterator->hh.next){
 		switch(iterator->type) {
@@ -125,7 +125,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_ASSIGNMENT:
 		{
 			char * id = entry->arg0->address->id;
-			switch(getType(id)){
+			switch(get_type(id)){
 				case BOOL_T:
 				{
 					char * boolean_value = getBooleanValue(entry->arg1);
@@ -233,7 +233,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_PRINT:
 		{
 			char * id = entry->arg0->address->id;
-			switch(getType(id)){
+			switch(get_type(id)){
 				case BOOL_T:
 					fprintf(c_main, "printf(\"%cd\\n\", %s);\n", 37, id);
 					break;

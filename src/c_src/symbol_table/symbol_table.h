@@ -22,25 +22,25 @@ typedef struct symbol_table_entry {
  * @param id
  * @param type
  */
-void installID(char* id, type_t type);
+void install_ID(char* id, type_t type);
 /**
  * @param id
  * @return the symbol table entry for the variable named id
  */
-symbol_table_entry * lookupID(char* id);
+symbol_table_entry * lookup_ID(char* id);
 
 /**
  * For its usage in the type_checker @see type_checker_ast_expr.c
  * @return the type of the entry "id" in the symbol table
  */
-type_t getType(char * id);
+type_t get_type(char * id);
 /**
  * Free the symbol table.
  */
-void freeTable();
+void free_table();
 /**
  * @return the symbol_table
  */
-symbol_table_entry * getTable();
+symbol_table_entry * get_table();
 
 #endif /*__SYMBOL_TABLE_H__*/

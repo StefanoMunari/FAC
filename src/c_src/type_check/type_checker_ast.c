@@ -12,20 +12,20 @@ bool type_check_ast_node(ast_node * ast) {
 	switch(node->data->token){
 		case AST_DECLARATION:
 			/* Perform a declaration */
-			installID((char*) node->ast_children[0]->data->value,
+			install_ID((char*) node->ast_children[0]->data->value,
 				node->data->type
 			);
 			break;
 		case AST_ASSIGNMENT:
 		{ 	/* Perform an assignment */
-			type_t expected_type = getType(node->ast_children[0]->data->value);
+			type_t expected_type = get_type(node->ast_children[0]->data->value);
 			result &= type_check_ast_expr(node->ast_children[1], expected_type);
 			break;
 		}
 		case AST_PRINT:
 		{ /* Check only if the ID is installed in the symbol table
 			 It is equivalent to checking it the type is already defined*/
-			getType(node->ast_children[0]->data->value);
+			get_type(node->ast_children[0]->data->value);
 			break;
 		}
 		case AST_IF:
