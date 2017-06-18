@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-static
-char * _token_string(ast_category token);
+char * token_string(ast_category token);
 
 ast_node * new_ast_node(ast_category token, int line, op_t op, void * value,
 	const int number_of_ast_children, const int number_of_seq_children, ...) {
@@ -45,7 +44,7 @@ ast_node * new_ast_node(ast_category token, int line, op_t op, void * value,
 		}
 	}
 	va_end(args_iterator);
-	node->data = (record *) astRecord(token, line, op, value);
+	node->data = (record *) ast_record(token, line, op, value);
 	return node;
 }
 
@@ -64,11 +63,11 @@ void free_ast_node(ast_node * node){
 		}
 
 		for(i = 0; i < node->number_of_seq_children; ++i) {
-			freeSeqNode(node->seq_children[i]);
+			free_seq_node(node->seq_children[i]);
 		}
 	}
 	/* Free resources */
-	freeastRecord(node->data);
+	free_ast_record(node->data);
 	free(node->ast_children);
 	free(node->seq_children);
 	free(node);
@@ -81,7 +80,7 @@ int print_ast_node_rec(ast_node * node, int instruction, int tab){
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	printf("Token : %s", _token_string(node->data->token));
+	printf("Token : %s", token_string(node->data->token));
 	if(node->data->token == AST_ID){
 		printf(" %s", (char*)node->data->value);
 	}
@@ -91,7 +90,7 @@ int print_ast_node_rec(ast_node * node, int instruction, int tab){
 		instruction = print_ast_node_rec(node->ast_children[i], instruction, tab);
 	}
 	for(i = 0; i < node->number_of_seq_children; ++i){
-		instruction = printSeqNodeRec(node->seq_children[i], instruction, tab);
+		instruction = print_seq_node_rec(node->seq_children[i], instruction, tab);
 	}
 	return instruction;
 
@@ -108,8 +107,7 @@ int print_ast_node(ast_node * node) {
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
-static
-char * _token_string(ast_category token){
+char * token_string(ast_category token){
 	switch(token){
 		case AST_BOOL: return "BOOL"; break;
 		case AST_FRACT: return "FRACT"; break;
@@ -127,4 +125,3 @@ char * _token_string(ast_category token){
 		default: return "";
 	}
 }
-

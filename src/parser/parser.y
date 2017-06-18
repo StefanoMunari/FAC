@@ -144,24 +144,24 @@ stmt { head=$1; }
 stmt :
 /* empty */ { $$ = NULL; }
 | stmt declaration SEPARATOR {
-	seq_node * subtree = newSeqNode($1, $2->ast_children[0]);
-	$$ = newSeqNode(subtree, $2->ast_children[1]);
+	seq_node * subtree = new_seq_node($1, $2->ast_children[0]);
+	$$ = new_seq_node(subtree, $2->ast_children[1]);
 
 	free($2->data);
 	free($2->ast_children);
 	free($2);
 }
 | stmt var_assignment SEPARATOR {
-	$$=newSeqNode($1, $2);
+	$$=new_seq_node($1, $2);
 }
 | stmt print_var SEPARATOR {
-	$$=newSeqNode($1, $2);
+	$$=new_seq_node($1, $2);
 }
 | stmt ifrule {
-	$$ = newSeqNode($1, $2);
+	$$ = new_seq_node($1, $2);
 }
 | stmt whilerule {
-	$$ = newSeqNode($1, $2);
+	$$ = new_seq_node($1, $2);
 }
 ;
 
@@ -346,7 +346,7 @@ int main(int argc, char * argv[]) {
 		err_handler(options.input_file, FAC_STANDARD_ERROR);
 
 	if(options.print_ast)
-		printSeqNode(head);
+		print_seq_node(head);
 
 
 	if(!type_check(head)){
@@ -377,7 +377,7 @@ void yyerror(const char * err_msg, ...) {
 }
 
 void finalize(){
-	freeSeqNode(head);
+	free_seq_node(head);
 	freeTable();
 	free_tac(tlist);
 }
