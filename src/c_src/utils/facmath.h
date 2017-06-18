@@ -16,7 +16,7 @@
  * @param f - the fract to normalize
  * @return the normalized fract
  */
-fract_t normalizeFract(fract_t f);
+fract_t normalize_fract(fract_t f);
 
 #endif /*__FAC__MATH__H__*/
 
