@@ -1,6 +1,5 @@
 #include "ast.h"
 #include "seq_tree.h"
-#include "../types/factype_ast.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
