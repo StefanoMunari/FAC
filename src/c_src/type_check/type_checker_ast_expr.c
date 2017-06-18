@@ -1,8 +1,6 @@
 #include "type_checker_ast_expr.h"
-#include "../types/factype.h"
 #include "../types/factype_ast.h"
 #include "../symbol_table/symbol_table.h"
-#include <stdio.h>
 
 
 /**
@@ -47,20 +45,15 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 			result = _type_check_bool(ast);
 			break;
 		default:
-		{
-			fprintf(stderr,
-					"Line %d: Type not recognized by type_checker\n",
+			yyerror("Line %d: Type not recognized by type_checker\n",
 					ast->data->line
 			);
-			result = false;
-		}
 	}
 	if(!result){
-		fprintf(stderr,
-				"Type Mismatch on line %d: Expected type %s!\n",
+		printastNode(ast);
+		yyerror("Type Mismatch on line %d: Expected type %s!\n",
 				ast->data->line, type==FRACT_T?"FRACT":"BOOL"
 		);
-		printastNode(ast);
 	}
 	return result;
 }
