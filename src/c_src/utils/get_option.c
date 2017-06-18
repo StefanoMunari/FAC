@@ -21,7 +21,7 @@ static struct option long_options[] = {
  * @param argv in order to get the name of the compiled program
  */
 static
-void print_help(char * argv[]){
+void _print_help(char * argv[]){
 	putchar('\n');
 	printf("Usage %s <input.f> [OPT] ... \n\n", argv[0]);
 	printf("-h, --help\t\t print this message and exit\n");
@@ -44,12 +44,12 @@ option_flags get_option(int argc,  char * argv[]){
 	option_flags options;
 	int c;
 	if(argc < 2) {
-		print_help(argv);
+		_print_help(argv);
 		exit(EXIT_FAILURE);
 	}
 	// One can specify only the help flag without the source file
 	if(strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0){
-		print_help(argv);
+		_print_help(argv);
 		exit(EXIT_SUCCESS);
 	// It is an option that is not help
 	} else if(argv[1][0] == '-'){
@@ -71,7 +71,7 @@ option_flags get_option(int argc,  char * argv[]){
 
 	while((c = getopt_long (argc, argv, "ht:o:a", long_options, &option_index)) != EOF) {
 		switch(c){
-			case 'h': print_help(argv); exit(EXIT_SUCCESS); break;
+			case 'h': _print_help(argv); exit(EXIT_SUCCESS); break;
 			case 'a': options.print_ast = true; break;
 			case 'o':
 			{
