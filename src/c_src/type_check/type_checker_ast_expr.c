@@ -10,7 +10,7 @@
  * @param node a node to check
  * @return true if node is of type fract, false otherwise.
  */
-static bool type_check_fract(ast_node *);
+static bool _type_check_fract(ast_node *);
 /**
  * Checks if node is an expression of type bool
  * @param node a node to check
@@ -37,16 +37,14 @@ typedef struct type_inference_struct {
 static type_inference_struct type_inference(ast_node * node);
 
 
-
-
 bool type_check_ast_expr(ast_node * ast, type_t type){
 	bool result;
 	switch(type){
 		case FRACT_T:
-			result = type_check_fract(ast);
+			result = _type_check_fract(ast);
 			break;
 		case BOOL_T:
-			result = type_check_bool(ast);
+			result = _type_check_bool(ast);
 			break;
 		default:
 		{
@@ -71,59 +69,56 @@ bool type_check_ast_expr(ast_node * ast, type_t type){
 			PRIVATE FUNCTIONS
 *********************************************/
 static
-bool type_check_fract(ast_node * node){
+bool _type_check_fract(ast_node * node){
 	switch(node->data->token){
 		case AST_FRACT:
 			return true;
 		case AST_ID:
 			return getType((char*) node->data->value) == FRACT_T;
 		case AST_AOP1:
-			return type_check_fract(node->ast_children[0]);
+			return _type_check_fract(node->ast_children[0]);
 		case AST_AOP2:
-			return type_check_fract(node->ast_children[0]) &&
-					type_check_fract(node->ast_children[1]);
+			return _type_check_fract(node->ast_children[0]) &&
+					_type_check_fract(node->ast_children[1]);
 		default:
 			return false;
 	}
 }
 
 static
-bool type_check_bool(ast_node * node){
+bool _type_check_bool(ast_node * node){
 	switch(node->data->token){
 		case AST_BOOL:
 			return true;
 		case AST_ID:
 			return getType((char*) node->data->value) == BOOL_T;
 		case AST_BOP1:
-			return type_check_bool(node->ast_children[0]);
+			return _type_check_bool(node->ast_children[0]);
 		case AST_BOP2:
-			return type_check_bool(node->ast_children[0]) &&
-				type_check_bool(node->ast_children[1]);
+			return _type_check_bool(node->ast_children[0]) &&
+				_type_check_bool(node->ast_children[1]);
 		case AST_BOP_RELOP:
 		{
-			bool ret = type_check_bool(node->ast_children[0]) &&
-					   type_check_bool(node->ast_children[1]);
-			if(!ret){
-				yyerror("type_checker_ast_expr::type_check_bool:Line %d: \
-					operator %s can be used only on bool expressions",
+			bool ret = _type_check_bool(node->ast_children[0]) &&
+					   _type_check_bool(node->ast_children[1]);
+			if(!ret)
+				yyerror("type_checker_ast_expr::_type_check_bool:Line %d: \
+					operator %s can be used only for boolean expressions",
 					node->data->line,
 					node->data->op==IFF?"<->":"XOR"
 				);
-			}
-
 			return ret;
 		}
 		case AST_RELOP:
 		{
-			bool ret = type_check_fract(node->ast_children[0]) &&
-				type_check_fract(node->ast_children[1]);
-
+			bool ret = _type_check_fract(node->ast_children[0]) &&
+				_type_check_fract(node->ast_children[1]);
 			if(!ret){
 				switch(node->data->op){
 					case EQ:
 					case NEQ:
-						yyerror("type_checker_ast_expr::type_check_bool:\
-							Line %d: %s can only be used on fract variables.\
+						yyerror("type_checker_ast_expr::_type_check_bool:\
+							Line %d: %s can only be used for fract variables.\
 							If lhs and rhs are bool use %s.\n",
 							node->data->line,
 							node->data->op==EQ?"==":"<>",
@@ -131,8 +126,8 @@ bool type_check_bool(ast_node * node){
 						);
 						break;
 					default:
-						yyerror("type_checker_ast_expr::type_check_bool: \
-							Line %d: relop can be used only on fract \
+						yyerror("type_checker_ast_expr::_type_check_bool: \
+							Line %d: relop can be used only for fract \
 							variables.",
 							node->data->line
 						);
