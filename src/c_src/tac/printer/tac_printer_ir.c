@@ -5,9 +5,9 @@
 #include <stdio.h>
 
 static
-void print_tac(tac_list *, char * out_dir, char * out_file);
+void _print_tac(tac_list *, char * out_dir, char * out_file);
 
-const struct _tprinter_vtable IR[] = { { print_tac } };
+const struct _tprinter_vtable IR[] = { { _print_tac } };
 
 extern void yyerror(const char *, ...);
 static
@@ -17,7 +17,7 @@ char * get_operator(tac_op operator);
 static
 void print_value(tac_value * value);
 
-void print_tac(tac_list * tlist, char * out_dir, char * out_file){
+void _print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	printf("======= IR: Print the 3AC =======\n");
 	tac_node * iterator = tlist->first;
 	int i=0;

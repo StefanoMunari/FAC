@@ -11,22 +11,22 @@ void print_tac(tac_list *, char * out_dir, char * out_file);
 const struct _tprinter_vtable C[] = { { print_tac } };
 
 static
-void dump_symbol_table(FILE *);
+void _dump_symbol_table(FILE *);
 
 static
-void print_h_vars(FILE *);
+void _print_h_vars(FILE *);
 
 static
-void print_tac_entry(FILE *, tac_node *, FILE *);
+void _print_tac_entry(FILE *, tac_node *, FILE *);
 
 static
-char * get_operator(tac_op operator);
+char * _get_operator(tac_op operator);
 
 static
-char * getValue(tac_value *, char *);
+char * _get_value(tac_value *, char *);
 
 static
-char * getBooleanValue(tac_value *);
+char * _get_boolean_value(tac_value *);
 
 static
 bool h_flag = false;
@@ -55,7 +55,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 		yyerror("tac_printer_c::print_tac:Could not open %s", header_name);
 	}
 
-	dump_symbol_table(c_header);
+	_dump_symbol_table(c_header);
 
 	fprintf(c_main, "#include \"fvariables.h\"\n");
 	fprintf(c_main, "#include <stdio.h>\n");
@@ -67,7 +67,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	int i=0;
 	tac_node * iterator = tlist->first;
 	while(iterator != NULL){
-		print_tac_entry(c_main, iterator, c_header);
+		_print_tac_entry(c_main, iterator, c_header);
 		++i;
 		iterator = iterator->next;
 	}
@@ -86,7 +86,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 
 }
 
-void dump_symbol_table(FILE * c_header){
+void _dump_symbol_table(FILE * c_header){
 	symbol_table_entry * iterator;
 	symbol_table_entry * table = get_table();
 
@@ -100,7 +100,7 @@ void dump_symbol_table(FILE * c_header){
 				fprintf(c_header, "int %sden;\n", iterator->id);
 				break;
 			default:
-				yyerror("tac_printer_c::dump_symbol_table:\
+				yyerror("tac_printer_c::_dump_symbol_table:\
 						wrong symbol table type"
 				);
 				break;
@@ -109,7 +109,7 @@ void dump_symbol_table(FILE * c_header){
 }
 
 
-void print_h_vars(FILE * c_header){
+void _print_h_vars(FILE * c_header){
 	if(h_flag)
 		return;
 	int i=0;
@@ -118,7 +118,7 @@ void print_h_vars(FILE * c_header){
 	h_flag = true;
 }
 
-void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
+void _print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 	tac_entry * entry = node->value;
 	if(entry == NULL)
 		return;
@@ -129,7 +129,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			switch(get_type(id)){
 				case BOOL_T:
 				{
-					char * boolean_value = getBooleanValue(entry->arg1);
+					char * boolean_value = _get_boolean_value(entry->arg1);
 					fprintf(c_main, "%s = %s;\n", id, boolean_value);
 
 					free(boolean_value);
@@ -137,8 +137,8 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 				}
 				case FRACT_T:
 				{
-					char * fract_val_num = getValue(entry->arg1, "num");
-					char * fract_val_den = getValue(entry->arg1, "den");
+					char * fract_val_num = _get_value(entry->arg1, "num");
+					char * fract_val_den = _get_value(entry->arg1, "den");
 					fprintf(c_main, "%snum = %s;\n", id, fract_val_num);
 					fprintf(c_main, "%sden = %s;\n", id, fract_val_den);
 
@@ -152,8 +152,8 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_PLUS:
 		case TAC_MINUS:
 		{
-			char * numA = getValue(entry->arg0, "num");
-			char * denA = getValue(entry->arg0, "den");
+			char * numA = _get_value(entry->arg0, "num");
+			char * denA = _get_value(entry->arg0, "den");
 			fprintf(c_main, "t%pnum = %s %s;\n",
 						entry, entry->op==TAC_SUM?"+":"-", numA
 			);
@@ -172,10 +172,10 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_DIFF:
 		{
 
-			char * numA = getValue(entry->arg0, "num");
-			char * denA = getValue(entry->arg0, "den");
-			char * numB = getValue(entry->arg1, "num");
-			char * denB = getValue(entry->arg1, "den");
+			char * numA = _get_value(entry->arg0, "num");
+			char * denA = _get_value(entry->arg0, "den");
+			char * numB = _get_value(entry->arg1, "num");
+			char * denB = _get_value(entry->arg1, "den");
 
 			fprintf(c_main, "/* SUM */\n");
 			fprintf(c_main, "h0 = %s * %s;\n", numA, denB);
@@ -188,7 +188,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
-			print_h_vars(c_header);
+			_print_h_vars(c_header);
 
 
 			free(numA);
@@ -201,11 +201,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_MULT:
 		case TAC_DIV:
 		{
-			char * numA = getValue(entry->arg0, "num");
-			char * denA = getValue(entry->arg0, "den");
+			char * numA = _get_value(entry->arg0, "num");
+			char * denA = _get_value(entry->arg0, "den");
 
-			char * numB = getValue(entry->arg1, "num");
-			char * denB = getValue(entry->arg1, "den");
+			char * numB = _get_value(entry->arg1, "num");
+			char * denB = _get_value(entry->arg1, "den");
 			if(entry->op == TAC_DIV){ //Take the inverse for division
 				char * tmp = numB;
 				numB = denB;
@@ -222,7 +222,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 
 			fprintf(c_header, "int t%pnum;\n", entry);
 			fprintf(c_header, "int t%pden;\n", entry);
-			print_h_vars(c_header);
+			_print_h_vars(c_header);
 
 			free(numA);
 			free(numB);
@@ -248,7 +248,7 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		}
 		case TAC_NOT:
 		{
-			char * boolean_value = getBooleanValue(entry->arg0);
+			char * boolean_value = _get_boolean_value(entry->arg0);
 			fprintf(c_main, "t%p = !%s;\n", entry, boolean_value);
 
 			fprintf(c_header, "int t%p;\n", entry);
@@ -259,11 +259,11 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_AND:
 		case TAC_OR:
 		{
-			char * bool1 = getBooleanValue(entry->arg0);
-			char * bool2 = getBooleanValue(entry->arg1);
+			char * bool1 = _get_boolean_value(entry->arg0);
+			char * bool2 = _get_boolean_value(entry->arg1);
 			fprintf(c_main,
 						"t%p = %s %s %s;\n",
-						entry, bool1, get_operator(entry->op), bool2
+						entry, bool1, _get_operator(entry->op), bool2
 			);
 
 			fprintf(c_header, "int t%p;\n", entry);
@@ -275,10 +275,10 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_XOR:
 		case TAC_IFF:
 		{
-			char * bool1 = getBooleanValue(entry->arg0);
-			char * bool2 = getBooleanValue(entry->arg1);
+			char * bool1 = _get_boolean_value(entry->arg0);
+			char * bool2 = _get_boolean_value(entry->arg1);
 			fprintf(c_main, "t%p = %s %s %s; \n",
-						entry, bool1, get_operator(entry->op), bool2
+						entry, bool1, _get_operator(entry->op), bool2
 			);
 			fprintf(c_header, "int t%p;\n", entry);
 
@@ -290,16 +290,16 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_NEQ:
 		{
 
-			char * numA = getValue(entry->arg0, "num");
-			char * denA = getValue(entry->arg0, "den");
-			char * numB = getValue(entry->arg1, "num");
-			char * denB = getValue(entry->arg1, "den");
-			fprintf(c_main, "h0 = %s %s %s;\n", numA, get_operator(entry->op), numB);
-			fprintf(c_main, "h1 = %s %s %s;\n", denA, get_operator(entry->op), denB);
+			char * numA = _get_value(entry->arg0, "num");
+			char * denA = _get_value(entry->arg0, "den");
+			char * numB = _get_value(entry->arg1, "num");
+			char * denB = _get_value(entry->arg1, "den");
+			fprintf(c_main, "h0 = %s %s %s;\n", numA, _get_operator(entry->op), numB);
+			fprintf(c_main, "h1 = %s %s %s;\n", denA, _get_operator(entry->op), denB);
 			fprintf(c_main, "t%p = h0 && h1;\n", entry);
 
 			fprintf(c_header, "int t%p;\n", entry);
-			print_h_vars(c_header);
+			_print_h_vars(c_header);
 
 			free(numA);
 			free(denA);
@@ -312,16 +312,16 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 		case TAC_LEQ:
 		case TAC_GT:
 		{
-			char * numA = getValue(entry->arg0, "num");
-			char * denA = getValue(entry->arg0, "den");
-			char * numB = getValue(entry->arg1, "num");
-			char * denB = getValue(entry->arg1, "den");
+			char * numA = _get_value(entry->arg0, "num");
+			char * denA = _get_value(entry->arg0, "den");
+			char * numB = _get_value(entry->arg1, "num");
+			char * denB = _get_value(entry->arg1, "den");
 			fprintf(c_main, "h0 = %s * %s;\n", numA, denB);
 			fprintf(c_main, "h1 = %s * %s;\n", denA, numB);
-			fprintf(c_main, "t%p = h0 %s h1;\n", entry, get_operator(entry->op));
+			fprintf(c_main, "t%p = h0 %s h1;\n", entry, _get_operator(entry->op));
 
 			fprintf(c_header, "int t%p;\n", entry);
-			print_h_vars(c_header);
+			_print_h_vars(c_header);
 
 			free(numA);
 			free(denA);
@@ -345,13 +345,13 @@ void print_tac_entry(FILE * c_main, tac_node * node, FILE * c_header){
 			break;
 		}
 		default:
-			yyerror("tac_printer_c:print_tac_entry:%d operator not recognized",
+			yyerror("tac_printer_c:_print_tac_entry:%d operator not recognized",
 				entry->op);
 	}
 }
 
 static
-char * get_operator(tac_op operator){
+char * _get_operator(tac_op operator){
 	switch(operator){
 		case TAC_PLUS:
 		case TAC_SUM: return "+"; break;
@@ -376,14 +376,14 @@ char * get_operator(tac_op operator){
 		case TAC_LABEL: return "label"; break;
 		/* the others are all unrecognized operators */
 		default:
-			yyerror("tac_pritner:get_operator - operator not recognized");
+			yyerror("tac_pritner:_get_operator - operator not recognized");
 			break;
 	}
 	return "";
 }
 
 static
-char * getBooleanValue(tac_value * tvalue){
+char * _get_boolean_value(tac_value * tvalue){
 	if(tvalue->address != NULL){
 		char * buffer = malloc(sizeof(char) * (strlen(tvalue->address->id) + 1));
 		sprintf(buffer, "%s", tvalue->address->id);
@@ -401,7 +401,7 @@ char * getBooleanValue(tac_value * tvalue){
 }
 
 static
-char * getValue(tac_value * tvalue, char * num_or_den) {
+char * _get_value(tac_value * tvalue, char * num_or_den) {
 	if(tvalue == NULL){
 		return NULL;
 	}
@@ -424,7 +424,7 @@ char * getValue(tac_value * tvalue, char * num_or_den) {
 		sprintf(buffer, "t%p%s", tvalue->instruction, num_or_den);
 		return buffer;
 	} else {
-		yyerror("tac_printer_c:getValue:Error in fetching numerator %s %d \n");
+		yyerror("tac_printer_c:_get_value:Error in fetching numerator %s %d \n");
 		return "";
 	}
 }
