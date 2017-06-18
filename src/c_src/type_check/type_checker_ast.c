@@ -1,5 +1,6 @@
 #include "type_checker.h"
 #include "type_checker_ast_expr.h"
+#include "../ast/ast.h"
 #include "../symbol_table/symbol_table.h"
 #include "../types/factype_ast.h"
 
@@ -48,7 +49,7 @@ bool type_check_ast_node(ast_node * ast) {
 		{
 			yyerror("tyype_checker_ast::type_check_ast_node \
 					%s token not recognized by type_checker on line %d",
-					tokenString(node->data->token), node->data->line
+					token_string(node->data->token), node->data->line
 			);
 		}
 	}

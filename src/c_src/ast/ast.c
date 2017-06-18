@@ -5,9 +5,10 @@
 #include <stdio.h>
 #include <assert.h>
 
-char * tokenString(ast_category token);
+static
+char * _token_string(ast_category token);
 
-ast_node * astNode(ast_category token, int line, op_t op, void * value,
+ast_node * new_ast_node(ast_category token, int line, op_t op, void * value,
 	const int number_of_ast_children, const int number_of_seq_children, ...) {
 
 	assert(number_of_ast_children >= 0 && number_of_seq_children >= 0);
@@ -15,21 +16,21 @@ ast_node * astNode(ast_category token, int line, op_t op, void * value,
 
 	node->number_of_ast_children = number_of_ast_children;
 	node->number_of_seq_children = number_of_seq_children;
-	
+
 	if(node->number_of_ast_children == 0){
 		node->ast_children = NULL;
 	}
 	else {
 		node->ast_children = calloc(number_of_ast_children, sizeof(ast_node*));
 	}
-	
+
 	if(node->number_of_seq_children == 0){
 		node->seq_children = NULL;
 	}
 	else {
 		node->seq_children = calloc(number_of_seq_children, sizeof(seq_node*));
 	}
-	
+
 	va_list args_iterator;
 	va_start(args_iterator, number_of_seq_children);
 	{
@@ -51,15 +52,15 @@ ast_node * astNode(ast_category token, int line, op_t op, void * value,
 
 
 
-void freeastNode(ast_node * node){
+void free_ast_node(ast_node * node){
 	if(node == NULL)
 		return;
-	
+
 	{
 		int i;
 		/* Free children */
 		for(i = 0; i < node->number_of_ast_children; ++i) {
-			freeastNode(node->ast_children[i]);
+			free_ast_node(node->ast_children[i]);
 		}
 
 		for(i = 0; i < node->number_of_seq_children; ++i) {
@@ -73,21 +74,21 @@ void freeastNode(ast_node * node){
 	free(node);
 }
 
-int printastNodeRec(ast_node * node, int instruction, int tab){
+int print_ast_node_rec(ast_node * node, int instruction, int tab){
 	if(node == NULL)
 		return instruction;
 	int i;
 	for(i = 0; i < tab; i++){
 		putchar('\t');
 	}
-	printf("Token : %s", tokenString(node->data->token));
+	printf("Token : %s", _token_string(node->data->token));
 	if(node->data->token == AST_ID){
 		printf(" %s", (char*)node->data->value);
 	}
 	putchar('\n');
 	++tab; //increment tab to print children
 	for(i = 0; i < node->number_of_ast_children; i++){
-		instruction = printastNodeRec(node->ast_children[i], instruction, tab);
+		instruction = print_ast_node_rec(node->ast_children[i], instruction, tab);
 	}
 	for(i = 0; i < node->number_of_seq_children; ++i){
 		instruction = printSeqNodeRec(node->seq_children[i], instruction, tab);
@@ -96,19 +97,19 @@ int printastNodeRec(ast_node * node, int instruction, int tab){
 
 }
 
-int printastNode(ast_node * node) {
+int print_ast_node(ast_node * node) {
 	if(node == NULL)
 		return 0;
 	putchar('\n');
-	return printastNodeRec(node, 0, 0);
+	return print_ast_node_rec(node, 0, 0);
 
 }
 
 /********************************************
 			PRIVATE FUNCTIONS
 *********************************************/
-
-char * tokenString(ast_category token){
+static
+char * _token_string(ast_category token){
 	switch(token){
 		case AST_BOOL: return "BOOL"; break;
 		case AST_FRACT: return "FRACT"; break;

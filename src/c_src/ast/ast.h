@@ -30,31 +30,31 @@ typedef struct ast_node {
  * @param token the ast
  * @param line the source code's line number, where you can find the op
  * @param op the real operation, e.g. SUM @see fac_type.h
- * @param value an optional parameter containing the content, e.g. in fract it 
+ * @param value an optional parameter containing the content, e.g. in fract it
  * is a fract number
  * @param number_of_ast_children number of children of type ast. For instance
  * a SUM has two ast_children
- * @param number_of_seq_children number of children of type seq_tree. For 
+ * @param number_of_seq_children number of children of type seq_tree. For
  * instance while has 1 ast child (the condition) and one seq child (the body)
  * @param ... a list containing exactly number_of_ast_children ast nodes and
  * number_of_seq_children seq nodes. These are the children of the new created
  * node
  * @return a new initialized node with the given parameters
  */
-ast_node * astNode(ast_category token, int line, op_t op, void * value, 
+ast_node * new_ast_node(ast_category token, int line, op_t op, void * value,
 	const int number_of_ast_children, const int number_of_seq_children, ...);
 
 /**
  * Free (recursively) the syntax three given in input
  * @param root the root of the syntax tree
  */
-void freeastNode(ast_node * root);
+void free_ast_node(ast_node * root);
 
 /**
  * Print a syntax tree on the screen (only the tokens)
  * @param root the root of the syntax tree
  */
-int printastNode(ast_node * root);
+int print_ast_node(ast_node * root);
 
 /**
  * Print a syntax tree on the screen
@@ -64,12 +64,12 @@ int printastNode(ast_node * root);
  * to prepend to the real content's print
  * @return an integer that corresponds to the next instruction id
  */
-int printastNodeRec(ast_node * node, int instruction, int tab);
+int print_ast_node_rec(ast_node * node, int instruction, int tab);
 
 /**
  * @param token the token from which we want the representation
- * @return the string representation of the token 
+ * @return the string representation of the token
  */
-char * tokenString(ast_category token);
+char * token_string(ast_category token);
 
 #endif /* __AST__H__ */
