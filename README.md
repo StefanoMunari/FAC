@@ -6,5 +6,6 @@ F Academic Compiler - project developed for the course formal languages and comp
 This software is released under the perl artistic license (reported in the file LICENSE).
 
 # Author 
-Mirko Bez 
+Mirko Bez
+
 Stefano Munari
