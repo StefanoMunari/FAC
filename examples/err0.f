@@ -1,5 +1,5 @@
-bool b;
-fract f;
+bool b = false;
+fract f = [1|1];
 b = true;
 f = [1|3];
 /* problematic assignment - wrong error */
