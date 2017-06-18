@@ -4,8 +4,6 @@
 #include "../symbol_table/symbol_table.h"
 #include "../types/factype.h"
 #include "../types/factype_ast.h"
-#include <string.h>
-#include <stdio.h>
 
 extern void yyerror(char *, ...);
 
