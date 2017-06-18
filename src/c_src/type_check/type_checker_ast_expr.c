@@ -67,7 +67,7 @@ bool _type_check_fract(ast_node * node){
 		case AST_FRACT:
 			return true;
 		case AST_ID:
-			return getType((char*) node->data->value) == FRACT_T;
+			return get_type((char*) node->data->value) == FRACT_T;
 		case AST_AOP1:
 			return _type_check_fract(node->ast_children[0]);
 		case AST_AOP2:
@@ -84,7 +84,7 @@ bool _type_check_bool(ast_node * node){
 		case AST_BOOL:
 			return true;
 		case AST_ID:
-			return getType((char*) node->data->value) == BOOL_T;
+			return get_type((char*) node->data->value) == BOOL_T;
 		case AST_BOP1:
 			return _type_check_bool(node->ast_children[0]);
 		case AST_BOP2:

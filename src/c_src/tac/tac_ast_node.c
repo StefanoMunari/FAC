@@ -96,7 +96,7 @@ tac_list * tac_ast_node(ast_node * node){
 			tnode->value->op = TAC_ASSIGNMENT;
 			tnode->value->arg0 = calloc(1, sizeof(tac_value));
 			tnode->value->arg0->address = (symbol_table_entry*)
-				lookupID(node->ast_children[0]->data->value);
+				lookup_ID(node->ast_children[0]->data->value);
 			/* Compute the the right hand side in 3AC */
 			tac_value * leaf = _tac_leaf(node->ast_children[1]);
 			/* the right hand side is a leaf */
@@ -225,7 +225,7 @@ tac_value * _tac_leaf(ast_node * node){
 		{
 			val = calloc(1,sizeof(tac_value));
 			val->address = (symbol_table_entry *)
-				lookupID(node->data->value);
+				lookup_ID(node->data->value);
 			break;
 		}
 		default : break;
@@ -260,7 +260,7 @@ tac_node * _tac_print(ast_node * node){
 	tnode->value->op = TAC_PRINT;
 	tnode->value->arg0 = calloc(1, sizeof(tac_value));
 	tnode->value->arg0->address =
-		(symbol_table_entry *) lookupID(node->ast_children[0]->data->value);
+		(symbol_table_entry *) lookup_ID(node->ast_children[0]->data->value);
 	return tnode;
 }
 
