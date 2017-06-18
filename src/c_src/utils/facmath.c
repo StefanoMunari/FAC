@@ -4,7 +4,7 @@ static long long _gcd(long long x, long long y) {
 	return (y != 0)? _gcd(y, x%y) : x;
 }
 
-fract_t normalizeFract(fract_t f) {
+fract_t normalize_fract(fract_t f) {
 	long long g = _gcd(f.num, f.den);
 	fract_t ret;
 	ret.num = f.num/g;

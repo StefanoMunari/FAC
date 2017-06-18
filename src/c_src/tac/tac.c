@@ -6,15 +6,15 @@
 
 
 static
-tac_list * init_tac(tac_list *);
+tac_list * _init_tac(tac_list *);
 static
-void free_tac_entry(tac_entry * entry);
+void _free_tac_entry(tac_entry * entry);
 
 
 tac_list * generate_tac(seq_node * node){
 	tac_list * tlist = calloc(1, sizeof(tac_list));
 	if(!node->left)
-		init_tac(tlist);
+		_init_tac(tlist);
 	else {
 		tac_list * help = generate_tac(node->left);
 		tlist = tac_append(tlist, help);
@@ -28,7 +28,7 @@ tac_list * generate_tac(seq_node * node){
 
 
 static
-tac_list * init_tac(tac_list * tlist){
+tac_list * _init_tac(tac_list * tlist){
 	tlist->first=NULL;
 	tlist->last=NULL;
 	return tlist;
@@ -43,7 +43,7 @@ void free_tac(tac_list * tlist){
 	}
 	tac_node * iterator = tlist->last;
 	while(iterator){
-		free_tac_entry(iterator->value);
+		_free_tac_entry(iterator->value);
 		tac_node * old = iterator;
 		iterator = iterator->prev;
 		free(old);
@@ -52,7 +52,7 @@ void free_tac(tac_list * tlist){
 }
 
 static
-void free_tac_entry(tac_entry * entry){
+void _free_tac_entry(tac_entry * entry){
 	if(!entry)
 		return;
 	free(entry->arg0);

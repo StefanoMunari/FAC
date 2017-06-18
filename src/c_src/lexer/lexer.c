@@ -16,7 +16,7 @@ fract_t tokenize_fract(){
 	fract_t f;
 	f.num = numerator;
 	f.den = denumerator;
-	return normalizeFract(f);
+	return normalize_fract(f);
 }
 
 static

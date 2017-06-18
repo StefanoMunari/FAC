@@ -1,8 +1,6 @@
 #include "tac.h"
 #include "../types/factype_ast.h"
-#include <assert.h>
 #include <limits.h>
-#include <stdio.h>
 
 extern void yyerror(const char *, ...);
 
