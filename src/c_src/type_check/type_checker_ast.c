@@ -47,7 +47,7 @@ bool type_check_ast_node(ast_node * ast) {
 		default:
 		{
 			yyerror("tyype_checker_ast::type_check_ast_node \
-					%s token not recognized by type_checker on line %d", 
+					%s token not recognized by type_checker on line %d",
 					tokenString(node->data->token), node->data->line
 			);
 		}
