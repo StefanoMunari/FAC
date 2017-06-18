@@ -70,4 +70,4 @@ doc:
 
 .PHONY: clean
 clean:
-	rm -rf *.yy.c *.o *.out *.output bin/fac main.c facvariables.h $(LEXER_PATH)/lex.yy.c *.tab.*
+	rm -rf *.yy.c *.o *.out *.output bin/fac main.c facvariables.h $(LEXER_PATH)/lex.yy.c $(C_SRC_PATH)/*.tab.* $(C_SRC_PATH)/*.yy.c
