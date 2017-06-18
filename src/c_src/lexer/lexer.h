@@ -7,14 +7,10 @@
  */
 #ifndef _LEXER_H_
 #define _LEXER_H_
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <limits.h>
 #include "../err/facerr.h"
-#include "../types/factype.h"
-#include "../ast/ast.h"
 #include "../ast/seq_tree.h"
 #include "../parser.tab.h"
 
