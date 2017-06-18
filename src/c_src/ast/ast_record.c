@@ -1,6 +1,5 @@
 #include "ast_record.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 record * ast_record(ast_category token, int line, op_t op, void * value){
