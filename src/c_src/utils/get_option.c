@@ -29,7 +29,8 @@ void _print_help(char * argv[]){
 	printf("-a, --ast\t\t print to stdout the abstract syntax tree\n");
 	printf("-t, --tac-printer\t choose the tac printer (default = C)\n");
 	printf("                 \t\t - IR : prints the internal representation to stdout\n");
-	printf("                 \t\t - C  : prints the TAC in a main.c file");
+	printf("                 \t\t - C  : prints the TAC in a main.c file\n");
+	printf("                 \t\t - JAVA  : prints the TAC in a main.java file\n");
 	putchar('\n');
 	putchar('\n');
 }
@@ -86,6 +87,10 @@ option_flags get_option(int argc,  char * argv[]){
 			case 't':
 				if (strcmp(optarg, "C") == 0)
 					options.printer = (tprinter) { C };
+				else if (strcmp(optarg, "JAVA") == 0){
+					options.printer = (tprinter) { JAVA };
+					options.output_main_file = strdup("Main.java");
+				}
 				else if (strcmp(optarg, "IR") == 0)
 					options.printer = (tprinter) { IR };
 				else{

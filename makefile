@@ -1,6 +1,6 @@
 # Provide arguments to the executable using the ARGS variable.
 # separate each argument through spaces, example:
-#	ARGS="examples/ex1.f IR"
+#	ARGS="examples/ex1.f -t C"
 # The first argument identifies the filename, the second identifies the printer.
 # Provide arguments to the memory debugger/profiler using the VGOPTS variable
 PARSER_PATH = $(PWD)/src/parser
