@@ -57,6 +57,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	fprintf(c_main, "#include \"fvariables.h\"\n");
 	fprintf(c_main, "#include <stdio.h>\n");
 	fprintf(c_main, "int MCD(int u, int v) {\n");
+	fprintf(c_main, "\tif(u < 0)u=-u;\n\tif(v < 0)v=-v;\n"); 
 	fprintf(c_main, "\treturn (v != 0)?MCD(v, u %c v):u;\n}\n", 37);
 
 	fprintf(c_main, "int main(void){\n");
