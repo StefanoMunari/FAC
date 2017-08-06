@@ -13,7 +13,7 @@ EXAMPLE_SOURCES = $(shell find $(PWD)/examples -name ex*.f)
 BIN=fac
 VALGRIND=valgrind
 
-C_FLAG = -g -Wall -Werror
+C_FLAG = -g -O3 -Wall -Werror
 
 .PHONY: all
 all: compile
