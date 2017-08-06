@@ -45,8 +45,8 @@ tac_list * tac_ast_node(ast_node * node){
 				tnode->value->arg0 = left;
 			} else {/* left is a tree with height > 0 */
 				tac_list * left_list = tac_ast_node(node->ast_children[0]);
-				tnode->value->arg0= calloc(1, sizeof(tac_value));
-				tnode->value->arg0->instruction= left_list->last->value;
+				tnode->value->arg0 = calloc(1, sizeof(tac_value));
+				tnode->value->arg0->instruction = left_list->last->value;
 				/* append the current computed list to the 3AC list */
 				tlist = tac_append(tlist, left_list);
 			}
@@ -59,7 +59,7 @@ tac_list * tac_ast_node(ast_node * node){
 		case AST_RELOP:
 		{/* Binary Operators */
 			/* create a new node 3AC node */
-			tac_node* tnode=_tac_node();
+			tac_node* tnode = _tac_node();
 			tnode->value->op = node->data->op;
 			/* compute the left-subtree in 3AC */
 			tac_value * left = _tac_leaf(node->ast_children[0]);
@@ -68,8 +68,8 @@ tac_list * tac_ast_node(ast_node * node){
 				tnode->value->arg0 = left;
 			} else {/* left is a tree with height > 0 */
 				tac_list* left = tac_ast_node(node->ast_children[0]);
-				tnode->value->arg0= calloc(1, sizeof(tac_value));
-				tnode->value->arg0->instruction= left->last->value;
+				tnode->value->arg0 = calloc(1, sizeof(tac_value));
+				tnode->value->arg0->instruction = left->last->value;
 				tlist = tac_append(tlist, left);
 			}
 			/* compute the right-subtree in 3AC */
@@ -79,8 +79,8 @@ tac_list * tac_ast_node(ast_node * node){
 				tnode->value->arg1 = right;
 			} else {/* right is a tree with height > 0 */
 				tac_list* right = tac_ast_node(node->ast_children[1]);
-				tnode->value->arg1= calloc(1, sizeof(tac_value));
-				tnode->value->arg1->instruction= right->last->value;
+				tnode->value->arg1 = calloc(1, sizeof(tac_value));
+				tnode->value->arg1->instruction = right->last->value;
 				tlist = tac_append(tlist, right);
 			}
 			/* connect tnode to the current list of triples */
@@ -115,9 +115,9 @@ tac_list * tac_ast_node(ast_node * node){
 			tlist = tac_connect(tlist, start_bexpr);
 			/* Create a label that points to the end of the body of the while */
 			tac_node * end_while_label = _tac_label();
-			/* Compute the bexpr in 3AC */
+			/* Compute the negated bexpr in 3AC */
 			tlist = _tac_bexpr(node, tlist);
-			/* If the negate condition is true goto end of while */
+			/* If the condition is true goto end of while */
 			tac_node * goto_skip_while_body =
 				_tac_goto_conditioned(tlist->last->value, end_while_label);
 			tlist = tac_connect(tlist, goto_skip_while_body);
