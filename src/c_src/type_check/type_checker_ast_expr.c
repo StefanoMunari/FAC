@@ -18,7 +18,7 @@ static bool _type_check_fract(ast_node *);
 static bool _type_check_bool(ast_node *);
 
 bool type_check_ast_expr(ast_node * ast, type_t type){
-	bool result;
+	bool result = false;
 	switch(type){
 		case FRACT_T:
 			result = _type_check_fract(ast);
