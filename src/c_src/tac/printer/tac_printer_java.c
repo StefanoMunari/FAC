@@ -20,9 +20,8 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	printf("%s\n", main_name);
 
 	FILE * java_main = fopen(main_name, "w");
-	if(java_main == NULL){
+	if(java_main == NULL)
 		yyerror("tac_printer_java::print_tac:Could not open %s", main_name);
-	}
 
 
 	fprintf(java_main,"public class Main {\n");
@@ -33,8 +32,7 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	fprintf(java_main,"}\n");
 
 	/* Close the files and check if error happens */
-	if(fclose(java_main) != 0){
+	if(fclose(java_main) != 0)
 		yyerror("tac_printer_java::print_tac:Could not close %s", main_name);
-	}
 	free(main_name);
 }
