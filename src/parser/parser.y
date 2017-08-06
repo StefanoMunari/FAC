@@ -167,10 +167,9 @@ stmt :
 
 whilerule :
 WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	if($6 == NULL){
+	if($6 == NULL)
 		yyerror("Lines %d-%d: The while body cannot be empty  \n",
 			@5.first_line, @7.first_line);
-	}
 	op_t operator = NULL_OP;
 	$$ = new_ast_node(AST_WHILE, @1.first_line, operator, NULL, 1, 1, $3, $6);
 }
@@ -180,23 +179,20 @@ WHILE L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
 ifrule :
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE ELSE L_DEL_SCOPE
 stmt R_DEL_SCOPE {
-	if($6 == NULL){
+	if($6 == NULL)
 		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line,
 			@7.first_line);
-	}
-	if($10 == NULL){
+	if($10 == NULL)
 		yyerror("Lines %d-%d: The else body cannot be empty  \n", @9.first_line,
 			@11.first_line);
-	}
 	op_t operator = NULL_OP;
 	$$ = new_ast_node(AST_IF, @1.first_line, operator, NULL, 1, 2, $3, $6, $10);
 }
 |
 IF L_DEL_EXPR expr R_DEL_EXPR L_DEL_SCOPE stmt R_DEL_SCOPE {
-	if($6 == NULL){
+	if($6 == NULL)
 		yyerror("Lines %d-%d: The if body cannot be empty  \n", @5.first_line,
 			@7.first_line);
-	}
 	op_t operator = NULL_OP;
 	$$ = new_ast_node(AST_IF, @1.first_line, operator, NULL, 1, 1, $3, $6);
 }

@@ -44,13 +44,11 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	printf("%s\n", main_name);
 
 	FILE * c_main = fopen(main_name, "w");
-	if(c_main == NULL){
+	if(c_main == NULL)
 		yyerror("tac_printer_c::print_tac:Could not open %s", main_name);
-	}
 	FILE * c_header = fopen(header_name, "w");
-	if(c_header == NULL){
+	if(c_header == NULL)
 		yyerror("tac_printer_c::print_tac:Could not open %s", header_name);
-	}
 
 	_dump_symbol_table(c_header);
 
@@ -73,12 +71,10 @@ void print_tac(tac_list * tlist, char * out_dir, char * out_file){
 	fprintf(c_main, "}\n");
 
 	/* Close the files and check if error happens */
-	if(fclose(c_main) != 0){
+	if(fclose(c_main) != 0)
 		yyerror("tac_printer_c::print_tac:Could not close %s", main_name);
-	}
-	if(fclose(c_header) != 0){
+	if(fclose(c_header) != 0)
 		yyerror("tac_printer_c::print_tac:Could not close %s", header_name);
-	}
 	free(main_name);
 	free(header_name);
 
