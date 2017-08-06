@@ -370,10 +370,8 @@ int main(int argc, char * argv[]) {
 	if(options.print_ast)
 		print_seq_node(head);
 
-	if(!type_check(head)){
-		fprintf(stderr, "Error, type checking failed. Exiting \n");
-		return EXIT_FAILURE;
-	}
+	if(!type_check(head))
+		yyerror("Error, type checking failed. Exiting");
 
 	tlist = generate_tac(head);
 
