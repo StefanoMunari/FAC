@@ -2,6 +2,7 @@
 #include "../types/factype_ast.h"
 #include "../symbol_table/symbol_table.h"
 
+extern void yyerror(const char *, ...);
 
 /**
  * Checks if node is an expression of type fract
@@ -14,26 +15,7 @@ static bool _type_check_fract(ast_node *);
  * @param node a node to check
  * @return true if node is of type bool, false otherwise.
  */
-static bool type_check_bool(ast_node *);
-
-/** Internal struct to perform type inference */
-typedef struct type_inference_struct {
-	type_t type;
-	bool success;
-} type_inference_struct;
-
-/**
- * Help function for type_check_bool used to implement overloading
- * of EQ and NEQ operator that can be used both for mathematical 
- * and boolean expression. 
- * 
- * Functionality: 
- * 1) it infers the types of lhs and rhs. 
- * 2) if both have the same type then it is well typed, otherwise it
- * is not.
- */
-static type_inference_struct type_inference(ast_node * node);
-
+static bool _type_check_bool(ast_node *);
 
 bool type_check_ast_expr(ast_node * ast, type_t type){
 	bool result = false;
@@ -132,60 +114,4 @@ bool _type_check_bool(ast_node * node){
 		default:
 			return false;
 	}
-}
-
-
-
-
-
-static 
-type_inference_struct type_inference(ast_node * node){
-	type_inference_struct tis;
-	switch(node->data->token){
-		case AST_BOOL:
-			tis.type = BOOL_T;
-			tis.success = true;
-			break;
-		case AST_FRACT:
-			tis.type = FRACT_T;
-			tis.success = true;
-			break;
-		case AST_ID:
-			tis.type = getType((char*) node->data->value);
-			tis.success = true;
-			break;
-		case AST_AOP1:
-		case AST_AOP2:
-			tis.type = FRACT_T;
-			tis.success = type_check_fract(node->ast_children[0]) &&
-				type_check_fract(node->ast_children[1]);
-			break;
-		case AST_BOP1:
-		case AST_BOP2:
-			tis.type = BOOL_T;
-			tis.success = type_check_ast_expr(node, BOOL_T);
-			break;
-		case AST_RELOP1:
-		{
-			type_inference_struct tis1 = type_inference(node->ast_children[0]);
-			type_inference_struct tis2 = type_inference(node->ast_children[1]);
-			if(tis1.type == tis2.type && tis1.success && tis2.success){
-				tis.success = true;
-				tis.type = BOOL_T;
-			}
-			else {
-				tis.type = false;
-			}
-			break;
-		}
-		case AST_RELOP:
-			tis.success = type_check_fract(node->ast_children[0]) && type_check_fract(node->ast_children[1]);
-			tis.type = BOOL_T;
-			break;
-		default: /* other ast_types are not expression */
-			tis.success = false;
-			break;
-			
-	}
-	return tis;
 }

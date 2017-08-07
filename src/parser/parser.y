@@ -55,9 +55,6 @@ void finalize();
 *
 * @brief recognize tokens from the input stream and returns them to the Parser
 */
-
-seq_node * head = NULL;
-
 int yylex();
 /**
  * Error handler of BISON
@@ -319,26 +316,6 @@ int main(int argc, char * argv[]) {
 	option_flags options = get_option(argc, argv);
 
 	FILE * fp = NULL;
-
-	if(argc < 3){
-		fprintf(stderr, 
-				"Usage: %s <file-to-compile> <printer>\n Arguments: \n\t \
-				<printer> \t IR - Intermediate Representation\n \t\t\t\t C - \
-				C representation\n"
-				, argv[0]
-		);
-		return EXIT_FAILURE;
-	}
-
-	if (strcmp(argv[2], "C") == 0)
-		printer = (tprinter) { C };
-	else if (strcmp(argv[2], "IR") == 0)
-		printer = (tprinter) { IR };
-	else{
-	  yyerror("main: invalid printer");
-	  return EXIT_FAILURE;
-	}
-
 
 	fp = fopen(options.input_file, "r");
 	if (fp == NULL) {
