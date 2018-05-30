@@ -38,7 +38,7 @@ void print_tac_entry(tac_entry * entry, int i){
 		return;
 	if(entry != NULL)
 		printf("%p:\t", entry);
-	printf(get_operator(entry->op));
+	printf("%s", get_operator(entry->op));
 	putchar('\t');
 	print_value(entry->arg0);
 	putchar('\t');
